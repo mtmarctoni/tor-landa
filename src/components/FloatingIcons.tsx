@@ -12,7 +12,7 @@ const SurrealFooterIcon: React.FC<SurrealFooterIconProps> = ({ icon, idx }) => {
     return (
         <motion.button
             key={key}
-            className={className + ' bg-white/10 rounded-full hover:bg-dream-100 transition z-10'}
+            className={className + ' hover:bg-dream-200 rounded-full p-2 transition z-10'}
             whileHover={hover}
             whileTap={{ scale: 0.95 }}
             aria-label={label}
@@ -48,7 +48,7 @@ const SurrealFooterIcon: React.FC<SurrealFooterIconProps> = ({ icon, idx }) => {
                 delay: idx * 0.7,
             }}
         >
-            <Icon size={32} strokeWidth={2.2} />
+            <Icon size={36} strokeWidth={2.5} />
         </motion.button>
     );
 };
