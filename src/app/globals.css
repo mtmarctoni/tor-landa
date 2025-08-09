@@ -1,26 +1,172 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+
+  /* Paleta dream */
+  --color-dream-50: #e0f2fe;
+  --color-dream-100: #bde0fe;
+  --color-dream-200: #9eceff;
+  --color-dream-300: #6dd5ed;
+  --color-dream-400: #38bdf8;
+  --color-dream-500: #0ea5e9;
+  --color-dream-600: #0284c7;
+  --color-dream-700: #0369a1;
+  --color-dream-800: #075985;
+  --color-dream-900: #0c4a6e;
+
+  /* Colores adicionales */
+  --color-glass: rgba(255, 255, 255, 0.15);
+  --color-blob-blue: #6dd5ed;
+  --color-blob-cyan: #38bdf8;
+  --color-blob-purple: #a78bfa;
+
+  /* Gradientes */
+  --surreal-gradient: linear-gradient(135deg,
+      #f5f3ff 0%,
+      #ede9fe 25%,
+      #ddd6fe 50%,
+      #c4b5fd 75%,
+      #ede7fe 100%);
+  --surreal-blue: linear-gradient(120deg,
+      #0ea5e9 0%,
+      #38bdf8 50%,
+      #a78bfa 100%);
+  --glass-gradient: linear-gradient(120deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(14, 165, 233, 0.15) 100%);
+
+  /* Sombras */
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  --shadow-surreal: 0 4px 32px 0 rgba(56, 189, 248, 0.25);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+/* 3. Reset / Base */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background-color: #fff;
+  color: #111;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Titulares con serif */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Bodoni Moda', Georgia, serif;
+}
+
+/* 4. Keyframes */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(3deg);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes morph {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+
+  50% {
+    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(20px, -20px) rotate(180deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes blobMorph {
+  0% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+
+  33% {
+    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  }
+
+  66% {
+    border-radius: 50% 50% 70% 30%/60% 40% 60% 40%;
+  }
+
+  100% {
+    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  }
+}
+
+/* 5. Clases personalizadas opcionales */
+.bg-surreal-gradient {
+  background: var(--surreal-gradient);
+}
+
+.bg-surreal-blue {
+  background: var(--surreal-blue);
+}
+
+.bg-glass-gradient {
+  background: var(--glass-gradient);
+}
+
+.shadow-glass {
+  box-shadow: var(--shadow-glass);
+}
+
+.shadow-surreal {
+  box-shadow: var(--shadow-surreal);
+}
+
+.blob1 {
+  border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+}
+
+.blob2 {
+  border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+}
+
+.blob3 {
+  border-radius: 50% 50% 70% 30%/60% 40% 60% 40%;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+.animate-morph {
+  animation: morph 15s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 20s linear infinite;
+}
+
+.animate-blob-morph {
+  animation: blobMorph 18s ease-in-out infinite;
 }
