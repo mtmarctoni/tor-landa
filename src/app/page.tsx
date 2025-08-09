@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Header from "./sections/Header";
 import Footer from "./sections/Footer";
 import QualityTracker from "./sections/QualityTracker";
+import HistoryButton from "../components/HistoryButton";
 import { QualityProvider } from "../context/QualityContext";
 
 export default function Home() {
@@ -52,6 +53,7 @@ export default function Home() {
             <QualityTracker />
           </main>
           <Footer />
+          <HistoryButton />
         </div>
       </div>
     </QualityProvider>
