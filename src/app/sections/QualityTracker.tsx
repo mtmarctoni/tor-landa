@@ -7,40 +7,16 @@ import QualityCard from '@/components/QualityCard';
 import WaitingForQuality from '@/components/WaitingForQuality';
 import LoadingQuality from '@/components/LoadingQuality';
 import NoQualityInPast from '@/components/NoQualityInPast';
-import { QualityEntry } from '@/types/index';
 import { getCurrentWeekAndYear } from '@/utils/dateFormatter';
+import { useQualityContext } from '@/context/QualityContext';
 
 const QualityTracker: React.FC = () => {
+    const { qualities, loading, error } = useQualityContext();
     const { week: currentWeek, year: currentYear } = getCurrentWeekAndYear();
     const [week, setWeek] = useState(currentWeek);
     const [year, setYear] = useState(currentYear);
     const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
     const cardRef = useRef<HTMLDivElement>(null);
-    const [qualities, setQualities] = useState<QualityEntry[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchAllQualities = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const res = await fetch('/api/quality');
-                if (!res.ok) {
-                    throw new Error('Failed to fetch quality messages.');
-                }
-                const data = await res.json();
-                setQualities(data.qualities || []);
-
-                // eslint-disable-next-line
-            } catch (error: any) {
-                setError(error.message || 'Failed to fetch quality messages.');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAllQualities();
-    }, []);
 
     // Keyboard navigation
     useEffect(() => {
