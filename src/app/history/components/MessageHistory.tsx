@@ -1,46 +1,25 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, Download } from 'lucide-react';
 import { QualityEntry } from '@/types/index';
 import { format } from '@/utils/dateFormatter';
+import { useQualityContext } from '@/context/QualityContext';
 
 const MessageHistory: React.FC = () => {
-  const [qualities, setQualities] = useState<QualityEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { qualities, loading, error } = useQualityContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterYear, setFilterYear] = useState<number | ''>('');
 
-  useEffect(() => {
-    const fetchAllQualities = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch('/api/quality');
-        if (!res.ok) {
-          throw new Error('Failed to fetch quality messages.');
-        }
-        const data = await res.json();
-        // Sort by year and week ascending (oldest first for chronological order)
-        const sortedQualities = (data.qualities || []).sort((a: QualityEntry, b: QualityEntry) => {
-          if (a.year !== b.year) return a.year - b.year;
-          return a.week - b.week;
-        });
-        setQualities(sortedQualities);
-      } catch (error: unknown) {
-        setError((error as Error).message || 'Failed to fetch quality messages.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchAllQualities();
-  }, []);
+  // Sort qualities by year and week ascending (oldest first for chronological order)
+  const sortedQualities = [...qualities].sort((a: QualityEntry, b: QualityEntry) => {
+    if (a.year !== b.year) return a.year - b.year;
+    return a.week - b.week;
+  });
 
   // Filter qualities based on search and year filter
-  const filteredQualities = qualities.filter(quality => {
+  const filteredQualities = sortedQualities.filter(quality => {
     const matchesSearch = searchQuery === '' || 
       quality.message.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesYear = filterYear === '' || quality.year === filterYear;
@@ -48,7 +27,7 @@ const MessageHistory: React.FC = () => {
   });
 
   // Get unique years for filter dropdown
-  const availableYears = Array.from(new Set(qualities.map(q => q.year))).sort((a, b) => b - a);
+  const availableYears = Array.from(new Set(sortedQualities.map(q => q.year))).sort((a, b) => b - a);
 
   // Get week date range (approximate)
   const getWeekDateRange = (week: number, year: number) => {
@@ -113,7 +92,7 @@ const MessageHistory: React.FC = () => {
     );
   }
 
-  if (qualities.length === 0) {
+  if (sortedQualities.length === 0) {
     return (
       <div className="text-center py-12">
         <div className="text-dream-600 text-lg">No se encontraron cualidades en la historia.</div>
@@ -181,7 +160,7 @@ const MessageHistory: React.FC = () => {
         
         {/* Results count */}
         <div className="mt-4 text-sm text-dream-600">
-          {filteredQualities.length} de {qualities.length} cualidades
+          {filteredQualities.length} de {sortedQualities.length} cualidades
           {searchQuery && <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>}
           {filterYear && <span> · Año: {filterYear}</span>}
         </div>
