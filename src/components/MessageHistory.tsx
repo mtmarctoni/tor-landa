@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, Download } from 'lucide-react';
+
 import { QualityEntry } from '@/types/index';
 import { format } from '@/utils/dateFormatter';
 import { useQualityContext } from '@/context/QualityContext';
@@ -20,7 +21,7 @@ const MessageHistory: React.FC = () => {
 
   // Filter qualities based on search and year filter
   const filteredQualities = sortedQualities.filter(quality => {
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       quality.message.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesYear = filterYear === '' || quality.year === filterYear;
     return matchesSearch && matchesYear;
@@ -36,7 +37,7 @@ const MessageHistory: React.FC = () => {
     const firstWeek = new Date(year, 0, 1 + daysToFirstWeek);
     const weekStart = new Date(firstWeek.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
     const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
-    
+
     return {
       start: format(weekStart),
       end: format(weekEnd)
@@ -45,9 +46,9 @@ const MessageHistory: React.FC = () => {
 
   const exportAsJson = () => {
     const dataStr = JSON.stringify(filteredQualities, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
     const exportFileDefaultName = 'cualidades-historia.json';
-    
+
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -59,10 +60,10 @@ const MessageHistory: React.FC = () => {
       const dateRange = getWeekDateRange(q.week, q.year);
       return `Semana ${q.week}, ${q.year} (${dateRange.start} - ${dateRange.end})\n${q.message}\n\n---\n`;
     }).join('\n');
-    
-    const dataUri = 'data:text/plain;charset=utf-8,'+ encodeURIComponent(textData);
+
+    const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(textData);
     const exportFileDefaultName = 'cualidades-historia.txt';
-    
+
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -72,7 +73,7 @@ const MessageHistory: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <motion.div 
+        <motion.div
           className="text-dream-600 text-lg"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -121,7 +122,7 @@ const MessageHistory: React.FC = () => {
               className="w-full pl-10 pr-4 py-3 bg-white/70 border border-dream-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dream-400 focus:border-transparent"
             />
           </div>
-          
+
           {/* Year Filter */}
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400" size={20} />
@@ -157,7 +158,7 @@ const MessageHistory: React.FC = () => {
             </button>
           </div>
         </div>
-        
+
         {/* Results count */}
         <div className="mt-4 text-sm text-dream-600">
           {filteredQualities.length} de {sortedQualities.length} cualidades
@@ -170,7 +171,7 @@ const MessageHistory: React.FC = () => {
       <div className="space-y-6">
         {filteredQualities.map((quality, index) => {
           const dateRange = getWeekDateRange(quality.week, quality.year);
-          
+
           return (
             <motion.div
               key={`${quality.year}-${quality.week}`}
