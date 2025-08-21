@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import EasterEggModal from './EasterEggModal';
+import AmorEasterEggModal from './AmorEasterEggModal';
 
 const targetSequence = ['a', 'm', 'o', 'r']; // "AMOR" sequence
 const sequenceTimeout = 3000; // 3 seconds timeout between keys
@@ -59,7 +59,7 @@ const EasterEggKeyboardListener: React.FC = () => {
 
     return (
         <>
-            {showEasterEgg && <EasterEggModal onClose={handleClose} />}
+            {showEasterEgg && <AmorEasterEggModal onClose={handleClose} />}
         </>
     );
 };
