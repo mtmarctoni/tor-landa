@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/sections/Header";
 import Footer from "@/sections/Footer";
 import SurrealistBackground from "@/components/SurrealistBackground";
+import EasterEggKeyboardListener from "@/components/EasterEggKeyboardListener";
 import { QualityProvider } from "@/context/QualityContext";
 
 const geistSans = Geist({
@@ -39,6 +40,7 @@ export default function RootLayout({
             </div>
           </div>
           <Footer />
+          <EasterEggKeyboardListener />
         </QualityProvider>
       </body>
     </html>
