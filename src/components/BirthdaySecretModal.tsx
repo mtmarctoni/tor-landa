@@ -35,7 +35,7 @@ const BirthdaySecretModal: React.FC<BirthdaySecretModalProps> = ({ isOpen, onClo
                     setError('');
                 }, 3000);
             } else {
-                setError('Mmm... no es esa. Piensa en un lugar especial ✨');
+                setError('Mmm... no es esa. Piensa en un 2 números especiales ✨');
                 setPassword('');
             }
         }
@@ -148,7 +148,7 @@ const BirthdaySecretModal: React.FC<BirthdaySecretModalProps> = ({ isOpen, onClo
                             </motion.button>
 
                             <p className="text-xs text-center text-rose-400">
-                                Pista: El mensaje tiene la respuesta 💫
+                                Pista: ya lo has usado alguna vez 💫
                             </p>
                         </form>
 
