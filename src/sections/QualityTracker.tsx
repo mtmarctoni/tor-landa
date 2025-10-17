@@ -9,6 +9,8 @@ import LoadingQuality from '@/components/LoadingQuality';
 import NoQualityInPast from '@/components/NoQualityInPast';
 import BirthdayCountdown from '@/components/BirthdayCountdown';
 import BirthdayConfetti from '@/components/BirthdayConfetti';
+import BirthdaySecretModal from '@/components/BirthdaySecretModal';
+import BirthdayGalleryModal from '@/components/BirthdayGalleryModal';
 import { getCurrentWeekAndYear, isLandaBirthdayWeek, isLandaBirthday } from '@/utils/dateFormatter';
 import { useQualityContext } from '@/context/QualityContext';
 
@@ -20,9 +22,25 @@ const QualityTracker: React.FC = () => {
     const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
     const cardRef = useRef<HTMLDivElement>(null);
 
+    // Birthday modal states
+    const [showSecretModal, setShowSecretModal] = useState(false);
+    const [showGalleryModal, setShowGalleryModal] = useState(false);
+
     // Check if currently viewing birthday week
     const isBirthdayWeek = isLandaBirthdayWeek(week, year);
     const isBirthdayToday = isLandaBirthday();
+
+    // Birthday modal handlers
+    const handleSecretClick = () => {
+        setShowSecretModal(true);
+    };
+
+    const handlePasswordSuccess = () => {
+        setShowSecretModal(false);
+        setTimeout(() => {
+            setShowGalleryModal(true);
+        }, 300);
+    };
 
     // Keyboard navigation
     useEffect(() => {
@@ -124,10 +142,26 @@ const QualityTracker: React.FC = () => {
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         className="w-full"
                     >
-                        <QualityCard entry={currentQuality} isLatest={true} />
+                        <QualityCard 
+                            entry={currentQuality} 
+                            isLatest={true} 
+                            onSecretClick={handleSecretClick}
+                        />
                     </motion.div>
                 )}
             </div>
+
+            {/* Birthday Modals */}
+            <BirthdaySecretModal
+                isOpen={showSecretModal}
+                onClose={() => setShowSecretModal(false)}
+                onSuccess={handlePasswordSuccess}
+            />
+
+            <BirthdayGalleryModal
+                isOpen={showGalleryModal}
+                onClose={() => setShowGalleryModal(false)}
+            />
         </motion.div>
     );
 };

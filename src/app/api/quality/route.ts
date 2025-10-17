@@ -64,7 +64,7 @@ const mockQualities: QualityEntry[] = [
     week: 43,
     year: 2025,
     message:
-      "En este día especial, celebramos no solo tu existencia, sino la luz que traes al mundo. Cada momento contigo es un regalo que transforma lo ordinario en extraordinario. ¡Feliz cumpleaños, Landa! Que este nuevo año de vida esté lleno de sueños cumplidos, sonrisas compartidas y el amor que tanto mereces. 🎂✨💖",
+      "En este día especial, celebramos la luz que traes al mundo. Cada momento contigo transforma lo ordinario en extraordinario. ¡Feliz cumpleaños, Landa! Que este año esté lleno de aventuras inolvidables, y que descubras **Berlín** en todo su esplendor. Recuerda siempre **nuestros cuatro números** que nos unen. 🎂✨💖",
   },
 ];
 

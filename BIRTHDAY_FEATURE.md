@@ -48,6 +48,7 @@ A special birthday feature has been implemented to celebrate Landa's birthday on
   - Title changes to "¡Feliz Cumpleaños, Landa!"
   - Emoji decoration: 🎂✨🎉
   - Pink/rose text colors
+- **🎁 Easter Egg**: Clickable "Berlín" word (see EASTER_EGG_DOCS.md)
   - Animated pulsing emojis
 
 ### 6. **Updated Quality Tracker** (`src/sections/QualityTracker.tsx`)
@@ -123,9 +124,11 @@ A special birthday feature has been implemented to celebrate Landa's birthday on
 2. ✅ `src/utils/qualityColorCombos.ts` - Birthday color theme
 3. ✅ `src/components/BirthdayConfetti.tsx` - NEW: Confetti animation
 4. ✅ `src/components/BirthdayCountdown.tsx` - NEW: Countdown widget
-5. ✅ `src/components/QualityCard.tsx` - Birthday detection and styling
-6. ✅ `src/sections/QualityTracker.tsx` - Birthday features integration
-7. ✅ `src/app/api/quality/route.ts` - Special birthday message
+5. ✅ `src/components/BirthdaySecretModal.tsx` - NEW: Password modal for easter egg
+6. ✅ `src/components/BirthdayGalleryModal.tsx` - NEW: Secret photo gallery
+7. ✅ `src/components/QualityCard.tsx` - Birthday detection, styling, and easter egg
+8. ✅ `src/sections/QualityTracker.tsx` - Birthday features integration
+9. ✅ `src/app/api/quality/route.ts` - Special birthday message with Berlin hint
 
 ## Future Enhancements (Optional)
 

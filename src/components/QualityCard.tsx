@@ -11,9 +11,10 @@ import { qualityColorCombos, birthdayColorCombo } from '@/utils/qualityColorComb
 interface QualityCardProps {
     entry: QualityEntry;
     isLatest: boolean;
+    onSecretClick?: () => void;
 }
 
-const QualityCard: React.FC<QualityCardProps> = ({ entry }) => {
+const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
     const [isHovered, setIsHovered] = useState(false);
     
     // Check if this is Landa's birthday week
@@ -22,6 +23,60 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry }) => {
     // Use birthday colors if it's birthday week, otherwise use deterministic random color
     const colorIndex = ((entry.week ?? 0) + (entry.year ?? 0)) % qualityColorCombos.length;
     const color = isBirthdayWeek ? birthdayColorCombo : qualityColorCombos[colorIndex];
+
+    const handleSecretClick = () => {
+        if (onSecretClick) {
+            onSecretClick();
+        }
+    };
+
+    // Function to render message with clickable hints
+    const renderMessage = (message: string) => {
+        if (!isBirthdayWeek) {
+            return message;
+        }
+
+        // Split by both Berlín and nuestros cuatro números
+        const regex = /(Berlín|nuestros cuatro números)/g;
+        const parts = message.split(regex);
+        
+        return parts.map((part, index) => {
+            if (part === 'Berlín' || part === 'nuestros cuatro números') {
+                return (
+                    <motion.span
+                        key={index}
+                        onClick={handleSecretClick}
+                        className="font-bold cursor-pointer relative inline-block"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                            background: 'linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            textShadow: '0 0 20px rgba(251, 191, 36, 0.5)',
+                        }}
+                    >
+                        {part}
+                        <motion.span
+                            className="absolute -top-1 -right-1 text-xs"
+                            animate={{
+                                rotate: [0, 360],
+                                scale: [1, 1.2, 1]
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                            }}
+                        >
+                            ✨
+                        </motion.span>
+                    </motion.span>
+                );
+            }
+            return part;
+        });
+    };
 
 
     return (
@@ -137,7 +192,7 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry }) => {
                     animate={{ opacity: 1, y: 0 }}
                 >
                     <span className={`${isBirthdayWeek ? 'text-rose-800' : 'text-dream-800'} text-xl leading-relaxed drop-shadow-[0_1px_4px_#0ea5e955] text-center`}>
-                        {entry.message}
+                        {renderMessage(entry.message)}
                     </span>
                 </motion.div>
             </div>
