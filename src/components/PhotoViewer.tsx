@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Photo } from '@/types';
 
 interface PhotoViewerProps {
@@ -18,6 +18,16 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     onNext,
     onPrev
 }) => {
+    const handlePanEnd = (event: any, info: PanInfo) => {
+        const swipeThreshold = 50;
+        
+        if (info.offset.x > swipeThreshold) {
+            onPrev();
+        } else if (info.offset.x < -swipeThreshold) {
+            onNext();
+        }
+    };
+
     if (photos.length === 0) {
         return (
             <div className="text-center p-8">
@@ -36,7 +46,11 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -100 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    className="w-full h-full flex items-center justify-center p-8 relative"
+                    className="w-full h-full flex items-center justify-center p-2 md:p-8 relative"
+                    onPanEnd={handlePanEnd}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
                 >
                     {/* Show loading spinner for individual image if not loaded */}
                     {!imageLoadStates[currentIndex] && (
@@ -54,9 +68,11 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
                     <img
                         src={photos[currentIndex].url}
                         alt={`Memory ${currentIndex + 1}`}
-                        className={`max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-opacity duration-300 ${
-                            imageLoadStates[currentIndex] ? 'opacity-100' : 'opacity-0'
-                        }`}
+                        className={`
+                            w-full h-full object-contain rounded-xl md:rounded-2xl shadow-2xl 
+                            transition-opacity duration-300 
+                            ${imageLoadStates[currentIndex] ? 'opacity-100' : 'opacity-0'}
+                        `}
                         loading="eager"
                     />
                 </motion.div>
@@ -67,21 +83,21 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
                 <>
                     <button
                         onClick={onPrev}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
+                        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 md:p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
                     >
-                        <ChevronLeft size={24} />
+                        <ChevronLeft size={20} className="md:w-6 md:h-6" />
                     </button>
                     <button
                         onClick={onNext}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
+                        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 md:p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
                     >
-                        <ChevronRight size={24} />
+                        <ChevronRight size={20} className="md:w-6 md:h-6" />
                     </button>
                 </>
             )}
 
             {/* Counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-rose-700 font-semibold shadow-lg">
+            <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm text-rose-700 font-semibold shadow-lg">
                 {currentIndex + 1} / {photos.length}
             </div>
         </>
