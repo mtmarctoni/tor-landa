@@ -3,14 +3,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Lock, Sparkles } from 'lucide-react';
+import type { BirthdaySecretModalProps } from '@/types/components';
 
 const PASSWORD = '2329';
-
-interface BirthdaySecretModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSuccess: () => void;
-}
 
 const BirthdaySecretModal: React.FC<BirthdaySecretModalProps> = ({ isOpen, onClose, onSuccess }) => {
     const [password, setPassword] = useState('');

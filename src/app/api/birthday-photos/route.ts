@@ -1,71 +1,25 @@
 import { NextResponse } from "next/server";
-import { Client } from "@notionhq/client";
-
-const notion = new Client({ auth: process.env.NOTION_API_KEY! });
-const birthdayPhotosDbId = process.env.BIRTHDAY_PHOTOS_DB_ID!;
-
-interface Photo {
-  url: string;
-  caption: string;
-}
+import { notionService } from "@/services/notionService";
 
 export async function GET() {
   try {
-    // Query the birthday photos database
-    const response = await notion.databases.query({
-      database_id: birthdayPhotosDbId,
-      filter: {
-        property: "Active",
-        checkbox: {
-          equals: true,
-        },
-      },
-      sorts: [
+    // Check if birthday photos database is configured
+    if (!notionService.isBirthdayPhotosConfigured()) {
+      return NextResponse.json(
         {
-          property: "Order",
-          direction: "ascending",
+          error: "Birthday photos database is not configured",
+          photos: [],
+          count: 0,
         },
-      ],
-    });
+        { status: 500 }
+      );
+    }
 
-    // Process the results
-    const photos: Photo[] = response.results.map((page: any) => {
-      // Extract caption
-      let caption = "";
-      if (page.properties.Caption && page.properties.Caption.rich_text) {
-        caption = page.properties.Caption.rich_text
-          .map((text: any) => text.plain_text)
-          .join("");
-      }
-
-      // Extract image URL
-      let url = "";
-      if (
-        page.properties.Image &&
-        page.properties.Image.files &&
-        page.properties.Image.files.length > 0
-      ) {
-        const file = page.properties.Image.files[0];
-        // Check if it's an external file or Notion-hosted file
-        if (file.type === "external") {
-          url = file.external.url;
-        } else if (file.type === "file") {
-          url = file.file.url;
-        }
-      }
-
-      return {
-        url,
-        caption: caption || "Un momento especial 💖",
-      };
-    });
-
-    // Filter out photos without URLs
-    const validPhotos = photos.filter((photo) => photo.url);
+    const photos = await notionService.getBirthdayPhotos();
 
     return NextResponse.json({
-      photos: validPhotos,
-      count: validPhotos.length,
+      photos,
+      count: photos.length,
     });
   } catch (error) {
     console.error("Error fetching birthday photos:", error);

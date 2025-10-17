@@ -2,13 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import type { SimpleModalProps } from '@/types/components';
 
-interface EasterEggModalProps {
-    onClose: () => void;
-}
-
-
-const EasterEggModal: React.FC<EasterEggModalProps> = ({ onClose }) => {
+const EasterEggModal: React.FC<SimpleModalProps> = ({ onClose }) => {
     if (typeof window === 'undefined') return null;
     return ReactDOM.createPortal(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

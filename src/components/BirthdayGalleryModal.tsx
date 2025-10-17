@@ -3,16 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
-
-interface Photo {
-    url: string;
-    caption?: string;
-}
-
-interface BirthdayGalleryModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
+import type { Photo } from '@/types';
+import type { BirthdayGalleryModalProps } from '@/types/components';
 
 const BirthdayGalleryModal: React.FC<BirthdayGalleryModalProps> = ({ isOpen, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);

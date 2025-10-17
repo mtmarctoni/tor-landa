@@ -6,6 +6,11 @@ export interface QualityEntry {
     message: string;
 }
 
+export interface Photo {
+    url: string;
+    caption: string;
+}
+
 export type IconConfig = {
     key: string;
     Icon: React.ComponentType<{ size: number; strokeWidth: number }>;
