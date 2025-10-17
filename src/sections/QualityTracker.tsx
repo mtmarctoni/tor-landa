@@ -7,7 +7,9 @@ import QualityCard from '@/components/QualityCard';
 import WaitingForQuality from '@/components/WaitingForQuality';
 import LoadingQuality from '@/components/LoadingQuality';
 import NoQualityInPast from '@/components/NoQualityInPast';
-import { getCurrentWeekAndYear } from '@/utils/dateFormatter';
+import BirthdayCountdown from '@/components/BirthdayCountdown';
+import BirthdayConfetti from '@/components/BirthdayConfetti';
+import { getCurrentWeekAndYear, isLandaBirthdayWeek, isLandaBirthday } from '@/utils/dateFormatter';
 import { useQualityContext } from '@/context/QualityContext';
 
 const QualityTracker: React.FC = () => {
@@ -17,6 +19,10 @@ const QualityTracker: React.FC = () => {
     const [year, setYear] = useState(currentYear);
     const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
     const cardRef = useRef<HTMLDivElement>(null);
+
+    // Check if currently viewing birthday week
+    const isBirthdayWeek = isLandaBirthdayWeek(week, year);
+    const isBirthdayToday = isLandaBirthday();
 
     // Keyboard navigation
     useEffect(() => {
@@ -56,23 +62,33 @@ const QualityTracker: React.FC = () => {
 
     return (
         <motion.div
-            className="max-w-3xl mx-auto"
+            className="max-w-3xl mx-auto relative"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
         >
+            {(isBirthdayWeek || isBirthdayToday) && <BirthdayConfetti />}
+            
+            <BirthdayCountdown />
+
             <div className="flex flex-col gap-2 mb-6">
                 <div className="flex justify-between items-center">
                     <button
                         onClick={handlePrev}
-                        className="px-4 py-2 bg-dream-200 text-dream-800 rounded-full shadow hover:bg-dream-300 transition-colors"
+                        className={`px-4 py-2 ${isBirthdayWeek 
+                            ? 'bg-rose-200 text-rose-800 hover:bg-rose-300' 
+                            : 'bg-dream-200 text-dream-800 hover:bg-dream-300'} rounded-full shadow transition-colors`}
                     >
                         ← Semana anterior
                     </button>
-                    <span className="text-lg text-dream-700 font-semibold">Semana {week} / {year}</span>
+                    <span className={`text-lg ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} font-semibold`}>
+                        Semana {week} / {year}
+                    </span>
                     <button
                         onClick={handleNext}
-                        className="px-4 py-2 bg-dream-200 text-dream-800 rounded-full shadow hover:bg-dream-300 transition-colors"
+                        className={`px-4 py-2 ${isBirthdayWeek 
+                            ? 'bg-rose-200 text-rose-800 hover:bg-rose-300' 
+                            : 'bg-dream-200 text-dream-800 hover:bg-dream-300'} rounded-full shadow transition-colors`}
                     >
                         Siguiente semana →
                     </button>
@@ -80,7 +96,9 @@ const QualityTracker: React.FC = () => {
                 {/* Progress bar */}
                 <div className="w-full h-3 bg-dream-100 rounded-full overflow-hidden shadow-inner">
                     <motion.div
-                        className="h-full bg-gradient-to-r from-dream-400 via-dream-200 to-dream-600"
+                        className={`h-full ${isBirthdayWeek 
+                            ? 'bg-gradient-to-r from-rose-400 via-pink-300 to-amber-400' 
+                            : 'bg-gradient-to-r from-dream-400 via-dream-200 to-dream-600'}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${progress * 100}%` }}
                         transition={{ duration: 0.5 }}
