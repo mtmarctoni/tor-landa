@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import type { BirthdayGalleryModalProps } from '@/types/components';
+import type { BaseModalProps } from '@/types/components';
 import { useImagePreloader } from '@/hooks/useImagePreloader';
 import { useBirthdayPhotos } from '@/hooks/useBirthdayPhotos';
 import BirthdayConfetti from './BirthdayConfetti';
@@ -11,12 +11,12 @@ import GalleryLoading from './GalleryLoading';
 import PhotoViewer from './PhotoViewer';
 import PhotoCaption from './PhotoCaption';
 
-const BirthdayGalleryModal: React.FC<BirthdayGalleryModalProps> = ({ isOpen, onClose }) => {
+const BirthdayGalleryModal: React.FC<BaseModalProps> = ({ isOpen, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showConfetti, setShowConfetti] = useState(true);
     
     // Custom hooks for data and preloading
-    const { photos, loading, error } = useBirthdayPhotos(isOpen);
+    const { photos, loading } = useBirthdayPhotos(isOpen);
     const { imageLoadStates, preloadImages, clearPreloadedImages, resetLoadStates } = useImagePreloader();
     
     // Calculate loading progress

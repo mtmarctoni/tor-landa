@@ -6,7 +6,14 @@ const nextConfig: NextConfig = {
     NOTION_DB_ID: process.env.NOTION_DB_ID,
     BIRTHDAY_PHOTOS_DB_ID: process.env.BIRTHDAY_PHOTOS_DB_ID,
   },
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "prod-files-secure.s3.us-west-2.amazonaws.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Photo } from '@/types';
@@ -18,7 +19,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     onNext,
     onPrev
 }) => {
-    const handlePanEnd = (event: any, info: PanInfo) => {
+    const handlePanEnd = (_event: Event, info: PanInfo) => {
         const swipeThreshold = 50;
         
         if (info.offset.x > swipeThreshold) {
@@ -65,15 +66,14 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
                         </div>
                     )}
                     
-                    <img
+                    <Image
                         src={photos[currentIndex].url}
                         alt={`Memory ${currentIndex + 1}`}
-                        className={`
-                            w-full h-full object-contain rounded-xl md:rounded-2xl shadow-2xl 
-                            transition-opacity duration-300 
-                            ${imageLoadStates[currentIndex] ? 'opacity-100' : 'opacity-0'}
-                        `}
-                        loading="eager"
+                        className={`w-full h-full object-contain rounded-xl md:rounded-2xl shadow-2xl transition-opacity duration-300 ${imageLoadStates[currentIndex] ? 'opacity-100' : 'opacity-0'}`}
+                        fill
+                        sizes="(max-width: 768px) 90vw, 70vw"
+                        priority
+                        style={{ objectFit: 'contain' }}
                     />
                 </motion.div>
             </AnimatePresence>

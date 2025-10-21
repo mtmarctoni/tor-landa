@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import type { Photo } from "@/types";
 
 export interface UseImagePreloaderReturn {
   imageLoadStates: { [key: number]: boolean };

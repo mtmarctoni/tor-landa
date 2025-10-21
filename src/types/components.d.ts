@@ -18,7 +18,3 @@ export interface BaseComponentProps {
 export interface BirthdaySecretModalProps extends BaseModalProps {
   onSuccess: () => void;
 }
-
-export interface BirthdayGalleryModalProps extends BaseModalProps {
-  // No additional props needed for gallery modal
-}

@@ -4,7 +4,6 @@ import React from 'react';
  * SurrealistContainer - a reusable container for surrealist, dreamy UI.
  * Usage: Wrap your content/components with <SurrealistContainer> ... </SurrealistContainer>
  */
-import { ReactNode } from 'react';
 import type { BaseComponentProps } from '@/types/components';
 
 const SurrealistContainer = ({ children, className = '' }: BaseComponentProps) => (

@@ -1,5 +1,6 @@
 import { Client } from "@notionhq/client";
 import type {
+  NotionPage,
   NotionResponse,
   NotionText,
   NotionTitleProperty,
@@ -118,24 +119,31 @@ class NotionService {
       });
 
       // Process the results
-      const photos: Photo[] = response.results.map((page: any) => {
+      const photos: Photo[] = response.results.map((p) => {
+        const page = p as NotionPage;
         // Extract caption
         let caption = "";
-        if (page.properties.Caption && page.properties.Caption.rich_text) {
-          caption = page.properties.Caption.rich_text
-            .map((text: any) => text.plain_text)
+        const captionProp = page.properties.Caption;
+        if (
+          captionProp &&
+          captionProp.type === "rich_text" &&
+          Array.isArray(captionProp.rich_text)
+        ) {
+          caption = captionProp.rich_text
+            .map((text) => ("plain_text" in text ? text.plain_text : ""))
             .join("");
         }
 
         // Extract image URL
         let url = "";
+        const imageProp = page.properties.Image;
         if (
-          page.properties.Image &&
-          page.properties.Image.files &&
-          page.properties.Image.files.length > 0
+          imageProp &&
+          "files" in imageProp &&
+          Array.isArray(imageProp.files) &&
+          imageProp.files.length > 0
         ) {
-          const file = page.properties.Image.files[0];
-          // Check if it's an external file or Notion-hosted file
+          const file = imageProp.files[0];
           if (file.type === "external") {
             url = file.external.url;
           } else if (file.type === "file") {
@@ -143,10 +151,11 @@ class NotionService {
           }
         }
 
-        return {
+        const photo: Photo = {
           url,
           caption: caption || "Un momento especial 💖",
         };
+        return photo;
       });
 
       // Filter out photos without URLs
