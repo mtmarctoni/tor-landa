@@ -5,9 +5,14 @@ import { motion } from 'framer-motion';
 
 import QualityCard from '@/components/QualityCard';
 import WaitingForQuality from '@/components/WaitingForQuality';
+import WaitingForBirthday from '@/components/WaitingForBirthday';
 import LoadingQuality from '@/components/LoadingQuality';
 import NoQualityInPast from '@/components/NoQualityInPast';
-import { getCurrentWeekAndYear } from '@/utils/dateFormatter';
+import BirthdayCountdown from '@/components/BirthdayCountdown';
+import BirthdayConfetti from '@/components/BirthdayConfetti';
+import BirthdaySecretModal from '@/components/BirthdaySecretModal';
+import BirthdayGalleryModal from '@/components/BirthdayGalleryModal';
+import { getCurrentWeekAndYear, isLandaBirthdayWeek, isLandaBirthday, getLandaBirthdayWeek } from '@/utils/dateFormatter';
 import { useQualityContext } from '@/context/QualityContext';
 
 const QualityTracker: React.FC = () => {
@@ -17,6 +22,26 @@ const QualityTracker: React.FC = () => {
     const [year, setYear] = useState(currentYear);
     const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
     const cardRef = useRef<HTMLDivElement>(null);
+
+    // Birthday modal states
+    const [showSecretModal, setShowSecretModal] = useState(false);
+    const [showGalleryModal, setShowGalleryModal] = useState(false);
+
+    // Check if currently viewing birthday week
+    const isBirthdayWeek = isLandaBirthdayWeek(week, year);
+    const isBirthdayToday = isLandaBirthday();
+
+    // Birthday modal handlers
+    const handleSecretClick = () => {
+        setShowSecretModal(true);
+    };
+
+    const handlePasswordSuccess = () => {
+        setShowSecretModal(false);
+        setTimeout(() => {
+            setShowGalleryModal(true);
+        }, 300);
+    };
 
     // Keyboard navigation
     useEffect(() => {
@@ -51,28 +76,42 @@ const QualityTracker: React.FC = () => {
     const currentQuality = qualities.find(q => q.week === week && q.year === year) || null;
     const isPast = year < currentYear || (year === currentYear && week < currentWeek);
 
+    // Check if we're in week 43 but before the birthday (October 23rd)
+    const birthdayWeek = getLandaBirthdayWeek(year);
+    const isWeek43BeforeBirthday = week === birthdayWeek.week && year === birthdayWeek.year && !isBirthdayWeek;
+
     // Progress bar for the year
     const progress = Math.min(week / 52, 1);
 
     return (
         <motion.div
-            className="max-w-3xl mx-auto"
+            className="max-w-3xl mx-auto relative"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
         >
+            {(isBirthdayWeek || isBirthdayToday) && <BirthdayConfetti />}
+            
+            <BirthdayCountdown />
+
             <div className="flex flex-col gap-2 mb-6">
                 <div className="flex justify-between items-center">
                     <button
                         onClick={handlePrev}
-                        className="px-4 py-2 bg-dream-200 text-dream-800 rounded-full shadow hover:bg-dream-300 transition-colors"
+                        className={`px-4 py-2 ${isBirthdayWeek 
+                            ? 'bg-rose-200 text-rose-800 hover:bg-rose-300' 
+                            : 'bg-dream-200 text-dream-800 hover:bg-dream-300'} rounded-full shadow transition-colors`}
                     >
                         ← Semana anterior
                     </button>
-                    <span className="text-lg text-dream-700 font-semibold">Semana {week} / {year}</span>
+                    <span className={`text-lg ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} font-semibold`}>
+                        Semana {week} / {year}
+                    </span>
                     <button
                         onClick={handleNext}
-                        className="px-4 py-2 bg-dream-200 text-dream-800 rounded-full shadow hover:bg-dream-300 transition-colors"
+                        className={`px-4 py-2 ${isBirthdayWeek 
+                            ? 'bg-rose-200 text-rose-800 hover:bg-rose-300' 
+                            : 'bg-dream-200 text-dream-800 hover:bg-dream-300'} rounded-full shadow transition-colors`}
                     >
                         Siguiente semana →
                     </button>
@@ -80,7 +119,9 @@ const QualityTracker: React.FC = () => {
                 {/* Progress bar */}
                 <div className="w-full h-3 bg-dream-100 rounded-full overflow-hidden shadow-inner">
                     <motion.div
-                        className="h-full bg-gradient-to-r from-dream-400 via-dream-200 to-dream-600"
+                        className={`h-full ${isBirthdayWeek 
+                            ? 'bg-gradient-to-r from-rose-400 via-pink-300 to-amber-400' 
+                            : 'bg-gradient-to-r from-dream-400 via-dream-200 to-dream-600'}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${progress * 100}%` }}
                         transition={{ duration: 0.5 }}
@@ -94,9 +135,10 @@ const QualityTracker: React.FC = () => {
             <div className="relative min-h-[350px] flex items-center justify-center">
                 {loading && <LoadingQuality />}
                 {error && <div className="text-center text-red-500 py-8">{error}</div>}
-                {!loading && !error && !currentQuality && isPast && <NoQualityInPast />}
-                {!loading && !error && !currentQuality && !isPast && <WaitingForQuality />}
-                {!loading && !error && currentQuality && (
+                {!loading && !error && isWeek43BeforeBirthday && <WaitingForBirthday />}
+                {!loading && !error && !isWeek43BeforeBirthday && !currentQuality && isPast && <NoQualityInPast />}
+                {!loading && !error && !isWeek43BeforeBirthday && !currentQuality && !isPast && <WaitingForQuality />}
+                {!loading && !error && !isWeek43BeforeBirthday && currentQuality && (
                     <motion.div
                         key={`${week}-${year}`}
                         ref={cardRef}
@@ -106,10 +148,26 @@ const QualityTracker: React.FC = () => {
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         className="w-full"
                     >
-                        <QualityCard entry={currentQuality} isLatest={true} />
+                        <QualityCard 
+                            entry={currentQuality} 
+                            isLatest={true} 
+                            onSecretClick={handleSecretClick}
+                        />
                     </motion.div>
                 )}
             </div>
+
+            {/* Birthday Modals */}
+            <BirthdaySecretModal
+                isOpen={showSecretModal}
+                onClose={() => setShowSecretModal(false)}
+                onSuccess={handlePasswordSuccess}
+            />
+
+            <BirthdayGalleryModal
+                isOpen={showGalleryModal}
+                onClose={() => setShowGalleryModal(false)}
+            />
         </motion.div>
     );
 };

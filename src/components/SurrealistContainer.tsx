@@ -4,14 +4,9 @@ import React from 'react';
  * SurrealistContainer - a reusable container for surrealist, dreamy UI.
  * Usage: Wrap your content/components with <SurrealistContainer> ... </SurrealistContainer>
  */
-import { ReactNode } from 'react';
+import type { BaseComponentProps } from '@/types/components';
 
-interface SurrealistContainerProps {
-    children: ReactNode;
-    className?: string;
-}
-
-const SurrealistContainer = ({ children, className = '' }: SurrealistContainerProps) => (
+const SurrealistContainer = ({ children, className = '' }: BaseComponentProps) => (
     <div
         className={`relative overflow-hidden p-8 md:p-12 bg-surreal-gradient shadow-surreal backdrop-blur-md border border-white/20 animate-blob-morph rounded-[60%_40%_30%_70%/60%_30%_70%_40%] ${className}`}
         style={{ minHeight: '320px', minWidth: '320px' }}
