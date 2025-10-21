@@ -27,19 +27,6 @@ const WaitingForBirthday: React.FC = () => {
                 <Sparkles className="w-8 h-8 text-amber-400" />
             </h2>
 
-            {/* <motion.div
-                className="mb-6 text-center"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            >
-                <p className="text-2xl font-semibold text-rose-600 mb-2">
-                    ¡Esta semana hay una sorpresa! 🎂
-                </p>
-                <p className="text-lg text-dream-700">
-                    El jueves 23 de octubre algo mágico sucederá aquí...
-                </p>
-            </motion.div> */}
-
             <motion.div
                 className="flex items-center gap-2 bg-gradient-to-r from-rose-100 to-pink-100 px-6 py-3 rounded-full shadow-lg"
                 animate={{ y: [0, -5, 0] }}
@@ -58,7 +45,7 @@ const WaitingForBirthday: React.FC = () => {
                 transition={{ delay: 1, duration: 1 }}
             >
                 <p className="text-sm text-dream-500 italic">
-                    Puede que los mensages perdidos vuelven este día...
+                    Puede que los mensajes perdidos vuelvan este día...
                 </p>
             </motion.div>
         </motion.div>
