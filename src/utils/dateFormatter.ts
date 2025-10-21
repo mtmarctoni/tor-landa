@@ -40,7 +40,21 @@ export const getLandaBirthdayWeek = (year: number) => {
 
 export const isLandaBirthdayWeek = (week: number, year: number) => {
   const birthdayWeek = getLandaBirthdayWeek(year);
-  return week === birthdayWeek.week && year === birthdayWeek.year;
+  const isCorrectWeek =
+    week === birthdayWeek.week && year === birthdayWeek.year;
+
+  // Only show birthday message from October 23rd onwards
+  if (isCorrectWeek) {
+    const today = new Date();
+    const birthdayDate = new Date(
+      year,
+      LANDA_BIRTHDAY.month - 1,
+      LANDA_BIRTHDAY.day
+    );
+    return today >= birthdayDate;
+  }
+
+  return false;
 };
 
 export const isLandaBirthday = (date = new Date()) => {

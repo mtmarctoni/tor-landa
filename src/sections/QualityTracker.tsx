@@ -5,13 +5,14 @@ import { motion } from 'framer-motion';
 
 import QualityCard from '@/components/QualityCard';
 import WaitingForQuality from '@/components/WaitingForQuality';
+import WaitingForBirthday from '@/components/WaitingForBirthday';
 import LoadingQuality from '@/components/LoadingQuality';
 import NoQualityInPast from '@/components/NoQualityInPast';
 import BirthdayCountdown from '@/components/BirthdayCountdown';
 import BirthdayConfetti from '@/components/BirthdayConfetti';
 import BirthdaySecretModal from '@/components/BirthdaySecretModal';
 import BirthdayGalleryModal from '@/components/BirthdayGalleryModal';
-import { getCurrentWeekAndYear, isLandaBirthdayWeek, isLandaBirthday } from '@/utils/dateFormatter';
+import { getCurrentWeekAndYear, isLandaBirthdayWeek, isLandaBirthday, getLandaBirthdayWeek } from '@/utils/dateFormatter';
 import { useQualityContext } from '@/context/QualityContext';
 
 const QualityTracker: React.FC = () => {
@@ -75,6 +76,10 @@ const QualityTracker: React.FC = () => {
     const currentQuality = qualities.find(q => q.week === week && q.year === year) || null;
     const isPast = year < currentYear || (year === currentYear && week < currentWeek);
 
+    // Check if we're in week 43 but before the birthday (October 23rd)
+    const birthdayWeek = getLandaBirthdayWeek(year);
+    const isWeek43BeforeBirthday = week === birthdayWeek.week && year === birthdayWeek.year && !isBirthdayWeek;
+
     // Progress bar for the year
     const progress = Math.min(week / 52, 1);
 
@@ -130,9 +135,10 @@ const QualityTracker: React.FC = () => {
             <div className="relative min-h-[350px] flex items-center justify-center">
                 {loading && <LoadingQuality />}
                 {error && <div className="text-center text-red-500 py-8">{error}</div>}
-                {!loading && !error && !currentQuality && isPast && <NoQualityInPast />}
-                {!loading && !error && !currentQuality && !isPast && <WaitingForQuality />}
-                {!loading && !error && currentQuality && (
+                {!loading && !error && isWeek43BeforeBirthday && <WaitingForBirthday />}
+                {!loading && !error && !isWeek43BeforeBirthday && !currentQuality && isPast && <NoQualityInPast />}
+                {!loading && !error && !isWeek43BeforeBirthday && !currentQuality && !isPast && <WaitingForQuality />}
+                {!loading && !error && !isWeek43BeforeBirthday && currentQuality && (
                     <motion.div
                         key={`${week}-${year}`}
                         ref={cardRef}
