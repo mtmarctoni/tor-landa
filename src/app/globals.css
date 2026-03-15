@@ -2,6 +2,22 @@
 
 @theme {
   /* Paleta dream */
+
+  /* Paleta rose (Tailwind rose-100, rose-200, rose-300, rose-400, rose-700, rose-800, rose-900) */
+  --color-rose-100: #ffe4e6;
+  --color-rose-200: #fecdd3;
+  --color-rose-300: #fda4af;
+  --color-rose-400: #fb7185;
+  --color-rose-700: #be123c;
+  --color-rose-800: #9f1239;
+  --color-rose-900: #881337;
+
+  /* Paleta pink (Tailwind pink-300) */
+  --color-pink-300: #f9a8d4;
+
+  /* Paleta amber (Tailwind amber-400) */
+  --color-amber-400: #fbbf24;
+
   --color-dream-50: #e0f2fe;
   --color-dream-100: #bde0fe;
   --color-dream-200: #9eceff;
