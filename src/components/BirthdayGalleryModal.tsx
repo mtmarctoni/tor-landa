@@ -32,7 +32,7 @@ const BirthdayGalleryModal: React.FC<BaseModalProps> = ({ isOpen, onClose }) => 
     // Handle confetti animation
     useEffect(() => {
         if (isOpen) {
-            setShowConfetti(true);
+            queueMicrotask(() => setShowConfetti(true));
             setTimeout(() => setShowConfetti(false), 5000);
         }
     }, [isOpen]);
@@ -40,7 +40,7 @@ const BirthdayGalleryModal: React.FC<BaseModalProps> = ({ isOpen, onClose }) => 
     // Reset states when modal closes
     useEffect(() => {
         if (!isOpen) {
-            setCurrentIndex(0);
+            queueMicrotask(() => setCurrentIndex(0));
             resetLoadStates();
         }
     }, [isOpen, resetLoadStates]);

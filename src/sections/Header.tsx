@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const Header: React.FC = () => {
     return (
-        <header className="py-8 px-4 bg-gradient-to-r from-dream-900/10 to-dream-700/10 backdrop-blur-lg border-b border-dream-200 sticky top-0 z-10 overflow-hidden">
+        <header className="sticky top-0 z-20 overflow-hidden border-b border-dream-200/80 bg-gradient-to-r from-dream-900/10 to-dream-700/10 px-4 py-6 backdrop-blur-lg">
             <div className="container mx-auto flex items-center justify-center relative">
                 <motion.div
                     className="absolute top-0 right-4 text-dream-400"
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
                     <Star size={16} />
                 </motion.div>
 
-                <h1 className="text-4xl md:text-5xl font-serif text-dream-800 tracking-tight italic">
+                <h1 className="text-center text-3xl font-serif italic tracking-tight text-dream-800 sm:text-4xl md:text-5xl">
                     Cualidades de Landa
                 </h1>
             </div>

@@ -5,13 +5,15 @@ import { motion } from 'framer-motion';
 import { Heart, Star, Sparkles } from 'lucide-react';
 
 const BirthdayConfetti: React.FC = () => {
-    const confettiItems = Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        Icon: [Heart, Star, Sparkles][i % 3],
-        delay: Math.random() * 2,
-        duration: 3 + Math.random() * 2,
-        x: Math.random() * 100,
-    }));
+    const [confettiItems] = React.useState(() =>
+        Array.from({ length: 20 }, (_, i) => ({
+            id: i,
+            Icon: [Heart, Star, Sparkles][i % 3],
+            delay: Math.random() * 2,
+            duration: 3 + Math.random() * 2,
+            x: Math.random() * 100,
+        }))
+    );
 
     return (
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-50">

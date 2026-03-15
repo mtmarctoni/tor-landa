@@ -3,7 +3,7 @@ import QualityTracker from "@/sections/QualityTracker";
 
 export default function Home() {
   return (
-    <main className="flex-1 container mx-auto px-4 py-12">
+    <main className="container mx-auto flex-1 px-4 py-8 sm:py-12">
       <QualityTracker />
       <HistoryButton />
     </main>
