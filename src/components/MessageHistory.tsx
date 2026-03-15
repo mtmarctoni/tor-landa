@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Calendar, User, Download } from 'lucide-react';
+import { Search, Calendar, User, Download, ArrowDownAZ } from 'lucide-react';
 
 import { QualityEntry } from '@/types/index';
 import { format } from '@/utils/dateFormatter';
@@ -12,11 +12,11 @@ const MessageHistory: React.FC = () => {
   const { qualities, loading, error } = useQualityContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterYear, setFilterYear] = useState<number | ''>('');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
-  // Sort qualities by year and week ascending (oldest first for chronological order)
   const sortedQualities = [...qualities].sort((a: QualityEntry, b: QualityEntry) => {
-    if (a.year !== b.year) return a.year - b.year;
-    return a.week - b.week;
+    if (a.year !== b.year) return sortOrder === 'oldest' ? a.year - b.year : b.year - a.year;
+    return sortOrder === 'oldest' ? a.week - b.week : b.week - a.week;
   });
 
   // Filter qualities based on search and year filter
@@ -72,13 +72,12 @@ const MessageHistory: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <motion.div
-          className="text-dream-600 text-lg"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          Cargando historia de cualidades...
+      <div className="surface-card py-12">
+        <motion.div className="mx-auto max-w-3xl space-y-3 px-6" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.6, repeat: Infinity }}>
+          <div className="h-5 w-1/3 rounded-full bg-dream-200" />
+          <div className="h-4 w-full rounded-full bg-dream-100" />
+          <div className="h-4 w-5/6 rounded-full bg-dream-100" />
+          <div className="h-4 w-2/3 rounded-full bg-dream-100" />
         </motion.div>
       </div>
     );
@@ -87,8 +86,10 @@ const MessageHistory: React.FC = () => {
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-500 text-lg mb-4">Error al cargar la historia</div>
-        <div className="text-dream-600">{error}</div>
+        <div className="surface-card mx-auto max-w-2xl px-6 py-8">
+          <div className="text-red-600 text-lg mb-4">Error al cargar la historia</div>
+          <div className="text-dream-700">{error}</div>
+        </div>
       </div>
     );
   }
@@ -96,7 +97,9 @@ const MessageHistory: React.FC = () => {
   if (sortedQualities.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-dream-600 text-lg">No se encontraron cualidades en la historia.</div>
+        <div className="surface-card mx-auto max-w-2xl px-6 py-8 text-dream-700 text-lg">
+          No se encontraron cualidades en la historia.
+        </div>
       </div>
     );
   }
@@ -109,7 +112,7 @@ const MessageHistory: React.FC = () => {
       className="max-w-4xl mx-auto"
     >
       {/* Search and Filter Controls */}
-      <div className="bg-dream-50/80 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-lg border border-dream-200">
+      <div className="surface-card p-6 mb-8">
         <div className="flex flex-col lg:flex-row gap-4 items-center">
           {/* Search */}
           <div className="relative flex-1">
@@ -141,6 +144,14 @@ const MessageHistory: React.FC = () => {
           {/* Export Buttons */}
           <div className="flex gap-2">
             <button
+              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              className="flex items-center gap-2 px-4 py-3 bg-dream-100 text-dream-800 rounded-xl hover:bg-dream-200 transition-colors"
+              title="Cambiar orden"
+            >
+              <ArrowDownAZ size={16} />
+              {sortOrder === 'newest' ? 'Reciente' : 'Antiguo'}
+            </button>
+            <button
               onClick={exportAsJson}
               className="flex items-center gap-2 px-4 py-3 bg-dream-200 text-dream-800 rounded-xl hover:bg-dream-300 transition-colors"
               title="Exportar como JSON"
@@ -160,10 +171,21 @@ const MessageHistory: React.FC = () => {
         </div>
 
         {/* Results count */}
-        <div className="mt-4 text-sm text-dream-600">
+        <div className="mt-4 text-sm text-dream-600 flex flex-wrap items-center gap-2">
           {filteredQualities.length} de {sortedQualities.length} cualidades
           {searchQuery && <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>}
           {filterYear && <span> · Año: {filterYear}</span>}
+          {(searchQuery || filterYear) && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setFilterYear('');
+              }}
+              className="rounded-full bg-dream-100 px-3 py-1 text-dream-700 hover:bg-dream-200"
+            >
+              Limpiar filtros
+            </button>
+          )}
         </div>
       </div>
 
