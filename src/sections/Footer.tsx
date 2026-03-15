@@ -13,8 +13,8 @@ const Footer: React.FC = () => {
     const handleClose = () => setShowEasterEgg(false);
 
     return (
-        <footer className="py-8 px-4 bg-gradient-to-r from-white/80 via-dream-100/90 to-dream-200/80 shadow-[0_2px_24px_#38bdf855] backdrop-blur-lg border-t border-dream-200/40">
-            <div className="container mx-auto text-center relative min-h-[120px]">
+        <footer className="border-t border-dream-200/40 bg-gradient-to-r from-white/80 via-dream-100/90 to-dream-200/80 px-4 py-8 shadow-[0_2px_24px_#38bdf855] backdrop-blur-lg">
+            <div className="container relative mx-auto min-h-[120px] text-center">
                 {/* Scattered Surreal Icons */}
                 <FloatingIcons />
                 {/* Sparkles icon triggers the easter egg */}
@@ -25,6 +25,7 @@ const Footer: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleClick}
                     aria-label="Sparkles Easter Egg"
+                    title="Abrir sorpresa"
                     animate={{
                         x: [0, 34, 100, -20, 50, 0, 20, 0],
                         y: [0, 30, 100, 20, 40, 0, -1, 0],
@@ -41,7 +42,7 @@ const Footer: React.FC = () => {
                 </motion.button>
 
 
-                <p className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-base justify-center align-middle text-dream-800 font-semibold z-20">
+                <p className="absolute left-1/2 top-1/2 z-20 w-[min(90%,36rem)] -translate-x-1/2 -translate-y-1/2 text-base font-semibold text-dream-800">
                     Capturando momentos en el paisaje onírico del tiempo
                 </p>
             </div>

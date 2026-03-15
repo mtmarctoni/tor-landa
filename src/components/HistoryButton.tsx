@@ -8,7 +8,7 @@ import { History } from 'lucide-react';
 const HistoryButton: React.FC = () => {
   return (
     <motion.div
-      className="fixed top-6 right-6 z-50"
+      className="fixed bottom-6 right-4 z-50 sm:right-6 sm:top-6 sm:bottom-auto"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1, duration: 0.4 }}
@@ -22,6 +22,7 @@ const HistoryButton: React.FC = () => {
           }}
           whileTap={{ scale: 0.95 }}
           title="Ver historia completa de cualidades"
+          aria-label="Ver historia completa"
         >
           <History size={24} />
         </motion.button>

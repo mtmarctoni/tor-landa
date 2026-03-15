@@ -10,7 +10,6 @@ import { qualityColorCombos, birthdayColorCombo } from '@/utils/qualityColorComb
 
 interface QualityCardProps {
     entry: QualityEntry;
-    isLatest: boolean;
     onSecretClick?: () => void;
 }
 
@@ -81,17 +80,19 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
 
     return (
         <motion.div
-            className={`relative flex flex-col items-center justify-center overflow-hidden border-2 transition-all duration-500 animate-blob-morph
+            className={`relative flex w-full flex-col items-center justify-center overflow-hidden border-2 px-2 transition-all duration-500 animate-blob-morph
             ${color.border} ${color.shadow} ${color.bg} rounded-[60%_40%_30%_70%/60%_30%_70%_40%]`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.05 }}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
-            style={{ minHeight: '320px', minWidth: '320px', boxShadow: isBirthdayWeek 
+            style={{ minHeight: '320px', boxShadow: isBirthdayWeek 
                 ? '0 0 64px 0 #f8717155, 0 8px 32px 0 #fbbf2455' 
                 : '0 0 64px 0 #a78bfa55, 0 8px 32px 0 #38bdf855' 
             }}
+            role="article"
+            aria-label={`Mensaje de la semana ${entry.week} del ${entry.year}`}
         >
             {isBirthdayWeek && (
                 <motion.div
@@ -125,7 +126,7 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                 </motion.div>
             )}
 
-            <div className="p-8 relative z-10 flex flex-col items-center justify-center">
+            <div className="relative z-10 flex w-full max-w-[44rem] flex-col items-center justify-center p-5 sm:p-8">
                 {isHovered && !isBirthdayWeek && (
                     <motion.div
                         className="absolute inset-0 pointer-events-none z-30"
@@ -178,10 +179,10 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                             🎂✨🎉
                         </motion.div>
                     )}
-                    <h2 className={`text-3xl text-center font-serif ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} italic drop-shadow-[0_2px_8px_#38bdf8cc]`}>
+                    <h2 className={`text-center font-serif text-2xl sm:text-3xl ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} italic drop-shadow-[0_2px_8px_#38bdf8cc]`}>
                         {isBirthdayWeek ? '¡Feliz Cumpleaños, Landa!' : `Semana ${entry.week} / ${entry.year}`}
                     </h2>
-                    <div className={`h-0.5 w-80 bg-gradient-to-r ${isBirthdayWeek 
+                    <div className={`h-0.5 w-full max-w-80 bg-gradient-to-r ${isBirthdayWeek 
                         ? 'from-rose-400 via-pink-300 to-amber-400' 
                         : 'from-dream-400 via-dream-200 to-dream-600'} rounded mt-2 mx-auto`}></div>
                 </div>
@@ -191,7 +192,7 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    <span className={`${isBirthdayWeek ? 'text-rose-800' : 'text-dream-800'} text-xl leading-relaxed drop-shadow-[0_1px_4px_#0ea5e955] text-center`}>
+                    <span className={`${isBirthdayWeek ? 'text-rose-800' : 'text-dream-800'} text-lg sm:text-xl leading-relaxed drop-shadow-[0_1px_4px_#0ea5e955] text-center`}>
                         {renderMessage(entry.message)}
                     </span>
                 </motion.div>
