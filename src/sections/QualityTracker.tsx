@@ -106,11 +106,12 @@ const QualityTracker: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={goToPreviousWeek}
-              className={`control-pill inline-flex items-center gap-2 ${
-                isBirthdayWeek
-                  ? "bg-rose-200 text-rose-800 hover:bg-rose-300"
-                  : "bg-dream-200 text-dream-800 hover:bg-dream-300"
-              }`}
+              className={`control-pill inline-flex items-center gap-2 font-semibold rounded-full border px-5 py-2
+                ${isBirthdayWeek
+                  ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
+                  : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
+                }
+                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1`}
               aria-label="Ir a la semana anterior"
             >
               <SkipBack size={18} aria-hidden="true" />
@@ -118,11 +119,12 @@ const QualityTracker: React.FC = () => {
             </button>
             <button
               onClick={goToNextWeek}
-              className={`control-pill inline-flex items-center gap-2 ${
-                isBirthdayWeek
-                  ? "bg-rose-200 text-rose-800 hover:bg-rose-300"
-                  : "bg-dream-200 text-dream-800 hover:bg-dream-300"
-              }`}
+              className={`control-pill inline-flex items-center gap-2 font-semibold rounded-full border px-5 py-2
+                ${isBirthdayWeek
+                  ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
+                  : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
+                }
+                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1`}
               aria-label="Ir a la semana siguiente"
             >
               Siguiente semana
@@ -153,37 +155,37 @@ const QualityTracker: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={goToCurrentWeek}
-            disabled={isCurrentWeek}
-            className="control-pill inline-flex items-center gap-2 bg-white/80 text-dream-700 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <RefreshCcw size={16} aria-hidden="true" />
-            Ir al presente
-          </button>
-          <button
-            onClick={goToRandomSavedWeek}
-            disabled={qualities.length === 0}
-            className="control-pill inline-flex items-center gap-2 bg-white/80 text-dream-700 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <Dice5 size={16} aria-hidden="true" />
-            Semana aleatoria
-          </button>
-          <button
-            onClick={refetch}
-            className="control-pill inline-flex items-center gap-2 bg-white/80 text-dream-700"
-          >
-            <RefreshCcw size={16} aria-hidden="true" />
-            Recargar datos
-          </button>
+<button
+             onClick={goToCurrentWeek}
+             disabled={isCurrentWeek}
+             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 px-5 py-2"
+           >
+             <RefreshCcw size={16} aria-hidden="true" />
+             Ir al presente
+           </button>
+<button
+             onClick={goToRandomSavedWeek}
+             disabled={qualities.length === 0}
+             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 px-5 py-2"
+           >
+             <Dice5 size={16} aria-hidden="true" />
+             Semana aleatoria
+           </button>
+<button
+             onClick={refetch}
+             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 px-5 py-2"
+           >
+             <RefreshCcw size={16} aria-hidden="true" />
+             Recargar datos
+           </button>
           {currentQuality && (
-            <button
-              onClick={handleCopyMessage}
-              className="control-pill inline-flex items-center gap-2 bg-white/80 text-dream-700"
-            >
-              <Copy size={16} aria-hidden="true" />
-              Copiar mensaje
-            </button>
+<button
+               onClick={handleCopyMessage}
+               className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 px-5 py-2"
+             >
+               <Copy size={16} aria-hidden="true" />
+               Copiar mensaje
+             </button>
           )}
         </div>
 
@@ -204,7 +206,7 @@ const QualityTracker: React.FC = () => {
               <button
                 key={`${entry.year}-${entry.week}`}
                 onClick={() => goToWeek(entry.week, entry.year)}
-                className="rounded-full border border-dream-200 bg-white/70 px-3 py-1 text-sm text-dream-700"
+                className="rounded-full border border-dream-200 bg-dream-50 px-4 py-1.5 text-sm font-semibold text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1"
                 aria-label={`Semana ${entry.week} del ${entry.year}`}
                 title={entry.message}
               >
@@ -231,7 +233,7 @@ const QualityTracker: React.FC = () => {
           <div className="surface-card w-full max-w-2xl px-6 py-8 text-center">
             <h2 className="mb-2 text-2xl font-semibold text-rose-900">No se pudieron cargar los mensajes</h2>
             <p className="mb-6 text-rose-800">{error}</p>
-            <button onClick={refetch} className="control-pill bg-rose-200 text-rose-900 hover:bg-rose-300">
+            <button onClick={refetch} className="control-pill font-semibold rounded-full border bg-rose-200 text-rose-900 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400 shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1 px-5 py-2">
               Reintentar
             </button>
           </div>
