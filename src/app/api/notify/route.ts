@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { sendTelegramMessage } from "@/services/telegramService";
+import { buildSurrealistTelegramMessage } from "@/services/buildSurrealistTelegramMessage";
 
 /** Utility: Mask secrets in headers log */
 function maskHeaders(headers: Headers): Record<string, string> {
@@ -173,9 +174,16 @@ export async function POST(req: NextRequest) {
   }
 
   // --- Telegram notification with page link ---
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "the app";
-  const message = `📬 *New Notion entry!*\n*${pageTitle}*\n[🔗 View in Notion](${pageUrl})\n\nSee more in [your dashboard](${APP_URL})`;
-  console.log("[NOTIFY] Sending Telegram message:", message);
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+  if (!APP_URL) {
+    console.error("[NOTIFY] Missing NEXT_PUBLIC_APP_URL for Telegram message!");
+    return NextResponse.json({ error: "App URL missing" }, { status: 500 });
+  }
+
+  const message = buildSurrealistTelegramMessage({
+    dashboardUrl: APP_URL,
+  });
+  console.log("[NOTIFY] Sending Telegram message (surrealist):", message);
   try {
     await sendTelegramMessage(message);
     console.log("[NOTIFY] Notification chain completed successfully!");
