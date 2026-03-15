@@ -95,7 +95,30 @@ export async function POST(req: NextRequest) {
   let bodyObj;
   try {
     bodyObj = JSON.parse(rawBody);
-    console.log("[NOTIFY] Parsed event body:", JSON.stringify(bodyObj, null, 2));
+    // --- Enhanced LOGGING: Show modification type/details ---
+    const eventType = bodyObj?.event || 'unknown';
+    const rowId = bodyObj?.data?.id || 'unknown';
+    let summary = '';
+    if (eventType === 'created') {
+      summary = '[NOTIFY] New row ADDED';
+      console.log(`${summary}: id="${rowId}" properties=`, JSON.stringify(bodyObj?.data?.properties, null, 2));
+    } else if (eventType === 'updated') {
+      summary = '[NOTIFY] Row UPDATED';
+      if (bodyObj?.changed_properties) {
+        console.log(`${summary}: id="${rowId}" changed_properties=`, JSON.stringify(bodyObj.changed_properties, null, 2));
+      } else {
+        console.log(`${summary}: id="${rowId}" all properties=`, JSON.stringify(bodyObj?.data?.properties, null, 2));
+      }
+    } else if (eventType === 'deleted' || eventType === 'archived') {
+      summary = '[NOTIFY] Row DELETED/ARCHIVED';
+      console.log(`${summary}: id="${rowId}"`);
+    } else {
+      summary = `[NOTIFY] Other event: ${eventType}`;
+      console.log(`${summary}: id="${rowId}" full data=`, JSON.stringify(bodyObj, null, 2));
+    }
+    // Log the full event for troubleshooting (temporarily, disable in prod if chatty)
+    console.log('[NOTIFY] Full event JSON:', JSON.stringify(bodyObj, null, 2));
+
     const pageTitle =
       bodyObj?.data?.properties?.title?.title?.[0]?.plain_text ||
       bodyObj?.data?.properties?.Name?.title?.[0]?.plain_text ||
