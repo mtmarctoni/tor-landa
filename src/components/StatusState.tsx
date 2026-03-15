@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 interface StatusStateProps {
   icon: string;
   title: string;
-  animatedTitle: string;
+  animatedTitle?: string;
   description?: string;
   footerMessage?: string;
   actionLabel?: string;
@@ -65,9 +65,11 @@ const StatusState: React.FC<StatusStateProps> = ({
         animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
-        <span className="text-3xl font-extrabold text-dream-500 drop-shadow animate-bounce select-none">
-          {animatedTitle}
-        </span>
+        {animatedTitle && (
+          <span className="text-3xl font-extrabold text-dream-500 drop-shadow animate-bounce select-none">
+            {animatedTitle}
+          </span>
+        )}
       </motion.div>
       {description && (
         <p className="text-dream-600 text-lg mb-4 text-center max-w-xl whitespace-pre-line">
