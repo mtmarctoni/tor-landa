@@ -76,6 +76,16 @@ const StatusState: React.FC<StatusStateProps> = ({
           {description}
         </p>
       )}
+      {onAction && actionLabel && (
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.95, rotate: -5 }}
+          className="px-6 py-2 bg-dream-200 text-dream-800 rounded-full shadow hover:bg-dream-300 transition-colors"
+          onClick={onAction}
+        >
+          {actionLabel}
+        </motion.button>
+      )}
       <motion.div
         className="mt-8"
         animate={{ y: [0, -10, 0] }}
@@ -89,14 +99,6 @@ const StatusState: React.FC<StatusStateProps> = ({
         <p className="mt-4 text-dream-500 italic text-center max-w-sm">
           {footerMessage}
         </p>
-      )}
-      {actionLabel && onAction && (
-        <button
-          onClick={onAction}
-          className={`control-pill mt-6 ${styles.action}`}
-        >
-          {actionLabel}
-        </button>
       )}
     </motion.div>
   );
