@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-
   /* Paleta dream */
   --color-dream-50: #e0f2fe;
   --color-dream-100: #bde0fe;
@@ -19,6 +18,31 @@
   --color-blob-blue: #6dd5ed;
   --color-blob-cyan: #38bdf8;
   --color-blob-purple: #a78bfa;
+
+  --color-surface-0: #f9fbff;
+  --color-surface-1: #f1f6ff;
+  --color-surface-2: #e7f0ff;
+  --color-text-primary: #12314f;
+  --color-text-muted: #2a5374;
+  --color-accent: #1278af;
+  --color-accent-soft: #c8ecff;
+  --color-danger-soft: #ffe4e8;
+  --color-danger-text: #9b1d36;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-pill: 999px;
 
   /* Gradientes */
   --surreal-gradient: linear-gradient(135deg,
@@ -38,20 +62,30 @@
   /* Sombras */
   --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
   --shadow-surreal: 0 4px 32px 0 rgba(56, 189, 248, 0.25);
+  --shadow-card: 0 20px 45px -30px rgba(18, 49, 79, 0.45);
+  --shadow-focus: 0 0 0 3px rgba(18, 120, 175, 0.32);
 }
 
-
-/* 3. Reset / Base */
 html,
 body {
   margin: 0;
   padding: 0;
   font-family: 'Space Grotesk', system-ui, sans-serif;
-  background-color: #fff;
-  color: #111;
+  background-color: var(--color-surface-0);
+  color: var(--color-text-primary);
+  min-height: 100%;
 }
 
-/* Titulares con serif */
+* {
+  box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
 h1,
 h2,
 h3,
@@ -59,9 +93,19 @@ h4,
 h5,
 h6 {
   font-family: 'Bodoni Moda', Georgia, serif;
+  line-height: 1.2;
 }
 
-/* 4. Keyframes */
+p {
+  line-height: 1.6;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
 @keyframes float {
 
   0%,
@@ -118,7 +162,6 @@ h6 {
   }
 }
 
-/* 5. Clases personalizadas opcionales */
 .bg-surreal-gradient {
   background: var(--surreal-gradient);
 }
@@ -137,6 +180,25 @@ h6 {
 
 .shadow-surreal {
   box-shadow: var(--shadow-surreal);
+}
+
+.surface-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(240, 248, 255, 0.88) 100%);
+  border: 1px solid rgba(158, 206, 255, 0.6);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+}
+
+.control-pill {
+  border-radius: var(--radius-pill);
+  padding: var(--space-3) var(--space-5);
+  font-weight: 600;
+  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.control-pill:hover {
+  transform: translateY(-1px);
 }
 
 .blob1 {
@@ -169,4 +231,27 @@ h6 {
 
 .animate-blob-morph {
   animation: blobMorph 18s ease-in-out infinite;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
