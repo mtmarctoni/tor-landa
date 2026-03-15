@@ -31,12 +31,15 @@ export const useWeekNavigator = (qualities: QualityEntry[]) => {
       if (!raw) return;
 
       const parsed = JSON.parse(raw) as { week?: number; year?: number };
-      if (typeof parsed.week !== "number" || typeof parsed.year !== "number") {
+      const { week, year } = parsed;
+      if (typeof week !== "number" || typeof year !== "number") {
         return;
       }
 
-      setWeek(normalizeWeek(parsed.week));
-      setYear(parsed.year);
+      queueMicrotask(() => {
+        setWeek(normalizeWeek(week));
+        setYear(year);
+      });
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
     }

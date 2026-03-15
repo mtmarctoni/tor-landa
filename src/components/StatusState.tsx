@@ -11,23 +11,7 @@ interface StatusStateProps {
   tone?: "default" | "danger" | "celebration";
 }
 
-const toneStyles = {
-  default: {
-    title: "text-dream-800",
-    description: "text-dream-700",
-    action: "bg-dream-200 text-dream-800 hover:bg-dream-300",
-  },
-  danger: {
-    title: "text-rose-900",
-    description: "text-rose-800",
-    action: "bg-rose-200 text-rose-900 hover:bg-rose-300",
-  },
-  celebration: {
-    title: "text-amber-900",
-    description: "text-amber-800",
-    action: "bg-amber-200 text-amber-900 hover:bg-amber-300",
-  },
-};
+
 
 const StatusState: React.FC<StatusStateProps> = ({
   icon,
@@ -37,9 +21,8 @@ const StatusState: React.FC<StatusStateProps> = ({
   footerMessage,
   actionLabel,
   onAction,
-  tone = "default",
+
 }) => {
-  const styles = toneStyles[tone];
 
   return (
     <motion.div
