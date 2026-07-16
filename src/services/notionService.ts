@@ -1,4 +1,4 @@
-import { Client } from "@notionhq/client";
+import { Client, isFullDatabase } from "@notionhq/client";
 import type { Photo, QualityEntry } from "@/types";
 import type {
   NotionPage,
@@ -11,6 +11,8 @@ class NotionService {
   private notion: Client;
   private qualityDbId: string;
   private birthdayPhotosDbId: string;
+  private qualityDataSourceId: string | null = null;
+  private birthdayPhotosDataSourceId: string | null = null;
 
   constructor() {
     this.notion = new Client({ auth: process.env.NOTION_API_KEY! });
@@ -43,6 +45,50 @@ class NotionService {
   }
 
   /**
+   * Discover the data_source_id for a given database_id.
+   *
+   * In Notion API v5 (2025-09-03+), databases.query became dataSources.query
+   * and requires a data_source_id instead of a database_id. A database can
+   * contain multiple data sources; we use the first one.
+   * The result is cached per database for the lifetime of the singleton.
+   */
+  private async resolveDataSourceId(
+    databaseId: string,
+    cacheKey: "quality" | "birthdayPhotos",
+  ): Promise<string> {
+    const cached =
+      cacheKey === "quality"
+        ? this.qualityDataSourceId
+        : this.birthdayPhotosDataSourceId;
+
+    if (cached) return cached;
+
+    const db = await this.notion.databases.retrieve({
+      database_id: databaseId,
+    });
+
+    if (
+      !isFullDatabase(db) ||
+      !db.data_sources ||
+      db.data_sources.length === 0
+    ) {
+      throw new Error(
+        `No data sources found for database ${databaseId}. Ensure the integration has access.`,
+      );
+    }
+
+    const dataSourceId = db.data_sources[0].id;
+
+    if (cacheKey === "quality") {
+      this.qualityDataSourceId = dataSourceId;
+    } else {
+      this.birthdayPhotosDataSourceId = dataSourceId;
+    }
+
+    return dataSourceId;
+  }
+
+  /**
    * Fetch all quality messages from Notion database
    */
   async getQualityMessages(): Promise<QualityEntry[]> {
@@ -51,14 +97,19 @@ class NotionService {
     }
 
     try {
-      const response: NotionResponse = (await this.notion.databases.query({
-        database_id: this.qualityDbId,
+      const dataSourceId = await this.resolveDataSourceId(
+        this.qualityDbId,
+        "quality",
+      );
+
+      const response: NotionResponse = (await this.notion.dataSources.query({
+        data_source_id: dataSourceId,
         sorts: [
           { property: "Year", direction: "descending" },
           { property: "Week", direction: "descending" },
         ],
         page_size: 100,
-      })) as NotionResponse;
+      })) as unknown as NotionResponse;
 
       const qualities: QualityEntry[] = response.results.map((page) => {
         const week =
@@ -102,8 +153,13 @@ class NotionService {
     }
 
     try {
-      const response = await this.notion.databases.query({
-        database_id: this.birthdayPhotosDbId,
+      const dataSourceId = await this.resolveDataSourceId(
+        this.birthdayPhotosDbId,
+        "birthdayPhotos",
+      );
+
+      const response = await this.notion.dataSources.query({
+        data_source_id: dataSourceId,
         filter: {
           property: "Active",
           checkbox: {
@@ -120,7 +176,7 @@ class NotionService {
 
       // Process the results
       const photos: Photo[] = response.results.map((p) => {
-        const page = p as NotionPage;
+        const page = p as unknown as NotionPage;
         // Extract caption
         let caption = "";
         const captionProp = page.properties.Caption;
