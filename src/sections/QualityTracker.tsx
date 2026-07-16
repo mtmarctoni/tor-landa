@@ -91,7 +91,7 @@ const QualityTracker: React.FC = () => {
 
   return (
     <motion.section
-      className="relative mx-auto w-full max-w-4xl"
+      className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -101,12 +101,36 @@ const QualityTracker: React.FC = () => {
 
       <BirthdayCountdown />
 
-      <div className="surface-card mb-6 flex flex-col gap-4 px-4 py-4 sm:px-6" aria-live="polite">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
+      <div className="surface-card mb-4 flex flex-col gap-4 px-4 py-4 sm:mb-6 sm:gap-5 sm:px-6 sm:py-5" aria-live="polite">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-dream-600">
+                Semana activa
+              </p>
+              <span
+                className={`mt-1 inline-flex rounded-full px-3 py-1.5 text-sm font-semibold sm:px-4 sm:py-2 sm:text-base ${
+                  isBirthdayWeek ? "bg-rose-100 text-rose-700" : "bg-dream-100 text-dream-700"
+                }`}
+              >
+                Semana {week} / {year}
+              </span>
+            </div>
+
+            <button
+              onClick={goToCurrentWeek}
+              disabled={isCurrentWeek}
+              className="control-pill inline-flex min-w-[9.5rem] items-center gap-2 self-start rounded-full border border-dream-100 bg-white/75 px-4 py-2 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-50 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 sm:text-base"
+            >
+              <RefreshCcw size={16} aria-hidden="true" />
+              Ir al presente
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
             <button
               onClick={goToPreviousWeek}
-              className={`control-pill inline-flex items-center gap-2 font-semibold rounded-full border px-5 py-2
+              className={`control-pill inline-flex items-center gap-2 rounded-[1.15rem] border px-4 py-3 text-sm font-semibold sm:rounded-full sm:px-5 sm:py-2 sm:text-base
                 ${isBirthdayWeek
                   ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
                   : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
@@ -119,26 +143,18 @@ const QualityTracker: React.FC = () => {
             </button>
             <button
               onClick={goToNextWeek}
-              className={`control-pill inline-flex items-center gap-2 font-semibold rounded-full border px-5 py-2
+              className={`control-pill inline-flex items-center justify-center gap-2 rounded-[1.15rem] border px-4 py-3 text-sm font-semibold sm:rounded-full sm:px-5 sm:py-2 sm:text-base
                 ${isBirthdayWeek
                   ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
                   : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
                 }
-                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1`}
+                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1 col-span-1`}
               aria-label="Ir a la semana siguiente"
             >
               Siguiente semana
               <SkipForward size={18} aria-hidden="true" />
             </button>
           </div>
-
-          <span
-            className={`rounded-full px-4 py-2 text-sm font-semibold sm:text-base ${
-              isBirthdayWeek ? "bg-rose-100 text-rose-700" : "bg-dream-100 text-dream-700"
-            }`}
-          >
-            Semana {week} / {year}
-          </span>
         </div>
 
         <div className="w-full overflow-hidden rounded-full bg-dream-100 shadow-inner" aria-hidden="true">
@@ -154,38 +170,30 @@ const QualityTracker: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-<button
-             onClick={goToCurrentWeek}
-             disabled={isCurrentWeek}
-             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 px-5 py-2"
-           >
-             <RefreshCcw size={16} aria-hidden="true" />
-             Ir al presente
-           </button>
-<button
-             onClick={goToRandomSavedWeek}
-             disabled={qualities.length === 0}
-             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 px-5 py-2"
-           >
-             <Dice5 size={16} aria-hidden="true" />
-             Semana aleatoria
-           </button>
-<button
-             onClick={refetch}
-             className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 px-5 py-2"
-           >
-             <RefreshCcw size={16} aria-hidden="true" />
-             Recargar datos
-           </button>
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
+          <button
+              onClick={goToRandomSavedWeek}
+              disabled={qualities.length === 0}
+              className="control-pill inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-dream-50 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
+            >
+              <Dice5 size={16} aria-hidden="true" />
+              Semana aleatoria
+            </button>
+          <button
+              onClick={refetch}
+              className="control-pill inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-dream-50 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
+            >
+              <RefreshCcw size={16} aria-hidden="true" />
+              Recargar datos
+            </button>
           {currentQuality && (
-<button
-               onClick={handleCopyMessage}
-               className="control-pill inline-flex items-center gap-2 font-semibold rounded-full border border-dream-100 bg-dream-50 text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1 px-5 py-2"
-             >
-               <Copy size={16} aria-hidden="true" />
-               Copiar mensaje
-             </button>
+            <button
+                onClick={handleCopyMessage}
+                className="control-pill col-span-2 inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-white/80 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-50 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 sm:col-span-1 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
+              >
+                <Copy size={16} aria-hidden="true" />
+                Copiar mensaje
+              </button>
           )}
         </div>
 
@@ -197,22 +205,27 @@ const QualityTracker: React.FC = () => {
         )}
 
         {sortedAvailableWeeks.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-dream-600">
+          <div className="border-t border-dream-100/90 pt-3">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-dream-600">
               <Bookmark size={14} aria-hidden="true" />
               Ultimos registros
-            </span>
-            {sortedAvailableWeeks.map((entry) => (
-              <button
-                key={`${entry.year}-${entry.week}`}
-                onClick={() => goToWeek(entry.week, entry.year)}
-                className="rounded-full border border-dream-200 bg-dream-50 px-4 py-1.5 text-sm font-semibold text-dream-700 hover:bg-dream-100 focus:ring-2 focus:ring-dream-300 focus:outline-none shadow-sm transition-all duration-150 active:scale-95 focus:ring-offset-1"
-                aria-label={`Semana ${entry.week} del ${entry.year}`}
-                title={entry.message}
-              >
-                {entry.week}/{entry.year}
-              </button>
-            ))}
+              </span>
+              <p className="text-xs text-dream-500">Atajos guardados</p>
+            </div>
+            <div className="soft-scroll-row -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible">
+              {sortedAvailableWeeks.map((entry) => (
+                <button
+                  key={`${entry.year}-${entry.week}`}
+                  onClick={() => goToWeek(entry.week, entry.year)}
+                  className="shrink-0 rounded-full border border-dream-200 bg-dream-50 px-4 py-2 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 active:scale-95"
+                  aria-label={`Semana ${entry.week} del ${entry.year}`}
+                  title={entry.message}
+                >
+                  {entry.week}/{entry.year}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -226,14 +239,14 @@ const QualityTracker: React.FC = () => {
         </p>
       </div>
 
-      <div className="relative flex min-h-[360px] items-center justify-center">
+      <div className="relative flex min-h-[360px] flex-1 items-center justify-center pb-4 sm:pb-0">
         {loading && <LoadingQuality />}
 
         {error && !loading && (
-          <div className="surface-card w-full max-w-2xl px-6 py-8 text-center">
+          <div className="surface-card w-full max-w-2xl px-5 py-7 text-center sm:px-6 sm:py-8">
             <h2 className="mb-2 text-2xl font-semibold text-rose-900">No se pudieron cargar los mensajes</h2>
             <p className="mb-6 text-rose-800">{error}</p>
-            <button onClick={refetch} className="control-pill font-semibold rounded-full border bg-rose-200 text-rose-900 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400 shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1 px-5 py-2">
+            <button onClick={refetch} className="control-pill rounded-full border border-rose-300 bg-rose-200 px-5 py-2 font-semibold text-rose-900 shadow-sm transition-all duration-150 hover:bg-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-1 active:scale-95">
               Reintentar
             </button>
           </div>

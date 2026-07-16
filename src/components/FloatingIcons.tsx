@@ -12,7 +12,7 @@ const SurrealFooterIcon: React.FC<SurrealFooterIconProps> = ({ icon, idx }) => {
     return (
         <motion.button
             key={key}
-            className={className + ' hover:bg-dream-200 rounded-full p-2 transition z-10'}
+            className={className + ' hidden rounded-full p-2 transition hover:bg-dream-200 sm:inline-flex z-10'}
             whileHover={hover}
             whileTap={{ scale: 0.95 }}
             aria-label={label}
@@ -56,7 +56,7 @@ const SurrealFooterIcon: React.FC<SurrealFooterIconProps> = ({ icon, idx }) => {
 const FloatingIcons: React.FC = () => {
     return (
         <>
-            {ICONS.map((icon, idx) => (
+            {ICONS.filter((_, idx) => idx % 2 === 0).map((icon, idx) => (
                 <SurrealFooterIcon icon={icon} idx={idx} key={icon.key} />
             ))}
         </>
