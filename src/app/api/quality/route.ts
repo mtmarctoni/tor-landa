@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { notionService } from "@/services/notionService";
 import { mockQualities } from "@/data/mockQualities";
+import { notionService } from "@/services/notionService";
 
 export async function GET() {
   // Check if we have valid Notion configuration
@@ -15,7 +15,7 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json(
       { error: `Failed to fetch quality messages: ${error}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

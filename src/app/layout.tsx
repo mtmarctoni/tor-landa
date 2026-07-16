@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import Header from "@/sections/Header";
-import Footer from "@/sections/Footer";
-import SurrealistBackground from "@/components/SurrealistBackground";
 import EasterEggKeyboardListener from "@/components/EasterEggKeyboardListener";
+import SurrealistBackground from "@/components/SurrealistBackground";
 import { QualityProvider } from "@/context/QualityContext";
+import Footer from "@/sections/Footer";
+import Header from "@/sections/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <QualityProvider>
           <div className="relative isolate min-h-screen overflow-hidden bg-surreal-gradient">
             <SurrealistBackground />

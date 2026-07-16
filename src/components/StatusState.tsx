@@ -11,8 +11,6 @@ interface StatusStateProps {
   tone?: "default" | "danger" | "celebration";
 }
 
-
-
 const StatusState: React.FC<StatusStateProps> = ({
   icon,
   title,
@@ -21,9 +19,7 @@ const StatusState: React.FC<StatusStateProps> = ({
   footerMessage,
   actionLabel,
   onAction,
-
 }) => {
-
   return (
     <motion.div
       className="surface-card flex w-full max-w-2xl flex-col items-center justify-center px-5 py-8 text-center sm:px-8 sm:py-12"
@@ -36,7 +32,11 @@ const StatusState: React.FC<StatusStateProps> = ({
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
         className="mb-4 sm:mb-6"
       >
-        <span className="select-none text-5xl sm:text-6xl" role="img" aria-label="calendar">
+        <span
+          className="select-none text-5xl sm:text-6xl"
+          role="img"
+          aria-label="calendar"
+        >
           {icon}
         </span>
       </motion.div>

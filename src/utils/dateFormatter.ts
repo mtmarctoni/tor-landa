@@ -10,21 +10,21 @@ export const getCurrentWeekAndYear = () => {
   const now = new Date();
   const onejan = new Date(now.getFullYear(), 0, 1);
   const week = Math.ceil(
-    ((now.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7
+    ((now.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7,
   );
   return { week, year: now.getFullYear() };
 };
 
-export const getWeekFromDate = (date: Date) => {
+const getWeekFromDate = (date: Date) => {
   const onejan = new Date(date.getFullYear(), 0, 1);
   const week = Math.ceil(
-    ((date.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7
+    ((date.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7,
   );
   return { week, year: date.getFullYear() };
 };
 
 // Landa's birthday utilities
-export const LANDA_BIRTHDAY = {
+const LANDA_BIRTHDAY = {
   month: 10, // October
   day: 23,
 };
@@ -33,7 +33,7 @@ export const getLandaBirthdayWeek = (year: number) => {
   const birthdayDate = new Date(
     year,
     LANDA_BIRTHDAY.month - 1,
-    LANDA_BIRTHDAY.day
+    LANDA_BIRTHDAY.day,
   );
   return getWeekFromDate(birthdayDate);
 };
@@ -49,7 +49,7 @@ export const isLandaBirthdayWeek = (week: number, year: number) => {
     const birthdayDate = new Date(
       year,
       LANDA_BIRTHDAY.month - 1,
-      LANDA_BIRTHDAY.day
+      LANDA_BIRTHDAY.day,
     );
     return today >= birthdayDate;
   }
@@ -69,7 +69,7 @@ export const getDaysUntilLandaBirthday = (currentDate = new Date()) => {
   const birthdayThisYear = new Date(
     currentYear,
     LANDA_BIRTHDAY.month - 1,
-    LANDA_BIRTHDAY.day
+    LANDA_BIRTHDAY.day,
   );
 
   // If birthday has passed this year, calculate for next year
@@ -77,15 +77,16 @@ export const getDaysUntilLandaBirthday = (currentDate = new Date()) => {
     const birthdayNextYear = new Date(
       currentYear + 1,
       LANDA_BIRTHDAY.month - 1,
-      LANDA_BIRTHDAY.day
+      LANDA_BIRTHDAY.day,
     );
     return Math.ceil(
       (birthdayNextYear.getTime() - currentDate.getTime()) /
-        (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24),
     );
   }
 
   return Math.ceil(
-    (birthdayThisYear.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
+    (birthdayThisYear.getTime() - currentDate.getTime()) /
+      (1000 * 60 * 60 * 24),
   );
 };

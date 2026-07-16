@@ -50,7 +50,7 @@ export const useWeekNavigator = (qualities: QualityEntry[]) => {
 
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ week: normalizeWeek(week), year })
+      JSON.stringify({ week: normalizeWeek(week), year }),
     );
   }, [week, year]);
 

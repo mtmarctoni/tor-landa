@@ -61,19 +61,25 @@
   --radius-pill: 999px;
 
   /* Gradientes */
-  --surreal-gradient: linear-gradient(135deg,
-      #f5f3ff 0%,
-      #ede9fe 25%,
-      #ddd6fe 50%,
-      #c4b5fd 75%,
-      #ede7fe 100%);
-  --surreal-blue: linear-gradient(120deg,
-      #0ea5e9 0%,
-      #38bdf8 50%,
-      #a78bfa 100%);
-  --glass-gradient: linear-gradient(120deg,
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(14, 165, 233, 0.15) 100%);
+  --surreal-gradient: linear-gradient(
+    135deg,
+    #f5f3ff 0%,
+    #ede9fe 25%,
+    #ddd6fe 50%,
+    #c4b5fd 75%,
+    #ede7fe 100%
+  );
+  --surreal-blue: linear-gradient(
+    120deg,
+    #0ea5e9 0%,
+    #38bdf8 50%,
+    #a78bfa 100%
+  );
+  --glass-gradient: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(14, 165, 233, 0.15) 100%
+  );
 
   /* Sombras */
   --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
@@ -124,7 +130,6 @@ select {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0) rotate(0deg);
@@ -136,14 +141,13 @@ select {
 }
 
 @keyframes morph {
-
   0%,
   100% {
-    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
 
   50% {
-    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
 }
 
@@ -163,19 +167,19 @@ select {
 
 @keyframes blobMorph {
   0% {
-    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
 
   33% {
-    border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
 
   66% {
-    border-radius: 50% 50% 70% 30%/60% 40% 60% 40%;
+    border-radius: 50% 50% 70% 30% / 60% 40% 60% 40%;
   }
 
   100% {
-    border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
 }
 
@@ -200,7 +204,11 @@ select {
 }
 
 .surface-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 246, 255, 0.94) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(241, 246, 255, 0.94) 100%
+  );
   border: 1px solid rgba(196, 220, 255, 0.72);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -213,7 +221,10 @@ select {
   font-weight: 600;
   min-height: 2.875rem;
   justify-content: center;
-  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 .control-pill:hover {
@@ -221,15 +232,15 @@ select {
 }
 
 .blob1 {
-  border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
 }
 
 .blob2 {
-  border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+  border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
 }
 
 .blob3 {
-  border-radius: 50% 50% 70% 30%/60% 40% 60% 40%;
+  border-radius: 50% 50% 70% 30% / 60% 40% 60% 40%;
 }
 
 .animate-float {

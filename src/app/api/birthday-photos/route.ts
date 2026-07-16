@@ -11,7 +11,7 @@ export async function GET() {
           photos: [],
           count: 0,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -29,7 +29,7 @@ export async function GET() {
         photos: [],
         count: 0,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

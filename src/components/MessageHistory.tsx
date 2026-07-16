@@ -1,79 +1,93 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Calendar, User, Download, ArrowDownAZ } from 'lucide-react';
-
-import { QualityEntry } from '@/types/index';
-import { format } from '@/utils/dateFormatter';
-import { useQualityContext } from '@/context/QualityContext';
+import { motion } from "framer-motion";
+import { ArrowDownAZ, Calendar, Download, Search, User } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useQualityContext } from "@/context/QualityContext";
+import type { QualityEntry } from "@/types/index";
+import { format } from "@/utils/dateFormatter";
 
 const MessageHistory: React.FC = () => {
   const { qualities, loading, error } = useQualityContext();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterYear, setFilterYear] = useState<number | ''>('');
-  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterYear, setFilterYear] = useState<number | "">("");
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
-  const sortedQualities = [...qualities].sort((a: QualityEntry, b: QualityEntry) => {
-    if (a.year !== b.year) return sortOrder === 'oldest' ? a.year - b.year : b.year - a.year;
-    return sortOrder === 'oldest' ? a.week - b.week : b.week - a.week;
-  });
+  const sortedQualities = [...qualities].sort(
+    (a: QualityEntry, b: QualityEntry) => {
+      if (a.year !== b.year)
+        return sortOrder === "oldest" ? a.year - b.year : b.year - a.year;
+      return sortOrder === "oldest" ? a.week - b.week : b.week - a.week;
+    },
+  );
 
   // Filter qualities based on search and year filter
-  const filteredQualities = sortedQualities.filter(quality => {
-    const matchesSearch = searchQuery === '' ||
+  const filteredQualities = sortedQualities.filter((quality) => {
+    const matchesSearch =
+      searchQuery === "" ||
       quality.message.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesYear = filterYear === '' || quality.year === filterYear;
+    const matchesYear = filterYear === "" || quality.year === filterYear;
     return matchesSearch && matchesYear;
   });
 
   // Get unique years for filter dropdown
-  const availableYears = Array.from(new Set(sortedQualities.map(q => q.year))).sort((a, b) => b - a);
+  const availableYears = Array.from(
+    new Set(sortedQualities.map((q) => q.year)),
+  ).sort((a, b) => b - a);
 
   // Get week date range (approximate)
   const getWeekDateRange = (week: number, year: number) => {
     const januaryFirst = new Date(year, 0, 1);
     const daysToFirstWeek = (7 - januaryFirst.getDay()) % 7;
     const firstWeek = new Date(year, 0, 1 + daysToFirstWeek);
-    const weekStart = new Date(firstWeek.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
+    const weekStart = new Date(
+      firstWeek.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000,
+    );
     const weekEnd = new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000);
 
     return {
       start: format(weekStart),
-      end: format(weekEnd)
+      end: format(weekEnd),
     };
   };
 
   const exportAsJson = () => {
     const dataStr = JSON.stringify(filteredQualities, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'cualidades-historia.json';
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
+    const exportFileDefaultName = "cualidades-historia.json";
 
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
   };
 
   const exportAsText = () => {
-    const textData = filteredQualities.map(q => {
-      const dateRange = getWeekDateRange(q.week, q.year);
-      return `Semana ${q.week}, ${q.year} (${dateRange.start} - ${dateRange.end})\n${q.message}\n\n---\n`;
-    }).join('\n');
+    const textData = filteredQualities
+      .map((q) => {
+        const dateRange = getWeekDateRange(q.week, q.year);
+        return `Semana ${q.week}, ${q.year} (${dateRange.start} - ${dateRange.end})\n${q.message}\n\n---\n`;
+      })
+      .join("\n");
 
-    const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(textData);
-    const exportFileDefaultName = 'cualidades-historia.txt';
+    const dataUri = `data:text/plain;charset=utf-8,${encodeURIComponent(textData)}`;
+    const exportFileDefaultName = "cualidades-historia.txt";
 
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
   };
 
   if (loading) {
     return (
       <div className="surface-card py-12">
-        <motion.div className="mx-auto max-w-3xl space-y-3 px-6" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.6, repeat: Infinity }}>
+        <motion.div
+          className="mx-auto max-w-3xl space-y-3 px-6"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.6, repeat: Infinity }}
+        >
           <div className="h-5 w-1/3 rounded-full bg-dream-200" />
           <div className="h-4 w-full rounded-full bg-dream-100" />
           <div className="h-4 w-5/6 rounded-full bg-dream-100" />
@@ -87,7 +101,9 @@ const MessageHistory: React.FC = () => {
     return (
       <div className="text-center py-12">
         <div className="surface-card mx-auto max-w-2xl px-6 py-8">
-          <div className="text-red-600 text-lg mb-4">Error al cargar la historia</div>
+          <div className="text-red-600 text-lg mb-4">
+            Error al cargar la historia
+          </div>
           <div className="text-dream-700">{error}</div>
         </div>
       </div>
@@ -116,7 +132,10 @@ const MessageHistory: React.FC = () => {
         <div className="flex flex-col lg:flex-row gap-4 items-center">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400" size={20} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Buscar en mensajes..."
@@ -128,15 +147,24 @@ const MessageHistory: React.FC = () => {
 
           {/* Year Filter */}
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400" size={20} />
+            <Calendar
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400"
+              size={20}
+            />
             <select
               value={filterYear}
-              onChange={(e) => setFilterYear(e.target.value === '' ? '' : parseInt(e.target.value))}
+              onChange={(e) =>
+                setFilterYear(
+                  e.target.value === "" ? "" : parseInt(e.target.value, 10),
+                )
+              }
               className="pl-10 pr-8 py-3 bg-white/70 border border-dream-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dream-400 focus:border-transparent"
             >
               <option value="">Todos los años</option>
-              {availableYears.map(year => (
-                <option key={year} value={year}>{year}</option>
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
               ))}
             </select>
           </div>
@@ -144,14 +172,20 @@ const MessageHistory: React.FC = () => {
           {/* Export Buttons */}
           <div className="flex gap-2">
             <button
-              onClick={() => setSortOrder((prev) => (prev === 'newest' ? 'oldest' : 'newest'))}
+              type="button"
+              onClick={() =>
+                setSortOrder((prev) =>
+                  prev === "newest" ? "oldest" : "newest",
+                )
+              }
               className="flex items-center gap-2 px-4 py-3 bg-dream-100 text-dream-800 rounded-xl hover:bg-dream-200 transition-colors"
               title="Cambiar orden"
             >
               <ArrowDownAZ size={16} />
-              {sortOrder === 'newest' ? 'Reciente' : 'Antiguo'}
+              {sortOrder === "newest" ? "Reciente" : "Antiguo"}
             </button>
             <button
+              type="button"
               onClick={exportAsJson}
               className="flex items-center gap-2 px-4 py-3 bg-dream-200 text-dream-800 rounded-xl hover:bg-dream-300 transition-colors"
               title="Exportar como JSON"
@@ -160,6 +194,7 @@ const MessageHistory: React.FC = () => {
               JSON
             </button>
             <button
+              type="button"
               onClick={exportAsText}
               className="flex items-center gap-2 px-4 py-3 bg-dream-200 text-dream-800 rounded-xl hover:bg-dream-300 transition-colors"
               title="Exportar como texto"
@@ -173,13 +208,16 @@ const MessageHistory: React.FC = () => {
         {/* Results count */}
         <div className="mt-4 text-sm text-dream-600 flex flex-wrap items-center gap-2">
           {filteredQualities.length} de {sortedQualities.length} cualidades
-          {searchQuery && <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>}
+          {searchQuery && (
+            <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>
+          )}
           {filterYear && <span> · Año: {filterYear}</span>}
           {(searchQuery || filterYear) && (
             <button
+              type="button"
               onClick={() => {
-                setSearchQuery('');
-                setFilterYear('');
+                setSearchQuery("");
+                setFilterYear("");
               }}
               className="rounded-full bg-dream-100 px-3 py-1 text-dream-700 hover:bg-dream-200"
             >
@@ -217,9 +255,7 @@ const MessageHistory: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="text-sm text-dream-500">
-                  Sistema
-                </div>
+                <div className="text-sm text-dream-500">Sistema</div>
               </div>
 
               {/* Message Content */}
@@ -238,9 +274,10 @@ const MessageHistory: React.FC = () => {
             No se encontraron cualidades con los filtros aplicados.
           </div>
           <button
+            type="button"
             onClick={() => {
-              setSearchQuery('');
-              setFilterYear('');
+              setSearchQuery("");
+              setFilterYear("");
             }}
             className="mt-4 px-6 py-2 bg-dream-200 text-dream-800 rounded-full hover:bg-dream-300 transition-colors"
           >
