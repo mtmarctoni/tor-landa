@@ -17,7 +17,7 @@
     "test:telegram": "node -r dotenv/config scripts/test-telegram.js dotenv_config_path=.env.local"
   },
   "dependencies": {
-    "@notionhq/client": "^4.0.1",
+    "@notionhq/client": "^5.23.2",
     "dotenv": "^17.3.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.24.0",

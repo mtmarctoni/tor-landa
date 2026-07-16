@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@notionhq/client':
-        specifier: ^4.0.1
-        version: 4.0.1
+        specifier: ^5.23.2
+        version: 5.23.2
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -348,8 +348,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@notionhq/client@4.0.1':
-    resolution: {integrity: sha512-SdILqiiThECLR2KDUOvl4JqRaJWBwDYaEw/f0qu+G6rKN/QUCkaJ84vN5MgBw1yKsMAsKxBlDazs3Jw6vv2ikA==}
+  '@notionhq/client@5.23.2':
+    resolution: {integrity: sha512-iyD5VU9MoNxCR0GespotyrMlBpO4kLG+BaZK2JpZW1yfFqrmOYmZGb3wl4xqfq3n1Z9eekFwNcZD6t63SaESig==}
     engines: {node: '>=18'}
 
   '@oxc-parser/binding-android-arm-eabi@0.137.0':
@@ -1363,7 +1363,7 @@ snapshots:
   '@next/swc-win32-x64-msvc@16.2.10':
     optional: true
 
-  '@notionhq/client@4.0.1': {}
+  '@notionhq/client@5.23.2': {}
 
   '@oxc-parser/binding-android-arm-eabi@0.137.0':
     optional: true
