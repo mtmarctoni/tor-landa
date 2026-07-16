@@ -49,8 +49,3 @@ Tor Landa is a small personal web app that shows weekly Notion-backed quality me
 - Review only changed code, but read full files for context.
 - Prioritize real behavioral regressions, broken edge cases, security mistakes, and mismatches with existing patterns.
 - Do not flag style-only issues unless they conflict with established repo conventions.
-
-## Notes
-
-- `.github/copilot-instructions.md` is partially stale and still references older dependency versions.
-- `.agents/instructions/add-telegram-notifier.md` is historical context only; the current notifier implementation uses HMAC signature validation, not a query-param secret.

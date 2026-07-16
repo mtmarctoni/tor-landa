@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-- Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4, Framer Motion.
+- Stack: Next.js 16.3 (preview) App Router, React 19, TypeScript 7 (native Go compiler), Tailwind CSS v4, Framer Motion 12.
 - Purpose: display weekly quality messages from Notion with a playful surrealist UI.
 - Main runtime paths:
 - `src/app/page.tsx` renders the home page.
@@ -49,9 +49,3 @@
 - For data changes, test `/api/quality` and `/api/birthday-photos`.
 - For notification changes, test the webhook route and `pnpm test:telegram`.
 - Run `pnpm lint` before handing off substantial code changes.
-
-## Known Repo Notes
-
-- The current repo already contains task-specific agent instructions at `.agents/instructions/add-telegram-notifier.md`.
-- That task-specific notifier instruction describes an older `?secret=` webhook flow. The live code uses `x-notion-signature` HMAC verification with `NOTION_WEBHOOK_VERIFICATION_TOKEN`, so prefer the current implementation.
-- `.github/copilot-instructions.md` exists but contains stale version details; prefer the codebase and this file when they disagree.
