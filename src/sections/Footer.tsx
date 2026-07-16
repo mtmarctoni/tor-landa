@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
   const handleClose = () => setShowEasterEgg(false);
 
   return (
-    <footer className="mt-10 border-t border-white/35 bg-gradient-to-r from-white/75 via-dream-50/80 to-dream-100/70 px-3 py-5 shadow-[0_-10px_28px_-24px_rgba(56,189,248,0.55)] backdrop-blur-xl sm:mt-14 sm:px-4 sm:py-8">
-      <div className="relative mx-auto flex min-h-[7rem] w-full max-w-5xl items-center justify-center overflow-hidden rounded-[1.6rem] border border-white/35 bg-white/38 px-5 py-5 text-center shadow-[0_18px_45px_-34px_rgba(18,49,79,0.55)] sm:min-h-[120px] sm:px-6">
+    <footer className="time-footer mt-10 border-t border-white/35 px-3 py-5 backdrop-blur-xl sm:mt-14 sm:px-4 sm:py-8">
+      <div className="time-surface-card relative mx-auto flex min-h-[7rem] w-full max-w-5xl items-center justify-center overflow-hidden rounded-[1.6rem] border px-5 py-5 text-center shadow-[0_18px_45px_-34px_rgba(18,49,79,0.55)] sm:min-h-[120px] sm:px-6">
         {/* Scattered Surreal Icons */}
         <FloatingIcons />
         <div
@@ -24,8 +24,11 @@ const Footer: React.FC = () => {
         />
         {/* Sparkles icon triggers the easter egg */}
         <motion.button
-          className="absolute bottom-3 right-3 z-10 rounded-full bg-white/55 p-2 text-dream-500 shadow-[0_12px_24px_-18px_rgba(18,49,79,0.65)] transition hover:bg-dream-100 sm:bottom-auto sm:right-auto sm:bg-transparent sm:text-dream-400 sm:shadow-none"
-          style={{ transform: "none" }}
+          className="absolute bottom-3 right-3 z-10 rounded-full bg-white/55 p-2 shadow-[0_12px_24px_-18px_rgba(18,49,79,0.65)] transition hover:bg-dream-100 sm:bottom-auto sm:right-auto sm:bg-transparent sm:shadow-none"
+          style={{
+            transform: "none",
+            color: "var(--time-text-muted)",
+          }}
           whileHover={{ scale: 1.15, rotate: 0 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleClick}
@@ -50,7 +53,10 @@ const Footer: React.FC = () => {
           />
         </motion.button>
 
-        <p className="relative z-20 w-[min(100%,34rem)] px-8 text-sm font-semibold leading-6 text-dream-800 sm:px-0 sm:text-base">
+        <p
+          className="relative z-20 w-[min(100%,34rem)] px-8 text-sm font-semibold leading-6 sm:px-0 sm:text-base"
+          style={{ color: "var(--time-text)" }}
+        >
           Capturando momentos en el paisaje onírico del tiempo
         </p>
       </div>
