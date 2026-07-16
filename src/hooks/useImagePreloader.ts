@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface UseImagePreloaderReturn {
   imageLoadStates: { [key: number]: boolean };
@@ -50,7 +50,7 @@ export const useImagePreloader = (): UseImagePreloaderReturn => {
         console.warn("Some images failed to preload:", error);
       }
     },
-    [preloadedImages]
+    [preloadedImages],
   );
 
   const clearPreloadedImages = useCallback(() => {

@@ -1,11 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-require('dotenv').config({ path: '.env.local' });
+require("dotenv").config({ path: ".env.local" });
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 if (!BOT_TOKEN || !CHAT_ID) {
-  console.error("❌ Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in environment.");
+  console.error(
+    "❌ Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in environment.",
+  );
   process.exit(1);
 }
 

@@ -2,16 +2,16 @@
 // Only the relevant fields for your use case are included for brevity.
 
 export type NotionResponse = {
-  object: 'list';
+  object: "list";
   results: NotionPage[];
   next_cursor: string | null;
   has_more: boolean;
-  type: 'page_or_database';
+  type: "page_or_database";
   page_or_database: Record<string, unknown>;
 };
 
 export type NotionPage = {
-  object: 'page';
+  object: "page";
   id: string;
   created_time: string;
   last_edited_time: string;
@@ -26,7 +26,7 @@ export type NotionPage = {
 };
 
 export type NotionUser = {
-  object: 'user';
+  object: "user";
   id: string;
   name?: string;
   avatar_url?: string;
@@ -35,17 +35,17 @@ export type NotionUser = {
 };
 
 export type NotionCover = {
-  type: 'external';
+  type: "external";
   external: { url: string };
 };
 
 export type NotionIcon = {
-  type: 'emoji';
+  type: "emoji";
   emoji: string;
 };
 
 export type NotionParent = {
-  type: 'database_id';
+  type: "database_id";
   database_id: string;
 };
 
@@ -65,12 +65,12 @@ export type NotionProperty =
 
 export type NotionTitleProperty = {
   id: string;
-  type: 'title';
+  type: "title";
   title: NotionText[];
 };
 
 export type NotionText = {
-  type: 'text';
+  type: "text";
   text: { content: string; link: string | null };
   annotations?: Record<string, unknown>;
   plain_text: string;
@@ -79,13 +79,13 @@ export type NotionText = {
 
 export type NotionNumberProperty = {
   id: string;
-  type: 'number';
+  type: "number";
   number: number;
 };
 
 export type NotionDateProperty = {
   id: string;
-  type: 'date';
+  type: "date";
   date: {
     start: string;
     end: string | null;
@@ -95,33 +95,33 @@ export type NotionDateProperty = {
 
 export type NotionMultiSelectProperty = {
   id: string;
-  type: 'multi_select';
+  type: "multi_select";
   multi_select: Array<{ id: string; name: string; color: string }>;
 };
 
 export type NotionSelectProperty = {
   id: string;
-  type: 'select';
+  type: "select";
   select: { id: string; name: string; color: string };
 };
 
 export type NotionPeopleProperty = {
   id: string;
-  type: 'people';
+  type: "people";
   people: NotionUser[];
 };
 
 export type NotionCheckboxProperty = {
   id: string;
-  type: 'checkbox';
+  type: "checkbox";
   checkbox: boolean;
 };
 
 export type NotionRollupProperty = {
   id: string;
-  type: 'rollup';
+  type: "rollup";
   rollup: {
-    type: 'number';
+    type: "number";
     number: number;
     function: string;
   };
@@ -129,28 +129,28 @@ export type NotionRollupProperty = {
 
 export type NotionUrlProperty = {
   id: string;
-  type: 'url';
+  type: "url";
   url: string;
 };
 
 export type NotionRelationProperty = {
   id: string;
-  type: 'relation';
+  type: "relation";
   relation: Array<{ id: string }>;
   has_more: boolean;
 };
 
 export type NotionRichTextProperty = {
   id: string;
-  type: 'rich_text';
+  type: "rich_text";
   rich_text: NotionText[];
 };
 
 export type NotionFormulaProperty = {
   id: string;
-  type: 'formula';
+  type: "formula";
   formula: {
-    type: 'number';
+    type: "number";
     number: number;
   };
 };

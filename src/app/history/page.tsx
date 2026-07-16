@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-import MessageHistory from '@/components/MessageHistory';
+import MessageHistory from "@/components/MessageHistory";
 
 export default function HistoryPage() {
   return (

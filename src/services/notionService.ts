@@ -1,11 +1,11 @@
 import { Client } from "@notionhq/client";
+import type { Photo, QualityEntry } from "@/types";
 import type {
   NotionPage,
   NotionResponse,
   NotionText,
   NotionTitleProperty,
 } from "@/types/notion";
-import type { QualityEntry, Photo } from "@/types";
 
 class NotionService {
   private notion: Client;

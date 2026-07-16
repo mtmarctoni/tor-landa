@@ -1,9 +1,12 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import { Cake } from "lucide-react";
-import { getDaysUntilLandaBirthday, isLandaBirthday } from "@/utils/dateFormatter";
+import type React from "react";
+import {
+  getDaysUntilLandaBirthday,
+  isLandaBirthday,
+} from "@/utils/dateFormatter";
 
 const BirthdayCountdown: React.FC = () => {
   const daysUntil = getDaysUntilLandaBirthday();

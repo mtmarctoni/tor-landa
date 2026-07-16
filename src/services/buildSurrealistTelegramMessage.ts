@@ -7,7 +7,7 @@ type SurrealistTemplate = (dashboardUrl: string) => string;
 
 const surrealistTemplates: SurrealistTemplate[] = [
   // El oráculo digital despierta
-  (dashboardUrl) => 
+  (dashboardUrl) =>
     `🔮 *¡El oráculo digital ha susurrado!* 🔮\n\nUn nuevo eco ha aparecido en el cosmos virtual.\n\n[Abrir portal cósmico](${dashboardUrl})\n\nEl viento digital mueve los relojes.\n*Importante*: No ignores el conjuro.`,
 
   // La paradoja del mensaje
@@ -24,13 +24,17 @@ const surrealistTemplates: SurrealistTemplate[] = [
 
   // El mensajero invisible canta
   (dashboardUrl) =>
-    `🎶 *El mensajero invisible canta:*\n\nAlgo nuevo ha brotado de la tela digital.\n\n[Viajar hacia la novedad](${dashboardUrl})\n\nEnhorabuena por ser parte del absurdo.\n*Importante*: Las palabras importan más allá del sentido.`
+    `🎶 *El mensajero invisible canta:*\n\nAlgo nuevo ha brotado de la tela digital.\n\n[Viajar hacia la novedad](${dashboardUrl})\n\nEnhorabuena por ser parte del absurdo.\n*Importante*: Las palabras importan más allá del sentido.`,
 ];
 
 /**
  * Picks a random surrealist template for Telegram notifications.
  */
-export function buildSurrealistTelegramMessage({ dashboardUrl }: { dashboardUrl: string }): string {
-  const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+export function buildSurrealistTelegramMessage({
+  dashboardUrl,
+}: {
+  dashboardUrl: string;
+}): string {
+  const pick = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
   return pick(surrealistTemplates)(dashboardUrl);
 }

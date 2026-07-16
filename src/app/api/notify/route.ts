@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createHmac, timingSafeEqual } from "crypto";
-import { sendTelegramMessage } from "@/services/telegramService";
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { type NextRequest, NextResponse } from "next/server";
 import { buildSurrealistTelegramMessage } from "@/services/buildSurrealistTelegramMessage";
+import { sendTelegramMessage } from "@/services/telegramService";
 
 /** Utility: Mask secrets in headers log */
 function maskHeaders(headers: Headers): Record<string, string> {
@@ -20,8 +20,7 @@ function isSignatureValid(
   token: string,
   expected: string,
 ): boolean {
-  const calculated =
-    "sha256=" + createHmac("sha256", token).update(rawBody).digest("hex");
+  const calculated = `sha256=${createHmac("sha256", token).update(rawBody).digest("hex")}`;
   try {
     return (
       expected.length === calculated.length &&
@@ -121,9 +120,9 @@ export async function POST(req: NextRequest) {
   const fullType = bodyObj?.type || "";
   const [entity, action] = fullType.split(".");
   const pageId = bodyObj?.entity?.id;
-  const parentId = bodyObj?.data?.parent?.id;
+  const _parentId = bodyObj?.data?.parent?.id;
   // Flexible title extraction
-  let pageTitle: string =
+  const pageTitle: string =
     bodyObj?.data?.properties?.title?.title?.[0]?.plain_text ||
     bodyObj?.data?.properties?.Name?.title?.[0]?.plain_text ||
     bodyObj?.data?.properties?.name?.title?.[0]?.plain_text ||

@@ -2,12 +2,12 @@
 
 import React, {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
-  type ReactNode,
 } from "react";
 import type { QualityEntry } from "../types";
 
@@ -33,7 +33,9 @@ interface QualityProviderProps {
   children: ReactNode;
 }
 
-export const QualityProvider: React.FC<QualityProviderProps> = ({ children }) => {
+export const QualityProvider: React.FC<QualityProviderProps> = ({
+  children,
+}) => {
   const [qualities, setQualities] = useState<QualityEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,8 +71,10 @@ export const QualityProvider: React.FC<QualityProviderProps> = ({ children }) =>
 
   const value = useMemo(
     () => ({ qualities, loading, error, refetch, lastUpdated }),
-    [qualities, loading, error, refetch, lastUpdated]
+    [qualities, loading, error, refetch, lastUpdated],
   );
 
-  return <QualityContext.Provider value={value}>{children}</QualityContext.Provider>;
+  return (
+    <QualityContext.Provider value={value}>{children}</QualityContext.Provider>
+  );
 };
