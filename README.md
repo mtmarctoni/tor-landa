@@ -19,6 +19,11 @@ Tor Landa is a modern, playful, and interactive web application for tracking and
 - [Notion API](https://developers.notion.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 
+## Agent Docs
+
+- `AGENTS.md` contains repo-specific implementation rules and validation guidance.
+- `CLAUDE.md` contains a compact architecture summary for agents and contributors.
+
 ## Getting Started
 
 1. **Clone the repository:**
