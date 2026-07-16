@@ -204,15 +204,21 @@ select {
 }
 
 .surface-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(241, 246, 255, 0.94) 100%
+  background: var(
+    --time-card-bg,
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(241, 246, 255, 0.94) 100%
+    )
   );
-  border: 1px solid rgba(196, 220, 255, 0.72);
+  border: 1px solid var(--time-card-border, rgba(196, 220, 255, 0.72));
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(14px);
+  transition:
+    background 1.8s ease,
+    border-color 1.8s ease;
 }
 
 .control-pill {
@@ -261,6 +267,257 @@ select {
 
 .animate-blob-morph {
   animation: blobMorph 18s ease-in-out infinite;
+}
+
+/* ── Time-of-day keyframes ── */
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes dawnGlow {
+  0%,
+  100% {
+    opacity: 0.3;
+    filter: blur(60px);
+  }
+
+  50% {
+    opacity: 0.6;
+    filter: blur(80px);
+  }
+}
+
+/* ── Time-of-day theme overrides ── */
+
+html[data-time="dawn"] {
+  --time-surface: #fff7ed;
+  --time-gradient: linear-gradient(
+    135deg,
+    #fef3c7 0%,
+    #fde68a 25%,
+    #fed7aa 50%,
+    #fdba74 75%,
+    #fef3c7 100%
+  );
+  --time-text: #78350f;
+  --time-text-muted: #92400e;
+  --time-glow: rgba(251, 191, 36, 0.25);
+  --time-orb-1: #fbbf24;
+  --time-orb-2: #f97316;
+  --time-orb-3: #fcd34d;
+  --time-card-bg: linear-gradient(
+    180deg,
+    rgba(255, 251, 235, 0.92) 0%,
+    rgba(254, 243, 199, 0.95) 100%
+  );
+  --time-card-border: rgba(251, 191, 36, 0.4);
+  --time-header-bg: rgba(255, 251, 235, 0.55);
+  --time-footer-bg: linear-gradient(
+    to right,
+    rgba(255, 251, 235, 0.8),
+    rgba(254, 243, 199, 0.85)
+  );
+  --time-blob-1: #fbbf24;
+  --time-blob-2: #f97316;
+  --time-blob-3: #fcd34d;
+}
+
+html[data-time="day"] {
+  --time-surface: #f9fbff;
+  --time-gradient: linear-gradient(
+    135deg,
+    #f5f3ff 0%,
+    #ede9fe 25%,
+    #ddd6fe 50%,
+    #c4b5fd 75%,
+    #ede7fe 100%
+  );
+  --time-text: #12314f;
+  --time-text-muted: #2a5374;
+  --time-glow: rgba(56, 189, 248, 0.25);
+  --time-orb-1: #9eceff;
+  --time-orb-2: #6dd5ed;
+  --time-orb-3: #38bdf8;
+  --time-card-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(241, 246, 255, 0.94) 100%
+  );
+  --time-card-border: rgba(196, 220, 255, 0.72);
+  --time-header-bg: rgba(255, 255, 255, 0.32);
+  --time-footer-bg: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.75),
+    rgba(224, 242, 254, 0.8)
+  );
+  --time-blob-1: #9eceff;
+  --time-blob-2: #6dd5ed;
+  --time-blob-3: #38bdf8;
+}
+
+html[data-time="dusk"] {
+  --time-surface: #1e1b4b;
+  --time-gradient: linear-gradient(
+    135deg,
+    #1e1b4b 0%,
+    #312e81 25%,
+    #4c1d95 50%,
+    #581c87 75%,
+    #1e1b4b 100%
+  );
+  --time-text: #e0e7ff;
+  --time-text-muted: #a5b4fc;
+  --time-glow: rgba(139, 92, 246, 0.35);
+  --time-orb-1: #8b5cf6;
+  --time-orb-2: #a78bfa;
+  --time-orb-3: #c084fc;
+  --time-card-bg: linear-gradient(
+    180deg,
+    rgba(30, 27, 75, 0.88) 0%,
+    rgba(49, 46, 129, 0.92) 100%
+  );
+  --time-card-border: rgba(139, 92, 246, 0.4);
+  --time-header-bg: rgba(30, 27, 75, 0.6);
+  --time-footer-bg: linear-gradient(
+    to right,
+    rgba(30, 27, 75, 0.8),
+    rgba(49, 46, 129, 0.85)
+  );
+  --time-blob-1: #8b5cf6;
+  --time-blob-2: #a78bfa;
+  --time-blob-3: #c084fc;
+}
+
+html[data-time="night"] {
+  --time-surface: #0c0a1d;
+  --time-gradient: linear-gradient(
+    135deg,
+    #0c0a1d 0%,
+    #0f172a 25%,
+    #1e1b4b 50%,
+    #0f172a 75%,
+    #0c0a1d 100%
+  );
+  --time-text: #e2e8f0;
+  --time-text-muted: #94a3b8;
+  --time-glow: rgba(56, 189, 248, 0.15);
+  --time-orb-1: #1e3a5f;
+  --time-orb-2: #1e40af;
+  --time-orb-3: #312e81;
+  --time-card-bg: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.85) 0%,
+    rgba(30, 27, 75, 0.9) 100%
+  );
+  --time-card-border: rgba(56, 189, 248, 0.2);
+  --time-header-bg: rgba(15, 23, 42, 0.65);
+  --time-footer-bg: linear-gradient(
+    to right,
+    rgba(15, 23, 42, 0.8),
+    rgba(30, 27, 75, 0.85)
+  );
+  --time-blob-1: #1e3a5f;
+  --time-blob-2: #1e40af;
+  --time-blob-3: #312e81;
+}
+
+/* ── Time-aware surface classes ── */
+
+.time-body {
+  background-color: var(--time-surface);
+  color: var(--time-text);
+  transition:
+    background-color 1.8s ease,
+    color 1.8s ease;
+}
+
+.time-gradient {
+  background: var(--time-gradient);
+  transition: background 1.8s ease;
+}
+
+.time-surface-card {
+  background: var(--time-card-bg);
+  border-color: var(--time-card-border);
+  transition:
+    background 1.8s ease,
+    border-color 1.8s ease;
+}
+
+.time-header {
+  background: var(--time-header-bg);
+  backdrop-filter: blur(16px);
+  transition: background 1.8s ease;
+}
+
+.time-footer {
+  background: var(--time-footer-bg);
+  transition: background 1.8s ease;
+}
+
+/* ── Night stars layer ── */
+
+.time-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+html[data-time="night"] .time-stars {
+  opacity: 1;
+}
+
+.time-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  animation: twinkle var(--tw-duration, 3s) ease-in-out infinite;
+  animation-delay: var(--tw-delay, 0s);
+}
+
+/* ── Dawn glow overlay ── */
+
+.time-dawn-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+html[data-time="dawn"] .time-dawn-glow {
+  opacity: 1;
+}
+
+.time-dawn-glow::before {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(251, 191, 36, 0.35) 0%,
+    rgba(249, 115, 22, 0.15) 40%,
+    transparent 70%
+  );
+  animation: dawnGlow 6s ease-in-out infinite;
 }
 
 .sr-only {

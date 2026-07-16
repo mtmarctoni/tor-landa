@@ -5,6 +5,7 @@ import "./globals.css";
 import EasterEggKeyboardListener from "@/components/EasterEggKeyboardListener";
 import SurrealistBackground from "@/components/SurrealistBackground";
 import { QualityProvider } from "@/context/QualityContext";
+import { TimeShiftProvider } from "@/context/TimeShiftContext";
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 
@@ -29,20 +30,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} time-body antialiased`}
       >
         <QualityProvider>
-          <div className="relative isolate min-h-screen overflow-hidden bg-surreal-gradient">
-            <SurrealistBackground />
-            <div className="relative z-10 flex min-h-screen flex-col">
-              <Header />
-              {children}
-              <Footer />
+          <TimeShiftProvider>
+            <div className="time-gradient relative isolate min-h-screen overflow-hidden">
+              <SurrealistBackground />
+              <div className="relative z-10 flex min-h-screen flex-col">
+                <Header />
+                {children}
+                <Footer />
+              </div>
             </div>
-          </div>
-          <EasterEggKeyboardListener />
+            <EasterEggKeyboardListener />
+          </TimeShiftProvider>
         </QualityProvider>
       </body>
     </html>

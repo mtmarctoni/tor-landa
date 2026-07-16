@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { useTimeShift } from "@/context/TimeShiftContext";
 import { isLandaBirthdayWeek } from "@/utils/dateFormatter";
 import {
   birthdayColorCombo,
@@ -18,6 +19,7 @@ interface QualityCardProps {
 
 const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { period } = useTimeShift();
 
   // Check if this is Landa's birthday week
   const isBirthdayWeek = isLandaBirthdayWeek(entry.week, entry.year);
@@ -83,6 +85,15 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
     });
   };
 
+  const glowColor =
+    period === "night"
+      ? "var(--time-glow)"
+      : period === "dawn"
+        ? "rgba(251, 191, 36, 0.25)"
+        : period === "dusk"
+          ? "rgba(139, 92, 246, 0.3)"
+          : "rgba(56, 189, 248, 0.33)";
+
   return (
     <motion.div
       className={`relative flex w-full flex-col items-center justify-center overflow-hidden border-2 px-2 transition-all duration-500 animate-blob-morph
@@ -95,8 +106,8 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
       style={{
         minHeight: "320px",
         boxShadow: isBirthdayWeek
-          ? "0 0 52px 0 #f8717130, 0 14px 34px -18px #fbbf2455"
-          : "0 0 52px 0 #a78bfa24, 0 14px 34px -18px #38bdf855",
+          ? `0 0 52px 0 #f8717130, 0 14px 34px -18px #fbbf2455`
+          : `0 0 60px 0 ${glowColor}, 0 14px 34px -18px ${glowColor}`,
       }}
       role="article"
       aria-label={`Mensaje de la semana ${entry.week} del ${entry.year}`}
