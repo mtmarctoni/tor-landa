@@ -32,14 +32,14 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QualityProvider>
-          <div className="min-h-screen bg-surreal-gradient relative overflow-hidden">
+          <div className="relative isolate min-h-screen overflow-hidden bg-surreal-gradient">
             <SurrealistBackground />
-            <div className="relative z-10 flex flex-col min-h-screen">
+            <div className="relative z-10 flex min-h-screen flex-col">
               <Header />
               {children}
+              <Footer />
             </div>
           </div>
-          <Footer />
           <EasterEggKeyboardListener />
         </QualityProvider>
       </body>

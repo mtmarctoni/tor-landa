@@ -81,15 +81,15 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
     return (
         <motion.div
             className={`relative flex w-full flex-col items-center justify-center overflow-hidden border-2 px-2 transition-all duration-500 animate-blob-morph
-            ${color.border} ${color.shadow} ${color.bg} rounded-[60%_40%_30%_70%/60%_30%_70%_40%]`}
+            ${color.border} ${color.shadow} ${color.bg}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
             style={{ minHeight: '320px', boxShadow: isBirthdayWeek 
-                ? '0 0 64px 0 #f8717155, 0 8px 32px 0 #fbbf2455' 
-                : '0 0 64px 0 #a78bfa55, 0 8px 32px 0 #38bdf855' 
+                ? '0 0 52px 0 #f8717130, 0 14px 34px -18px #fbbf2455' 
+                : '0 0 52px 0 #a78bfa24, 0 14px 34px -18px #38bdf855' 
             }}
             role="article"
             aria-label={`Mensaje de la semana ${entry.week} del ${entry.year}`}
@@ -100,13 +100,13 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                 >
-                    {[...Array(12)].map((_, i) => (
+                    {[...Array(8)].map((_, i) => (
                         <motion.div
                             key={i}
-                            className="absolute text-rose-300"
+                            className="absolute text-rose-300/85 sm:text-rose-300"
                             style={{
-                                left: `${10 + (i * 7)}%`,
-                                top: `${5 + (i % 3) * 30}%`,
+                                left: `${12 + (i * 9)}%`,
+                                top: `${8 + (i % 3) * 28}%`,
                             }}
                             animate={{
                                 y: [0, -10, 0],
@@ -120,7 +120,7 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                                 delay: i * 0.1
                             }}
                         >
-                            {i % 2 === 0 ? <Heart size={20} /> : <Star size={18} />}
+                            {i % 2 === 0 ? <Heart size={18} className="sm:size-5" /> : <Star size={16} className="sm:size-[18px]" />}
                         </motion.div>
                     ))}
                 </motion.div>
@@ -129,7 +129,7 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
             <div className="relative z-10 flex w-full max-w-[44rem] flex-col items-center justify-center p-5 sm:p-8">
                 {isHovered && !isBirthdayWeek && (
                     <motion.div
-                        className="absolute inset-0 pointer-events-none z-30"
+                        className="absolute inset-0 pointer-events-none z-30 hidden sm:block"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                     >
@@ -164,10 +164,10 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                     </motion.div>
                 )}
 
-                <div className="mb-6 relative">
+                <div className="relative mb-5 w-full max-w-[26rem] px-3 text-center sm:mb-6">
                     {isBirthdayWeek && (
                         <motion.div
-                            className="text-4xl mb-2 text-center"
+                            className="mb-2 text-center text-3xl sm:text-4xl"
                             animate={{
                                 scale: [1, 1.1, 1],
                             }}
@@ -179,20 +179,20 @@ const QualityCard: React.FC<QualityCardProps> = ({ entry, onSecretClick }) => {
                             🎂✨🎉
                         </motion.div>
                     )}
-                    <h2 className={`text-center font-serif text-2xl sm:text-3xl ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} italic drop-shadow-[0_2px_8px_#38bdf8cc]`}>
+                    <h2 className={`text-center font-serif text-[1.65rem] leading-tight sm:text-3xl ${isBirthdayWeek ? 'text-rose-700' : 'text-dream-700'} italic drop-shadow-[0_2px_8px_rgba(56,189,248,0.45)]`}>
                         {isBirthdayWeek ? '¡Feliz Cumpleaños, Landa!' : `Semana ${entry.week} / ${entry.year}`}
                     </h2>
-                    <div className={`h-0.5 w-full max-w-80 bg-gradient-to-r ${isBirthdayWeek 
+                    <div className={`mx-auto mt-3 h-0.5 w-full max-w-64 rounded bg-gradient-to-r ${isBirthdayWeek 
                         ? 'from-rose-400 via-pink-300 to-amber-400' 
-                        : 'from-dream-400 via-dream-200 to-dream-600'} rounded mt-2 mx-auto`}></div>
+                        : 'from-dream-400 via-dream-200 to-dream-600'} sm:max-w-80`}></div>
                 </div>
 
                 <motion.div
-                    className="flex flex-col items-center justify-center"
+                    className="flex w-full flex-col items-center justify-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    <span className={`${isBirthdayWeek ? 'text-rose-800' : 'text-dream-800'} text-lg sm:text-xl leading-relaxed drop-shadow-[0_1px_4px_#0ea5e955] text-center`}>
+                    <span className={`${isBirthdayWeek ? 'text-rose-900' : 'text-dream-900'} max-w-[34ch] text-balance px-2 text-left text-[1.02rem] leading-7 drop-shadow-[0_1px_3px_rgba(14,165,233,0.18)] sm:px-0 sm:text-center sm:text-xl sm:leading-relaxed`}>
                         {renderMessage(entry.message)}
                     </span>
                 </motion.div>
