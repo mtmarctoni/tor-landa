@@ -5,7 +5,8 @@ import { useQualityContext } from "@/context/QualityContext";
 
 const CYCLE_MS = 25_000;
 const INITIAL_DELAY_MS = 4_000;
-const EXPAND_AUTO_DISMISS_MS = 4_000;
+const BASE_DISMISS_MS = 4_000;
+const MS_PER_CHAR = 60;
 const CONFETTI_COUNT = 22;
 const CONFETTI_COLORS = [
   "#6dd5ed",
@@ -88,8 +89,9 @@ export default function FloatingQuote() {
     setParticles(generateParticles());
 
     if (autoDismissRef.current) clearTimeout(autoDismissRef.current);
-    autoDismissRef.current = setTimeout(collapse, EXPAND_AUTO_DISMISS_MS);
-  }, [collapse]);
+    const duration = BASE_DISMISS_MS + (quote?.length ?? 0) * MS_PER_CHAR;
+    autoDismissRef.current = setTimeout(collapse, duration);
+  }, [collapse, quote]);
 
   const handleInteract = useCallback(() => {
     if (isExpanded) {
@@ -102,10 +104,6 @@ export default function FloatingQuote() {
   const handlePointerEnter = useCallback(() => {
     if (!isExpanded) expand();
   }, [isExpanded, expand]);
-
-  const handlePointerLeave = useCallback(() => {
-    if (isExpanded) collapse();
-  }, [isExpanded, collapse]);
 
   useEffect(() => {
     if (!isExpanded) return;
@@ -131,7 +129,7 @@ export default function FloatingQuote() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0"
       aria-hidden="true"
       style={{ zIndex: 5 }}
     >
@@ -144,7 +142,6 @@ export default function FloatingQuote() {
         style={{ top: `${top}%` }}
         onClick={handleInteract}
         onPointerEnter={handlePointerEnter}
-        onPointerLeave={handlePointerLeave}
       >
         {quote}
         {isExpanded && (

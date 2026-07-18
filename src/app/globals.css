@@ -285,15 +285,29 @@ select {
   }
 }
 
+@keyframes floatingQuoteHint {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.22;
+  }
+}
+
 .floating-quote {
-  max-width: 28ch;
+  max-width: 60vw;
   opacity: 0.1;
   cursor: pointer;
   pointer-events: auto;
   transition:
     opacity 0.35s ease,
     z-index 0s;
-  animation: floatingQuote 20s ease-in-out forwards;
+  animation:
+    floatingQuote 20s ease-in-out forwards,
+    floatingQuoteHint 3s ease-in-out 1;
+  animation-delay: 0s, 0.5s;
   user-select: none;
   -webkit-user-select: none;
   background: none;
@@ -303,18 +317,66 @@ select {
   font: inherit;
   color: inherit;
   text-align: left;
+  will-change: transform;
 }
 
 @media (min-width: 640px) {
   .floating-quote {
     max-width: 36ch;
+    animation:
+      floatingQuote 20s ease-in-out forwards,
+      floatingQuoteHint 3s ease-in-out 1;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 768px) {
+  .floating-quote {
+    animation:
+      floatingQuote 25s ease-in-out forwards,
+      floatingQuoteHint 3s ease-in-out 1;
+  }
+}
+
+@media (max-width: 639px) {
+  .floating-quote {
+    animation:
+      floatingQuote 28s ease-in-out forwards,
+      floatingQuoteHint 3s ease-in-out 1;
   }
 }
 
 .floating-quote.expanded {
   opacity: 1;
-  z-index: 20;
-  animation-play-state: paused;
+  z-index: 30;
+  animation-play-state: paused, paused;
+}
+
+.floating-quote.expanded::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 8px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(56, 189, 248, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+  animation: expandedGlow 2s ease-in-out infinite;
+}
+
+@keyframes expandedGlow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 /* ── Confetti burst ── */
