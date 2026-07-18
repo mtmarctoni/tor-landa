@@ -273,15 +273,20 @@ select {
 
 @keyframes floatingQuote {
   0% {
-    transform: translateX(-100%) translateY(0) rotate(-2deg);
+    transform: translateX(-100%) translateY(10px) rotate(-3deg) scale(0.6);
   }
 
-  50% {
-    transform: translateX(50vw) translateY(-15px) rotate(1deg);
+  35% {
+    transform: translateX(30vw) translateY(-20px) rotate(1.5deg) scale(1.15);
+  }
+
+  65% {
+    transform: translateX(65vw) translateY(5px) rotate(-0.5deg) scale(0.95);
   }
 
   100% {
-    transform: translateX(calc(100vw + 100%)) translateY(0) rotate(-1deg);
+    transform: translateX(calc(100vw + 100%)) translateY(-8px) rotate(-2deg)
+      scale(0.7);
   }
 }
 
@@ -305,7 +310,7 @@ select {
     opacity 0.35s ease,
     z-index 0s;
   animation:
-    floatingQuote 20s ease-in-out forwards,
+    floatingQuote 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards,
     floatingQuoteHint 3s ease-in-out 1;
   animation-delay: 0s, 0.5s;
   user-select: none;
@@ -324,7 +329,7 @@ select {
   .floating-quote {
     max-width: 36ch;
     animation:
-      floatingQuote 20s ease-in-out forwards,
+      floatingQuote 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards,
       floatingQuoteHint 3s ease-in-out 1;
   }
 }
@@ -332,7 +337,7 @@ select {
 @media (min-width: 640px) and (max-width: 768px) {
   .floating-quote {
     animation:
-      floatingQuote 25s ease-in-out forwards,
+      floatingQuote 18s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards,
       floatingQuoteHint 3s ease-in-out 1;
   }
 }
@@ -340,7 +345,7 @@ select {
 @media (max-width: 639px) {
   .floating-quote {
     animation:
-      floatingQuote 28s ease-in-out forwards,
+      floatingQuote 20s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards,
       floatingQuoteHint 3s ease-in-out 1;
   }
 }
