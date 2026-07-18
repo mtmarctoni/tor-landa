@@ -269,6 +269,37 @@ select {
   animation: blobMorph 18s ease-in-out infinite;
 }
 
+/* ── Floating quote animation ── */
+
+@keyframes floatingQuote {
+  0% {
+    transform: translateX(-100%) translateY(0) rotate(-2deg);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: translateX(50vw) translateY(-15px) rotate(1deg);
+    opacity: 0.14;
+  }
+
+  92% {
+    opacity: 0.1;
+  }
+
+  100% {
+    transform: translateX(calc(100vw + 100%)) translateY(0) rotate(-1deg);
+    opacity: 0;
+  }
+}
+
+.floating-quote {
+  animation: floatingQuote 20s ease-in-out forwards;
+}
+
 /* ── Time-of-day keyframes ── */
 
 @keyframes twinkle {
