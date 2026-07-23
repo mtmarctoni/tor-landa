@@ -20,20 +20,20 @@
     "@notionhq/client": "^5.23.2",
     "dotenv": "^17.3.1",
     "framer-motion": "^12.42.2",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.25.0",
     "next": "16.3.0-preview.6",
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.4",
+    "@biomejs/biome": "^2.5.5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "dependency-cruiser": "^18.1.0",
-    "knip": "^6.27.0",
-    "postcss": "^8.4.35",
+    "knip": "^6.29.0",
+    "postcss": "^8.5.22",
     "tailwindcss": "^4",
     "typescript": "^7"
   },
