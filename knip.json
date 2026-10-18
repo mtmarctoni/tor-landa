@@ -1,4 +1,3 @@
 {
-  "entry": ["src/app/**/*.{ts,tsx}", "src/sections/**/*.{ts,tsx}"],
-  "ignore": ["src/types/**"]
+  "entry": ["src/app/**/*.{ts,tsx}", "src/sections/**/*.{ts,tsx}"]
 }
