@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-import EasterEggKeyboardListener from "@/components/EasterEggKeyboardListener";
 import MotionPreferences from "@/components/MotionPreferences";
 import SurrealistBackground from "@/components/SurrealistBackground";
 import { QualityProvider } from "@/context/QualityContext";
@@ -50,7 +49,6 @@ export default function RootLayout({
                   <Footer />
                 </div>
               </div>
-              <EasterEggKeyboardListener />
             </TimeShiftProvider>
           </QualityProvider>
         </MotionPreferences>
