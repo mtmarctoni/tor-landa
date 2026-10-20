@@ -981,6 +981,45 @@ html[data-time="night"] .journal-scene img {
 }
 
 /* A native top-layer window: the impossible scenery never overlaps the letter. */
+.birthday-countdown > div {
+  background: var(--journal-surface);
+  color: var(--journal-ink);
+  border-color: var(--journal-accent);
+  transform: rotate(-2deg);
+}
+.birthday-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 4;
+}
+.birthday-confetti i {
+  position: absolute;
+  top: -25px;
+  width: 10px;
+  height: 20px;
+  border-radius: 50% 10%;
+  animation: birthday-fall 3s ease-in both;
+}
+@keyframes birthday-fall {
+  0% {
+    transform: translateY(-30px) rotate(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(90vh) rotate(260deg);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .birthday-confetti {
+    display: none;
+  }
+}
 
 .journal-dialog {
   width: min(760px, calc(100vw - 32px));
