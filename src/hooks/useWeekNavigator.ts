@@ -22,37 +22,38 @@ export const useWeekNavigator = (qualities: QualityEntry[]) => {
   const [week, setWeek] = useState(initial.week);
   const [year, setYear] = useState(initial.year);
   const [direction, setDirection] = useState(0);
+  const [restored, setRestored] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-
-      const parsed = JSON.parse(raw) as { week?: number; year?: number };
-      const { week, year } = parsed;
-      if (typeof week !== "number" || typeof year !== "number") {
-        return;
+      if (raw) {
+        const parsed = JSON.parse(raw) as { week?: number; year?: number };
+        const { week, year } = parsed;
+        if (typeof week === "number" && typeof year === "number") {
+          queueMicrotask(() => {
+            setWeek(normalizeWeek(week));
+            setYear(year);
+          });
+        }
       }
-
-      queueMicrotask(() => {
-        setWeek(normalizeWeek(week));
-        setYear(year);
-      });
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      queueMicrotask(() => setRestored(true));
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !restored) return;
 
     window.localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ week: normalizeWeek(week), year }),
     );
-  }, [week, year]);
+  }, [week, year, restored]);
 
   const goToCurrentWeek = useCallback(() => {
     const now = getCurrentWeekAndYear();
