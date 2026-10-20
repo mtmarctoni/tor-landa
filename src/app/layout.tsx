@@ -1,22 +1,27 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 
 import EasterEggKeyboardListener from "@/components/EasterEggKeyboardListener";
+import MotionPreferences from "@/components/MotionPreferences";
 import SurrealistBackground from "@/components/SurrealistBackground";
 import { QualityProvider } from "@/context/QualityContext";
 import { TimeShiftProvider } from "@/context/TimeShiftContext";
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const readingFont = DM_Sans({
+  variable: "--font-journal-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const displayFont = Cormorant_Garamond({
+  variable: "--font-journal-serif",
   subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -32,21 +37,23 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} time-body antialiased`}
+        className={`${readingFont.variable} ${displayFont.variable} time-body antialiased`}
       >
-        <QualityProvider>
-          <TimeShiftProvider>
-            <div className="time-gradient relative isolate min-h-screen overflow-hidden">
-              <SurrealistBackground />
-              <div className="relative z-10 flex min-h-screen flex-col">
-                <Header />
-                {children}
-                <Footer />
+        <MotionPreferences>
+          <QualityProvider>
+            <TimeShiftProvider>
+              <div className="time-gradient relative isolate min-h-screen overflow-hidden">
+                <SurrealistBackground />
+                <div className="relative z-10 flex min-h-screen flex-col">
+                  <Header />
+                  {children}
+                  <Footer />
+                </div>
               </div>
-            </div>
-            <EasterEggKeyboardListener />
-          </TimeShiftProvider>
-        </QualityProvider>
+              <EasterEggKeyboardListener />
+            </TimeShiftProvider>
+          </QualityProvider>
+        </MotionPreferences>
       </body>
     </html>
   );

@@ -92,11 +92,18 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-journal-sans), sans-serif;
   background-color: var(--color-surface-0);
   color: var(--color-text-primary);
   min-height: 100%;
   overflow-x: hidden;
+}
+
+.time-body,
+.time-gradient,
+.surface-card,
+.time-surface-card {
+  transition: none;
 }
 
 * {
@@ -115,7 +122,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-family: var(--font-journal-serif), Georgia, serif;
   line-height: 1.2;
 }
 
@@ -709,9 +716,159 @@ html[data-time="dawn"] .time-dawn-glow {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
+    animation: none !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Floating dream gallery. Day is also the deterministic server default. */
+:root,
+html[data-time="day"] {
+  --journal-surface: #dbf4ef;
+  --journal-ink: #163c47;
+  --journal-muted: #365b64;
+  --journal-accent: #9b3456;
+  --dream-cloud: #fff9ed;
+  --dream-sky: #89d9dc;
+  --dream-horizon: #ffc9ad;
+}
+
+html[data-time="dawn"] {
+  --journal-surface: #ffdeca;
+  --journal-ink: #513346;
+  --journal-muted: #6f4055;
+  --journal-accent: #993952;
+  --dream-cloud: #fff8e8;
+  --dream-sky: #ffb398;
+  --dream-horizon: #f3a9c0;
+}
+
+html[data-time="dusk"] {
+  --journal-surface: #343464;
+  --journal-ink: #fff0e6;
+  --journal-muted: #e8d7ef;
+  --journal-accent: #ffcf98;
+  --dream-cloud: #34355a;
+  --dream-sky: #9b668e;
+  --dream-horizon: #e79095;
+}
+
+html[data-time="night"] {
+  --journal-surface: #142d4b;
+  --journal-ink: #fff3da;
+  --journal-muted: #c7e6ea;
+  --journal-accent: #ffcc9c;
+  --dream-cloud: #193a52;
+  --dream-sky: #315b78;
+  --dream-horizon: #765577;
+  color-scheme: dark;
+}
+
+html:root {
+  --journal-rule: color-mix(in srgb, var(--journal-ink) 24%, transparent);
+  --time-surface: var(--journal-surface);
+  --time-text: var(--journal-ink);
+  --time-text-muted: var(--journal-muted);
+  --time-card-bg: var(--journal-surface);
+  --time-card-border: var(--journal-rule);
+  --time-gradient: var(--journal-surface);
+  --color-surface-0: var(--journal-surface);
+  --color-surface-1: var(--journal-surface);
+  --color-surface-2: var(--journal-surface);
+  --color-text-primary: var(--journal-ink);
+  --color-text-muted: var(--journal-muted);
+  --color-accent: var(--journal-accent);
+  --color-dream-50: var(--journal-surface);
+  --color-dream-100: color-mix(
+    in srgb,
+    var(--journal-ink) 7%,
+    var(--journal-surface)
+  );
+  --color-dream-200: color-mix(
+    in srgb,
+    var(--journal-ink) 10%,
+    var(--journal-surface)
+  );
+  --color-dream-300: color-mix(
+    in srgb,
+    var(--journal-ink) 22%,
+    var(--journal-surface)
+  );
+  --color-dream-400: var(--journal-accent);
+  --color-dream-500: var(--journal-muted);
+  --color-dream-600: var(--journal-muted);
+  --color-dream-700: var(--journal-ink);
+  --color-dream-800: var(--journal-ink);
+  --color-dream-900: var(--journal-ink);
+  --shadow-focus: 0 0 0 3px var(--journal-accent);
+}
+
+body {
+  background: var(--journal-surface);
+  color: var(--journal-ink);
+}
+
+.time-gradient {
+  background:
+    radial-gradient(ellipse at 5% 5%, var(--dream-sky), transparent 55%),
+    radial-gradient(ellipse at 100% 40%, var(--dream-horizon), transparent 60%),
+    var(--journal-surface);
+}
+
+.time-gradient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23g)' opacity='.65' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+
+.surface-card,
+.time-surface-card {
+  background: var(--journal-surface);
+  color: var(--journal-ink);
+  border-color: var(--journal-rule);
+  box-shadow: none;
+  backdrop-filter: none;
+  border-radius: 2px;
+}
+
+button,
+a.control-pill,
+input,
+select {
+  min-height: 44px;
+}
+
+button,
+a.control-pill {
+  min-width: 44px;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--journal-accent);
+  outline-offset: 4px;
+  box-shadow: none;
+}
+
+.journal-eyebrow {
+  color: var(--journal-muted);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  /* MotionConfig covers Framer transforms. CSS atmosphere must also stop. */
+  .floating-quote {
+    transform: none;
+    opacity: 1;
   }
 }
