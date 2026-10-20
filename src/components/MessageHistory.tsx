@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDownAZ, Calendar, Download, Search, User } from "lucide-react";
+import { ArrowDownAZ, Download, Search } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useQualityContext } from "@/context/QualityContext";
@@ -9,7 +8,7 @@ import type { QualityEntry } from "@/types/index";
 import { format } from "@/utils/dateFormatter";
 
 const MessageHistory: React.FC = () => {
-  const { qualities, loading, error } = useQualityContext();
+  const { qualities, loading, error, refetch } = useQualityContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterYear, setFilterYear] = useState<number | "">("");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
@@ -80,85 +79,67 @@ const MessageHistory: React.FC = () => {
     linkElement.click();
   };
 
-  if (loading) {
+  if (!loading && error) {
     return (
-      <div className="surface-card py-12">
-        <motion.div
-          className="mx-auto max-w-3xl space-y-3 px-6"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.6, repeat: Infinity }}
+      <div className="archive-state" role="alert">
+        <h2>No se pudo cargar la historia</h2>
+        <p>{error}</p>
+        <button
+          type="button"
+          className="archive-button"
+          onClick={() => void refetch()}
         >
-          <div className="h-5 w-1/3 rounded-full bg-dream-200" />
-          <div className="h-4 w-full rounded-full bg-dream-100" />
-          <div className="h-4 w-5/6 rounded-full bg-dream-100" />
-          <div className="h-4 w-2/3 rounded-full bg-dream-100" />
-        </motion.div>
+          Reintentar
+        </button>
       </div>
     );
   }
 
-  if (error) {
+  if (!loading && sortedQualities.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="surface-card mx-auto max-w-2xl px-6 py-8">
-          <div className="text-red-600 text-lg mb-4">
-            Error al cargar la historia
-          </div>
-          <div className="text-dream-700">{error}</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (sortedQualities.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <div className="surface-card mx-auto max-w-2xl px-6 py-8 text-dream-700 text-lg">
-          No se encontraron cualidades en la historia.
-        </div>
+      <div className="archive-state">
+        <h2>Todavía no hay recuerdos</h2>
+        <p>Este pequeño archipiélago espera su primera historia.</p>
+        <button
+          type="button"
+          className="archive-button"
+          onClick={() => void refetch()}
+        >
+          Volver a cargar
+        </button>
       </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto"
-    >
-      {/* Search and Filter Controls */}
-      <div className="surface-card p-6 mb-8">
-        <div className="flex flex-col lg:flex-row gap-4 items-center">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Buscar en mensajes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white/70 border border-dream-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dream-400 focus:border-transparent"
-            />
+    <div className="archive-collection">
+      <section className="archive-tools" aria-label="Explorar recuerdos">
+        <div className="archive-tool-grid">
+          <div className="archive-search">
+            <label htmlFor="archive-search">Buscar en mensajes</label>
+            <div className="archive-search-field">
+              <Search aria-hidden="true" size={20} />
+              <input
+                disabled={loading}
+                id="archive-search"
+                type="text"
+                placeholder="Una palabra, una pequeña puerta…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
-
-          {/* Year Filter */}
-          <div className="relative">
-            <Calendar
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dream-400"
-              size={20}
-            />
+          <div className="archive-year">
+            <label htmlFor="archive-year">Año</label>
             <select
+              disabled={loading}
+              id="archive-year"
               value={filterYear}
               onChange={(e) =>
                 setFilterYear(
                   e.target.value === "" ? "" : parseInt(e.target.value, 10),
                 )
               }
-              className="pl-10 pr-8 py-3 bg-white/70 border border-dream-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dream-400 focus:border-transparent"
             >
               <option value="">Todos los años</option>
               {availableYears.map((year) => (
@@ -169,49 +150,40 @@ const MessageHistory: React.FC = () => {
             </select>
           </div>
 
-          {/* Export Buttons */}
-          <div className="flex gap-2">
+          <div className="archive-sort">
+            <span aria-hidden="true">Orden del viaje</span>
             <button
               type="button"
+              disabled={loading}
               onClick={() =>
                 setSortOrder((prev) =>
                   prev === "newest" ? "oldest" : "newest",
                 )
               }
-              className="flex items-center gap-2 px-4 py-3 bg-dream-100 text-dream-800 rounded-xl hover:bg-dream-200 transition-colors"
+              className="archive-button"
               title="Cambiar orden"
             >
-              <ArrowDownAZ size={16} />
+              <ArrowDownAZ aria-hidden="true" size={16} />
               {sortOrder === "newest" ? "Reciente" : "Antiguo"}
-            </button>
-            <button
-              type="button"
-              onClick={exportAsJson}
-              className="flex items-center gap-2 px-4 py-3 bg-dream-200 text-dream-800 rounded-xl hover:bg-dream-300 transition-colors"
-              title="Exportar como JSON"
-            >
-              <Download size={16} />
-              JSON
-            </button>
-            <button
-              type="button"
-              onClick={exportAsText}
-              className="flex items-center gap-2 px-4 py-3 bg-dream-200 text-dream-800 rounded-xl hover:bg-dream-300 transition-colors"
-              title="Exportar como texto"
-            >
-              <Download size={16} />
-              TXT
             </button>
           </div>
         </div>
 
-        {/* Results count */}
-        <div className="mt-4 text-sm text-dream-600 flex flex-wrap items-center gap-2">
-          {filteredQualities.length} de {sortedQualities.length} cualidades
-          {searchQuery && (
-            <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>
-          )}
-          {filterYear && <span> · Año: {filterYear}</span>}
+        <div className="archive-tool-footer">
+          <p
+            className="archive-count"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {loading
+              ? "Reuniendo recuerdos…"
+              : `${filteredQualities.length} de ${sortedQualities.length} cualidades`}
+            {searchQuery && (
+              <span> · Filtrado por: &ldquo;{searchQuery}&rdquo;</span>
+            )}
+            {filterYear && <span> · Año: {filterYear}</span>}
+          </p>
           {(searchQuery || filterYear) && (
             <button
               type="button"
@@ -219,73 +191,105 @@ const MessageHistory: React.FC = () => {
                 setSearchQuery("");
                 setFilterYear("");
               }}
-              className="rounded-full bg-dream-100 px-3 py-1 text-dream-700 hover:bg-dream-200"
+              className="archive-button"
             >
               Limpiar filtros
             </button>
           )}
+          <fieldset
+            className="archive-exports"
+            aria-label="Guardar recuerdos filtrados"
+          >
+            <span>Llevar contigo</span>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={exportAsJson}
+              className="archive-button"
+              title="Exportar como JSON"
+            >
+              <Download aria-hidden="true" size={16} />
+              JSON
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={exportAsText}
+              className="archive-button"
+              title="Exportar como texto"
+            >
+              <Download aria-hidden="true" size={16} />
+              TXT
+            </button>
+          </fieldset>
         </div>
-      </div>
+      </section>
 
       {/* Message List */}
-      <div className="space-y-6">
-        {filteredQualities.map((quality, index) => {
-          const dateRange = getWeekDateRange(quality.week, quality.year);
+      <div className="archive-islands">
+        {loading && (
+          <div
+            className="memory-island archive-loading-island"
+            aria-hidden="true"
+          >
+            <span className="memory-moon" />
+            <header className="memory-heading">
+              <span className="memory-week">…</span>
+              <div>
+                <h2 className="archive-loading-line">&nbsp;</h2>
+                <div className="memory-date archive-loading-line">&nbsp;</div>
+              </div>
+            </header>
+            <p className="archive-loading-line">&nbsp;</p>
+          </div>
+        )}
+        {!loading &&
+          filteredQualities.map((quality) => {
+            const dateRange = getWeekDateRange(quality.week, quality.year);
 
-          return (
-            <motion.div
-              key={`${quality.year}-${quality.week}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-dream-200 hover:shadow-xl hover:scale-[1.01] transition-all duration-300"
-            >
-              {/* Message Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
-                <div className="flex items-center gap-3">
-                  <div className="bg-dream-100 p-2 rounded-full">
-                    <User className="text-dream-600" size={16} />
-                  </div>
+            return (
+              <article
+                key={`${quality.year}-${quality.week}`}
+                aria-label={`Semana ${quality.week} del ${quality.year}`}
+                className="memory-island"
+              >
+                <span className="memory-moon" aria-hidden="true" />
+                <header className="memory-heading">
+                  <span className="memory-week" aria-hidden="true">
+                    {String(quality.week).padStart(2, "0")}
+                  </span>
                   <div>
-                    <div className="font-semibold text-dream-800">
+                    <h2>
                       Semana {quality.week}, {quality.year}
-                    </div>
-                    <div className="text-sm text-dream-600">
+                    </h2>
+                    <div className="memory-date">
                       {dateRange.start} - {dateRange.end}
                     </div>
                   </div>
-                </div>
-                <div className="text-sm text-dream-500">Sistema</div>
-              </div>
-
-              {/* Message Content */}
-              <div className="text-dream-700 leading-relaxed">
-                {quality.message}
-              </div>
-            </motion.div>
-          );
-        })}
+                </header>
+                <p>{quality.message}</p>
+                <span className="memory-stair" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              </article>
+            );
+          })}
       </div>
 
       {/* No results message */}
       {filteredQualities.length === 0 && (searchQuery || filterYear) && (
-        <div className="text-center py-12">
-          <div className="text-dream-600 text-lg">
-            No se encontraron cualidades con los filtros aplicados.
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setSearchQuery("");
-              setFilterYear("");
-            }}
-            className="mt-4 px-6 py-2 bg-dream-200 text-dream-800 rounded-full hover:bg-dream-300 transition-colors"
-          >
-            Limpiar filtros
-          </button>
+        <div className="archive-state">
+          <h2>Ningún recuerdo coincide</h2>
+          <p>
+            Prueba otra palabra o usa «Limpiar filtros» para volver a todas las
+            islas.
+          </p>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };
 
