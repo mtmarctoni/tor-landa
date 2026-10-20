@@ -1,23 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  Bookmark,
-  Copy,
-  Dice5,
-  RefreshCcw,
-  SkipBack,
-  SkipForward,
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Copy, Dice5, RefreshCcw, SkipBack, SkipForward } from "lucide-react";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import BirthdayConfetti from "@/components/BirthdayConfetti";
 import BirthdayCountdown from "@/components/BirthdayCountdown";
 import BirthdayGalleryModal from "@/components/BirthdayGalleryModal";
 import BirthdaySecretModal from "@/components/BirthdaySecretModal";
+import HistoryButton from "@/components/HistoryButton";
+import { getDialogOwnershipVersion } from "@/components/JournalDialog";
 import LoadingQuality from "@/components/LoadingQuality";
 import NoQualityInPast from "@/components/NoQualityInPast";
 import QualityCard from "@/components/QualityCard";
+import StatusState from "@/components/StatusState";
 import WaitingForBirthday from "@/components/WaitingForBirthday";
 import WaitingForQuality from "@/components/WaitingForQuality";
 import { useQualityContext } from "@/context/QualityContext";
@@ -30,10 +26,10 @@ import {
 } from "@/utils/dateFormatter";
 
 const QualityTracker: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const { qualities, loading, error, refetch, lastUpdated } =
     useQualityContext();
   const { week: currentWeek, year: currentYear } = getCurrentWeekAndYear();
-
   const {
     week,
     year,
@@ -45,27 +41,44 @@ const QualityTracker: React.FC = () => {
     goToNextWeek,
     goToRandomSavedWeek,
   } = useWeekNavigator(qualities);
-
   const [copyStatus, setCopyStatus] = useState<"idle" | "done" | "error">(
     "idle",
   );
-
   const [showSecretModal, setShowSecretModal] = useState(false);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const galleryHandoffTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  useEffect(() => {
+    return () => {
+      if (galleryHandoffTimer.current !== null) {
+        clearTimeout(galleryHandoffTimer.current);
+        galleryHandoffTimer.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (copyStatus === "idle") return;
+    const timer = window.setTimeout(() => setCopyStatus("idle"), 2200);
+    return () => window.clearTimeout(timer);
+  }, [copyStatus]);
 
   const isBirthdayWeek = isLandaBirthdayWeek(week, year);
   const isBirthdayToday = isLandaBirthday();
-
   const currentQuality =
     qualities.find((q) => q.week === week && q.year === year) || null;
   const isPast =
     year < currentYear || (year === currentYear && week < currentWeek);
-
   const birthdayWeek = getLandaBirthdayWeek(year);
   const isWeek43BeforeBirthday =
     week === birthdayWeek.week && year === birthdayWeek.year && !isBirthdayWeek;
-
-  const progress = Math.min(week / 52, 1);
+  const canCopy =
+    !loading &&
+    !error &&
+    !isWeek43BeforeBirthday &&
+    Boolean(currentQuality?.message);
 
   const sortedAvailableWeeks = useMemo(
     () =>
@@ -75,260 +88,212 @@ const QualityTracker: React.FC = () => {
     [qualities],
   );
 
-  const handleSecretClick = () => {
-    setShowSecretModal(true);
-  };
-
   const handlePasswordSuccess = () => {
+    if (galleryHandoffTimer.current !== null || showGalleryModal) return;
+    const ownershipVersion = getDialogOwnershipVersion();
     setShowSecretModal(false);
-    setTimeout(() => {
+    galleryHandoffTimer.current = setTimeout(() => {
+      galleryHandoffTimer.current = null;
+      // The user's newer surprise request wins; never cover it or reopen the
+      // gallery after it has already been dismissed.
+      if (getDialogOwnershipVersion() !== ownershipVersion) return;
       setShowGalleryModal(true);
     }, 280);
   };
 
+  const handleSecretOpen = () => {
+    // Closing the secret restores its hint before the gallery opens. Keep that
+    // focus restoration, but don't allow a second modal during the handoff.
+    if (galleryHandoffTimer.current !== null || showGalleryModal) return;
+    setShowSecretModal(true);
+  };
+
   const handleCopyMessage = async () => {
-    if (!currentQuality?.message) return;
-
+    if (!canCopy || !currentQuality) return;
     const content = `Semana ${week} / ${year}\n\n${currentQuality.message}`;
-
     try {
       await navigator.clipboard.writeText(content);
       setCopyStatus("done");
     } catch {
       setCopyStatus("error");
     }
-
-    window.setTimeout(() => setCopyStatus("idle"), 2200);
   };
 
   return (
     <motion.section
       className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col"
-      initial={{ opacity: 0 }}
+      initial={false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
       aria-label="Seguimiento de cualidades por semana"
     >
       {(isBirthdayWeek || isBirthdayToday) && <BirthdayConfetti />}
-
-      <BirthdayCountdown />
-
-      <div
-        className="surface-card mb-4 flex flex-col gap-4 px-4 py-4 sm:mb-6 sm:gap-5 sm:px-6 sm:py-5"
-        aria-live="polite"
-      >
-        <div className="flex flex-col gap-3 sm:gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-dream-600">
-                Semana activa
-              </p>
-              <span
-                className={`mt-1 inline-flex rounded-full px-3 py-1.5 text-sm font-semibold sm:px-4 sm:py-2 sm:text-base ${
-                  isBirthdayWeek
-                    ? "bg-rose-100 text-rose-700"
-                    : "bg-dream-100 text-dream-700"
-                }`}
-              >
-                Semana {week} / {year}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={goToCurrentWeek}
-              disabled={isCurrentWeek}
-              className="control-pill inline-flex min-w-[9.5rem] items-center gap-2 self-start rounded-full border border-dream-100 bg-white/75 px-4 py-2 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-50 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 sm:text-base"
-            >
-              <RefreshCcw size={16} aria-hidden="true" />
-              Ir al presente
-            </button>
+      <div className="surface-card mb-4 flex flex-col gap-4 sm:mb-6 sm:gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="journal-eyebrow">Semana seleccionada</p>
+            <span data-testid="week-context" aria-live="polite">
+              Semana {week} / {year}
+            </span>
           </div>
-
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
-            <button
-              type="button"
-              onClick={goToPreviousWeek}
-              className={`control-pill inline-flex items-center gap-2 rounded-[1.15rem] border px-4 py-3 text-sm font-semibold sm:rounded-full sm:px-5 sm:py-2 sm:text-base
-                ${
-                  isBirthdayWeek
-                    ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
-                    : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
-                }
-                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1`}
-              aria-label="Ir a la semana anterior"
-            >
-              <SkipBack size={18} aria-hidden="true" />
-              Semana anterior
-            </button>
-            <button
-              type="button"
-              onClick={goToNextWeek}
-              className={`control-pill inline-flex items-center justify-center gap-2 rounded-[1.15rem] border px-4 py-3 text-sm font-semibold sm:rounded-full sm:px-5 sm:py-2 sm:text-base
-                ${
-                  isBirthdayWeek
-                    ? "bg-rose-200 text-rose-800 border-rose-300 hover:bg-rose-300 focus:ring-2 focus:ring-rose-400"
-                    : "bg-dream-200 text-dream-800 border-dream-300 hover:bg-dream-300 focus:ring-2 focus:ring-dream-400"
-                }
-                shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-offset-1 col-span-1`}
-              aria-label="Ir a la semana siguiente"
-            >
-              Siguiente semana
-              <SkipForward size={18} aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-
-        <div
-          className="w-full overflow-hidden rounded-full bg-dream-100 shadow-inner"
-          aria-hidden="true"
-        >
-          <motion.div
-            className={`h-2.5 ${
-              isBirthdayWeek
-                ? "bg-gradient-to-r from-rose-400 via-pink-300 to-amber-400"
-                : "bg-gradient-to-r from-dream-400 via-dream-200 to-dream-600"
-            }`}
-            initial={{ width: 0 }}
-            animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.35 }}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
           <button
             type="button"
-            onClick={goToRandomSavedWeek}
-            disabled={qualities.length === 0}
-            className="control-pill inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-dream-50 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
-          >
-            <Dice5 size={16} aria-hidden="true" />
-            Semana aleatoria
-          </button>
-          <button
-            type="button"
-            onClick={refetch}
-            className="control-pill inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-dream-50 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
+            onClick={goToCurrentWeek}
+            disabled={isCurrentWeek}
+            className="control-pill inline-flex items-center gap-2 border"
           >
             <RefreshCcw size={16} aria-hidden="true" />
-            Recargar datos
+            Volver al presente
           </button>
-          {currentQuality && (
-            <button
-              type="button"
-              onClick={handleCopyMessage}
-              className="control-pill col-span-2 inline-flex items-center gap-2 rounded-[1.05rem] border border-dream-100 bg-white/80 px-4 py-3 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-50 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 sm:col-span-1 sm:rounded-full sm:px-5 sm:py-2 sm:text-base"
+        </div>
+
+        <div className="relative flex w-full items-center py-2">
+          {loading ? (
+            <LoadingQuality />
+          ) : error ? (
+            <StatusState
+              icon=""
+              title="No se pudieron cargar los mensajes"
+              description={error}
+              actionLabel="Reintentar"
+              onAction={refetch}
+              tone="danger"
+            />
+          ) : isWeek43BeforeBirthday ? (
+            <WaitingForBirthday />
+          ) : !currentQuality ? (
+            isPast ? (
+              <NoQualityInPast />
+            ) : (
+              <WaitingForQuality />
+            )
+          ) : (
+            <motion.div
+              key={`${week}-${year}`}
+              initial={
+                reduceMotion
+                  ? false
+                  : {
+                      x: direction === 1 ? 12 : direction === -1 ? -12 : 0,
+                      opacity: 1,
+                    }
+              }
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: direction === 1 ? -180 : 180, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 32 }}
+              className="w-full"
             >
-              <Copy size={16} aria-hidden="true" />
-              Copiar mensaje
-            </button>
+              <QualityCard
+                entry={currentQuality}
+                onSecretClick={handleSecretOpen}
+              />
+            </motion.div>
           )}
         </div>
 
-        {copyStatus === "done" && (
-          <p className="text-sm text-dream-700">
-            Mensaje copiado al portapapeles.
-          </p>
-        )}
-        {copyStatus === "error" && (
-          <p className="text-sm text-rose-700">
-            No se pudo copiar el mensaje. Intentalo otra vez.
-          </p>
-        )}
-
-        {sortedAvailableWeeks.length > 0 && (
-          <div className="border-t border-dream-100/90 pt-3">
-            <div className="mb-2 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-dream-600">
-                <Bookmark size={14} aria-hidden="true" />
-                Ultimos registros
-              </span>
-              <p className="text-xs text-dream-500">Atajos guardados</p>
-            </div>
-            <div className="soft-scroll-row -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible">
-              {sortedAvailableWeeks.map((entry) => (
-                <button
-                  type="button"
-                  key={`${entry.year}-${entry.week}`}
-                  onClick={() => goToWeek(entry.week, entry.year)}
-                  className="shrink-0 rounded-full border border-dream-200 bg-dream-50 px-4 py-2 text-sm font-semibold text-dream-700 shadow-sm transition-all duration-150 hover:bg-dream-100 focus:outline-none focus:ring-2 focus:ring-dream-300 focus:ring-offset-1 active:scale-95"
-                  aria-label={`Semana ${entry.week} del ${entry.year}`}
-                  title={entry.message}
-                >
-                  {entry.week}/{entry.year}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <p className="text-xs text-dream-600">
-          {lastUpdated
-            ? `Actualizado: ${lastUpdated.toLocaleTimeString("es-ES", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}`
-            : "Sincronizando datos..."}
+        <nav
+          aria-label="Navegar entre semanas"
+          className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
+        >
+          <button
+            type="button"
+            onClick={goToPreviousWeek}
+            className="control-pill inline-flex items-center gap-2 border"
+            aria-label="Semana anterior"
+          >
+            <SkipBack size={18} aria-hidden="true" /> Semana anterior
+          </button>
+          <button
+            type="button"
+            onClick={goToNextWeek}
+            className="control-pill inline-flex items-center gap-2 border"
+            aria-label="Semana siguiente"
+          >
+            Semana siguiente <SkipForward size={18} aria-hidden="true" />
+          </button>
+        </nav>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={goToRandomSavedWeek}
+            disabled={loading || Boolean(error) || qualities.length === 0}
+            className="control-pill inline-flex items-center gap-2 border"
+          >
+            <Dice5 size={16} aria-hidden="true" /> Semana aleatoria
+          </button>
+          <button
+            type="button"
+            onClick={handleCopyMessage}
+            disabled={!canCopy}
+            className="control-pill inline-flex items-center gap-2 border"
+          >
+            <Copy size={16} aria-hidden="true" /> Copiar mensaje
+          </button>
+          <HistoryButton />
+        </div>
+        <p
+          role="status"
+          aria-label="Estado de copia"
+          aria-live="polite"
+          aria-atomic="true"
+          className="journal-copy-status"
+        >
+          {copyStatus === "done"
+            ? "Mensaje copiado al portapapeles."
+            : copyStatus === "error"
+              ? "No se pudo copiar el mensaje. Inténtalo otra vez."
+              : ""}
         </p>
-      </div>
 
-      <div className="relative flex min-h-[360px] flex-1 items-center justify-center pb-4 sm:pb-0">
-        {loading && <LoadingQuality />}
-
-        {error && !loading && (
-          <div className="surface-card w-full max-w-2xl px-5 py-7 text-center sm:px-6 sm:py-8">
-            <h2 className="mb-2 text-2xl font-semibold text-rose-900">
-              No se pudieron cargar los mensajes
-            </h2>
-            <p className="mb-6 text-rose-800">{error}</p>
+        <details className="journal-details">
+          <summary>Detalles de la semana</summary>
+          <div className="flex flex-col items-start gap-4 py-4">
+            <p className="text-sm text-dream-600">
+              Semana {week} de {year}
+            </p>
+            {sortedAvailableWeeks.length > 0 && (
+              <div>
+                <p className="journal-eyebrow mb-2">
+                  Últimos registros · Atajos guardados
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {sortedAvailableWeeks.map((entry) => (
+                    <button
+                      type="button"
+                      key={`${entry.year}-${entry.week}`}
+                      onClick={() => goToWeek(entry.week, entry.year)}
+                      className="control-pill border"
+                      aria-label={`Semana ${entry.week} del ${entry.year}`}
+                      title={entry.message}
+                    >
+                      {entry.week}/{entry.year}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <button
               type="button"
               onClick={refetch}
-              className="control-pill rounded-full border border-rose-300 bg-rose-200 px-5 py-2 font-semibold text-rose-900 shadow-sm transition-all duration-150 hover:bg-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-1 active:scale-95"
+              disabled={loading}
+              className="control-pill inline-flex items-center gap-2 border"
             >
-              Reintentar
+              <RefreshCcw size={16} aria-hidden="true" /> Recargar datos
             </button>
+            <p className="text-xs text-dream-600">
+              {lastUpdated
+                ? `Actualizado: ${lastUpdated.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`
+                : "Sincronizando datos..."}
+            </p>
           </div>
-        )}
-
-        {!loading && !error && isWeek43BeforeBirthday && <WaitingForBirthday />}
-        {!loading &&
-          !error &&
-          !isWeek43BeforeBirthday &&
-          !currentQuality &&
-          isPast && <NoQualityInPast />}
-        {!loading &&
-          !error &&
-          !isWeek43BeforeBirthday &&
-          !currentQuality &&
-          !isPast && <WaitingForQuality />}
-
-        {!loading && !error && !isWeek43BeforeBirthday && currentQuality && (
-          <motion.div
-            key={`${week}-${year}`}
-            initial={{
-              x: direction === 1 ? 180 : direction === -1 ? -180 : 0,
-              opacity: 0,
-            }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: direction === 1 ? -180 : 180, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 32 }}
-            className="w-full"
-          >
-            <QualityCard
-              entry={currentQuality}
-              onSecretClick={handleSecretClick}
-            />
-          </motion.div>
-        )}
+        </details>
       </div>
-
+      <BirthdayCountdown />
       <BirthdaySecretModal
         isOpen={showSecretModal}
         onClose={() => setShowSecretModal(false)}
         onSuccess={handlePasswordSuccess}
       />
-
       <BirthdayGalleryModal
         isOpen={showGalleryModal}
         onClose={() => setShowGalleryModal(false)}
