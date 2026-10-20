@@ -909,6 +909,29 @@ a.control-pill {
   display: none;
 }
 
+.journal-scene {
+  position: absolute;
+  top: 100px;
+  right: 0;
+  width: 100%;
+  height: 145px;
+  pointer-events: none;
+  overflow: hidden;
+  border-bottom: 1px solid var(--journal-rule);
+}
+
+.journal-scene img {
+  position: absolute;
+  right: 18px;
+  bottom: -24px;
+  width: 144px;
+  height: auto;
+}
+
+html[data-time="night"] .journal-scene img {
+  filter: brightness(0.79) saturate(0.72);
+}
+
 @media (min-width: 768px) {
   .journal-header {
     padding: 38px 40px 24px;
@@ -919,6 +942,20 @@ a.control-pill {
   .journal-eyebrow {
     font-size: 10px;
   }
+  .journal-scene {
+    top: 154px;
+    right: max(0px, calc((100vw - 1200px) / 2));
+    width: 40%;
+    max-width: 470px;
+    height: 630px;
+    border: none;
+  }
+  .journal-scene img {
+    width: 100%;
+    right: 0;
+    top: 0;
+    bottom: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -926,5 +963,355 @@ a.control-pill {
   .floating-quote {
     transform: none;
     opacity: 1;
+  }
+}
+
+/* Paintings are floating islands, not a translucent texture. The solid cloud
+   protects the reading column even where art passes behind it. */
+.dream-gallery {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dream-painting {
+  position: absolute;
+  opacity: 1;
+  filter: drop-shadow(0 16px 12px #183f4938);
+  animation: painting-float 12s ease-in-out infinite alternate;
+  transform: rotate(var(--tilt, -8deg));
+}
+
+.dream-painting img {
+  object-fit: cover;
+  border: 3px solid #fff4d9;
+  border-radius: inherit;
+}
+
+/* Impossible painted objects retain the real canvases inside their silhouettes. */
+.dream-painting-swans img {
+  clip-path: url(#eye-opening);
+  border: none;
+}
+.dream-eyelids {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.dream-eye-pupil {
+  position: absolute;
+  width: 19%;
+  height: 34%;
+  left: 43%;
+  top: 39%;
+  border-radius: 50%;
+  border: 5px solid #c8ad72;
+  background: radial-gradient(
+    ellipse at 33% 24%,
+    #fff6d5 0 7%,
+    #245b64 10% 24%,
+    #102c39 48%,
+    #051a26 70%
+  );
+  box-shadow:
+    0 0 0 3px #294e55,
+    6px 5px 12px #132e4470;
+}
+.dream-painting-clocks {
+  border-radius: 44% 48% 35% 18% / 36% 38% 44% 52%;
+}
+.dream-painting-clocks img {
+  border: 7px solid #edc793;
+  box-shadow: 0 4px 0 #a96f70;
+}
+.dream-melting-wax {
+  position: absolute;
+  top: 80%;
+  left: 0;
+  width: 100%;
+  height: 48%;
+  filter: drop-shadow(3px 7px 3px #633c5b40);
+  transform-origin: top;
+  animation: wax-breathe 13s ease-in-out infinite alternate;
+}
+.dream-stairs {
+  position: absolute;
+  width: 110px;
+  height: 150px;
+  left: calc(50% - 63px);
+  top: 100px;
+  filter: drop-shadow(7px 12px 5px #3e64764d);
+  animation: stair-drift 17s ease-in-out infinite alternate;
+}
+.dream-moon {
+  position: absolute;
+  right: 27px;
+  top: 91px;
+  width: 53px;
+  height: 110px;
+  transform: rotate(24deg);
+  animation: moon-drift 15s ease-in-out infinite alternate;
+}
+.dream-moon-orb {
+  position: absolute;
+  inset: 0 0 auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 25%,
+    #fffbe0 0 12%,
+    #ecd2a0 43%,
+    #ae7583 78%,
+    #5b4f70
+  );
+  box-shadow:
+    inset -7px -3px 9px #6c537655,
+    5px 8px 10px #193b4f30;
+}
+.dream-moon-orb::after {
+  content: "";
+  position: absolute;
+  width: 23%;
+  height: 18%;
+  left: 23%;
+  top: 50%;
+  border-radius: 50%;
+  box-shadow: inset 2px 2px 3px #9d8292;
+  background: #d5ba98;
+}
+.dream-moon-ribbon {
+  position: absolute;
+  width: 24px;
+  height: 70px;
+  top: 41px;
+  left: 14px;
+  border-radius: 0 0 80% 10%;
+  border-right: 6px solid #f4d7ab;
+  border-bottom: 4px solid #b77789;
+  transform: skewX(-20deg);
+}
+@keyframes wax-breathe {
+  to {
+    transform: scaleY(1.12);
+  }
+}
+@keyframes stair-drift {
+  to {
+    transform: translateY(-9px) rotate(-3deg);
+  }
+}
+@keyframes moon-drift {
+  to {
+    transform: translateY(-14px) rotate(12deg);
+  }
+}
+@media (min-width: 768px) {
+  .dream-stairs {
+    left: -10px;
+    top: 415px;
+    width: 190px;
+    height: 260px;
+  }
+  .dream-moon {
+    right: 35px;
+    top: 84px;
+    width: 75px;
+    height: 130px;
+  }
+}
+@media (min-width: 1100px) {
+  .dream-stairs {
+    left: calc(50% - 550px);
+    top: 415px;
+    width: 230px;
+    height: 310px;
+  }
+  .dream-moon {
+    right: calc(50% - 600px);
+    top: 48px;
+    width: 96px;
+    height: 150px;
+  }
+}
+
+.dream-painting-swans {
+  left: -24px;
+  top: 126px;
+  width: 200px;
+  height: 145px;
+  border-radius: 48% 52% 38% 62% / 42% 35% 65% 58%;
+  --tilt: -9deg;
+}
+
+.dream-painting-clocks {
+  right: -18px;
+  top: 125px;
+  width: 184px;
+  height: 126px;
+  border-radius: 46% 54% 61% 39% / 57% 38% 62% 43%;
+  --tilt: 10deg;
+  animation-delay: -4s;
+}
+
+.dream-painting-kiss {
+  right: -25px;
+  top: 735px;
+  width: 190px;
+  height: 230px;
+  border-radius: 38% 42% 46% 40% / 18% 22% 60% 48%;
+  --tilt: 12deg;
+  animation-delay: -8s;
+}
+
+.dream-painting-kiss img {
+  object-position: right top;
+}
+
+.dream-painting-cypresses {
+  left: -72px;
+  top: 742px;
+  width: 216px;
+  height: 165px;
+  border-radius: 52% 48% 62% 38% / 43% 64% 36% 57%;
+  --tilt: -12deg;
+  animation-delay: -6s;
+}
+
+.dream-orbit {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--journal-accent) 35%, transparent);
+  border-radius: 50%;
+  transform: rotate(-24deg);
+}
+
+.dream-orbit-one {
+  width: 650px;
+  height: 180px;
+  top: 120px;
+  left: calc(50% - 325px);
+}
+
+.dream-orbit-two {
+  width: 120vw;
+  height: 400px;
+  top: 530px;
+  left: -10vw;
+  transform: rotate(18deg);
+}
+
+.dream-spark {
+  position: absolute;
+  color: var(--journal-accent);
+  font-size: 38px;
+  animation: dream-sparkle 7s ease-in-out infinite alternate;
+}
+
+.dream-spark-one {
+  top: 185px;
+  left: 46%;
+}
+.dream-spark-two {
+  top: 610px;
+  left: 5%;
+  font-size: 54px;
+  animation-delay: -3s;
+}
+.dream-spark-three {
+  top: 100px;
+  right: 12%;
+  font-size: 22px;
+  animation-delay: -5s;
+}
+
+@keyframes painting-float {
+  from {
+    transform: translateY(0) rotate(var(--tilt));
+  }
+  to {
+    transform: translateY(-16px) rotate(calc(var(--tilt) + 5deg));
+  }
+}
+
+
+@keyframes dream-sparkle {
+  from {
+    transform: rotate(-12deg) scale(0.85);
+  }
+  to {
+    transform: rotate(18deg) scale(1.1);
+  }
+}
+
+@media (min-width: 768px) {
+  .dream-painting-swans {
+    width: 260px;
+    height: 210px;
+    top: 192px;
+    left: -80px;
+  }
+  .dream-painting-clocks {
+    width: 250px;
+    height: 200px;
+    top: 160px;
+    right: -70px;
+  }
+  .dream-painting-kiss {
+    width: 220px;
+    height: 270px;
+    top: 485px;
+    right: -60px;
+  }
+  .dream-painting-cypresses {
+    width: 280px;
+    height: 220px;
+    top: 590px;
+    left: -100px;
+  }
+  .dream-spark-one {
+    top: 160px;
+    left: 18%;
+  }
+  .dream-orbit-one {
+    width: 95vw;
+    height: 580px;
+    left: 2.5vw;
+    top: 60px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .dream-painting-swans {
+    width: 350px;
+    height: 275px;
+    top: 172px;
+    left: calc(50% - 690px);
+  }
+  .dream-painting-clocks {
+    width: 340px;
+    height: 270px;
+    top: 140px;
+    right: calc(50% - 690px);
+  }
+  .dream-painting-kiss {
+    width: 290px;
+    height: 350px;
+    top: 490px;
+    right: calc(50% - 630px);
+  }
+  .dream-painting-cypresses {
+    width: 350px;
+    height: 275px;
+    top: 535px;
+    left: calc(50% - 670px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dream-painting,
+  .dream-spark {
+    animation: none;
   }
 }

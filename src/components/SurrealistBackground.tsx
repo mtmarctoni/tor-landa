@@ -1,133 +1,166 @@
-"use client";
-
 import Image from "next/image";
-import { useMemo } from "react";
-import { useTimeShift } from "@/context/TimeShiftContext";
 
-const ORB_CONFIGS = {
-  dawn: {
-    orb1: "bg-amber-300",
-    orb2: "bg-orange-400",
-    orb3: "bg-yellow-300",
-    imageBlend: "mix-blend-soft-light",
-    imageOpacity: "opacity-20 sm:opacity-25",
-    orbOpacity: "opacity-30 sm:opacity-40",
-  },
-  day: {
-    orb1: "bg-dream-200",
-    orb2: "bg-dream-300",
-    orb3: "bg-dream-400",
-    imageBlend: "mix-blend-multiply",
-    imageOpacity: "opacity-14 sm:opacity-20",
-    orbOpacity: "opacity-24 sm:opacity-30",
-  },
-  dusk: {
-    orb1: "bg-violet-500",
-    orb2: "bg-purple-400",
-    orb3: "bg-fuchsia-400",
-    imageBlend: "mix-blend-soft-light",
-    imageOpacity: "opacity-10 sm:opacity-16",
-    orbOpacity: "opacity-28 sm:opacity-35",
-  },
-  night: {
-    orb1: "bg-blue-900",
-    orb2: "bg-indigo-800",
-    orb3: "bg-violet-900",
-    imageBlend: "mix-blend-soft-light",
-    imageOpacity: "opacity-6 sm:opacity-10",
-    orbOpacity: "opacity-20 sm:opacity-25",
-  },
-} as const;
+const paintings = [
+  { name: "swans", src: "/images/dali1.webp" },
+  { name: "clocks", src: "/images/dali2.webp" },
+  { name: "kiss", src: "/images/thekiss.jpg" },
+  { name: "cypresses", src: "/images/dream/van-gogh-cypresses.webp" },
+];
 
-function generateStars(count: number) {
-  const stars = [];
-  for (let i = 0; i < count; i++) {
-    const x = Math.round(Math.random() * 100);
-    const y = Math.round(Math.random() * 100);
-    const duration = 2 + Math.round(Math.random() * 4);
-    const delay = Math.round(Math.random() * 5);
-    stars.push({ x, y, duration, delay, id: i });
-  }
-  return stars;
-}
-
+/** Deterministic painting islands: full colour, no blending away the artwork. */
 export default function SurrealistBackground() {
-  const { period } = useTimeShift();
-  const config = ORB_CONFIGS[period];
-
-  const stars = useMemo(() => generateStars(80), []);
-
   return (
-    <>
-      {/* Dawn glow overlay */}
-      <div className="time-dawn-glow" />
-
-      {/* Night stars */}
-      <div className="time-stars">
-        {stars.map((star) => (
-          <div
-            key={star.id}
-            className="time-star"
-            style={
-              {
-                left: `${star.x}%`,
-                top: `${star.y}%`,
-                "--tw-duration": `${star.duration}s`,
-                "--tw-delay": `${star.delay}s`,
-              } as React.CSSProperties
-            }
+    <div
+      className="dream-gallery"
+      data-testid="journal-scene"
+      aria-hidden="true"
+    >
+      <div className="dream-orbit dream-orbit-one" />
+      <div className="dream-orbit dream-orbit-two" />
+      {paintings.map(({ name, src }) => (
+        <div
+          className={`dream-painting dream-painting-${name}`}
+          data-painting={name}
+          data-dream-object={
+            name === "swans" ? "eye" : name === "clocks" ? "melt" : undefined
+          }
+          key={name}
+        >
+          <Image
+            src={src}
+            alt=""
+            fill
+            sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 380px"
+            loading="eager"
           />
+          {name === "swans" && (
+            <>
+              <svg
+                className="dream-eyelids"
+                aria-hidden="true"
+                viewBox="0 0 350 275"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <clipPath id="eye-opening" clipPathUnits="objectBoundingBox">
+                    <path d="M.009 .502Q.486 -.087 .991 .502Q.5 1.164 .009 .502Z" />
+                  </clipPath>
+                  <linearGradient id="lid-paint" x2="0.3" y2="1">
+                    <stop stopColor="#fff2c9" />
+                    <stop offset=".45" stopColor="#de9d7a" />
+                    <stop offset="1" stopColor="#8c415e" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M3 138Q165 -75 347 138Q176 5 3 138Z"
+                  fill="url(#lid-paint)"
+                />
+                <path
+                  d="M3 138Q170 346 347 138Q175 290 3 138Z"
+                  fill="url(#lid-paint)"
+                />
+                <path
+                  d="M3 138Q170 -24 347 138Q175 320 3 138Z"
+                  fill="none"
+                  stroke="#ffe8ad"
+                  strokeWidth="5"
+                />
+                <path
+                  d="M58 77L43 43M115 45L109 13M178 35L181 4M239 52L254 22M294 89L320 61"
+                  stroke="#683d52"
+                  strokeWidth="7"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <span className="dream-eye-pupil" />
+            </>
+          )}
+          {name === "clocks" && (
+            <svg
+              className="dream-melting-wax"
+              aria-hidden="true"
+              viewBox="0 0 340 150"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <linearGradient id="wax-paint" x2=".8" y2="1">
+                  <stop stopColor="#fff0b4" />
+                  <stop offset=".45" stopColor="#eeb880" />
+                  <stop offset="1" stopColor="#a75569" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M4 3Q31 24 47 7Q64 1 67 24L70 97Q73 117 82 96L86 38Q91 19 100 34L109 127Q119 153 130 129L135 46Q139 27 153 40L162 70Q172 87 181 64L188 29Q197 12 206 29L214 106Q224 132 234 108L240 36Q244 12 258 26Q293 46 336 3Q259 28 174 13Q83 34 4 3Z"
+                fill="url(#wax-paint)"
+                stroke="#fff0c5"
+                strokeWidth="3"
+              />
+              <path
+                d="M77 44L78 92M119 58L121 123M225 47L225 102"
+                stroke="#fff6d8"
+                strokeWidth="4"
+                strokeLinecap="round"
+                opacity=".8"
+              />
+            </svg>
+          )}
+        </div>
+      ))}
+      <svg
+        className="dream-stairs"
+        aria-hidden="true"
+        data-dream-object="stairs"
+        viewBox="0 0 220 300"
+      >
+        <defs>
+          <linearGradient id="stair-paint" x2=".8" y2="1">
+            <stop stopColor="#fff8da" />
+            <stop offset=".55" stopColor="#efb799" />
+            <stop offset="1" stopColor="#9c6c87" />
+          </linearGradient>
+          <radialGradient id="cloud-paint" cx=".35" cy=".25" r=".8">
+            <stop stopColor="#fffcef" />
+            <stop offset=".6" stopColor="#f4d7c3" />
+            <stop offset="1" stopColor="#86a9ba" />
+          </radialGradient>
+        </defs>
+        <path
+          d="M48 259L130 212V161L96 180V130L159 94V43L193 24V113L135 147V197L170 177V236L83 286Z"
+          fill="#735f80"
+          stroke="#5f5871"
+          strokeWidth="2"
+        />
+        {Array.from({ length: 9 }, (_, i) => (
+          <g key={i} transform={`translate(${48 + i * 9} ${252 - i * 17})`}>
+            <path
+              d="M0 0L34 20L79 -6L45 -26Z"
+              fill="url(#stair-paint)"
+              stroke="#fff1d1"
+            />
+            <path d="M0 0V17L34 37V20Z" fill="#c48183" />
+            <path d="M34 20L79 -6V11L34 37Z" fill="#76718f" />
+          </g>
         ))}
+        <path d="M112 113L145 132L193 104L159 85Z" fill="#fff0c9" />
+        <path
+          d="M141 68C107 72 98 43 119 35C109 8 146 -4 161 16C180 -7 210 9 205 30C234 42 215 73 192 67C178 83 155 83 141 68Z"
+          fill="url(#cloud-paint)"
+        />
+        <path
+          d="M119 39Q139 26 150 42M166 22Q186 12 195 32"
+          fill="none"
+          stroke="#fff9e5"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="dream-moon" data-dream-object="moon">
+        <span className="dream-moon-orb" />
+        <span className="dream-moon-ribbon" />
       </div>
-
-      {/* Surrealist Background Images */}
-      <div
-        className={`pointer-events-none absolute inset-0 ${config.imageOpacity} transition-opacity duration-[2s]`}
-      >
-        <Image
-          src="/images/thekiss.jpg"
-          alt=""
-          width={1280}
-          height={1285}
-          loading="lazy"
-          className={`absolute right-[-5rem] top-32 h-56 w-56 rounded-full object-cover blur-sm sm:right-0 sm:top-40 sm:h-96 sm:w-96 sm:blur-xs sm:animate-float ${config.imageBlend}`}
-        />
-        <Image
-          src="/images/dali1.webp"
-          alt=""
-          width={320}
-          height={320}
-          loading="lazy"
-          className={`absolute -left-16 bottom-24 h-44 w-44 rounded-full object-cover blur-sm sm:-left-20 sm:bottom-0 sm:h-80 sm:w-80 sm:blur-xs sm:animate-float ${config.imageBlend}`}
-          style={{ animationDelay: "-5s" }}
-        />
-        <Image
-          src="/images/dali2.webp"
-          alt=""
-          width={512}
-          height={512}
-          loading="lazy"
-          className={`absolute left-1/2 top-[48%] hidden h-[22rem] w-[22rem] -translate-x-1/2 rounded-full object-cover blur-sm sm:left-1/4 sm:top-1/2 sm:block sm:h-128 sm:w-128 sm:translate-x-0 sm:blur-xs sm:animate-float ${config.imageBlend}`}
-          style={{ animationDelay: "-10s" }}
-        />
-      </div>
-
-      {/* Floating Orbs */}
-      <div
-        className={`absolute inset-0 ${config.orbOpacity} transition-opacity duration-[2s]`}
-      >
-        <div
-          className={`absolute left-0 top-24 h-28 w-28 rounded-full blur-2xl sm:left-20 sm:top-20 sm:h-40 sm:w-40 sm:animate-drift ${config.orb1}`}
-        />
-        <div
-          className={`absolute right-2 top-44 h-36 w-36 rounded-full blur-2xl sm:right-20 sm:top-40 sm:h-60 sm:w-60 sm:animate-drift ${config.orb2}`}
-          style={{ animationDelay: "-5s" }}
-        />
-        <div
-          className={`absolute bottom-28 left-1/2 h-28 w-28 -translate-x-1/2 rounded-full blur-2xl sm:bottom-20 sm:h-40 sm:w-40 sm:animate-drift ${config.orb3}`}
-          style={{ animationDelay: "-10s" }}
-        />
-      </div>
-    </>
+      <span className="dream-spark dream-spark-one">✦</span>
+      <span className="dream-spark dream-spark-two">✧</span>
+      <span className="dream-spark dream-spark-three">✦</span>
+    </div>
   );
 }
