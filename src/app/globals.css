@@ -932,6 +932,61 @@ html[data-time="night"] .journal-scene img {
   filter: brightness(0.79) saturate(0.72);
 }
 
+.home-main {
+  max-width: 1120px;
+  padding: 176px 20px 36px;
+}
+
+.home-main > section {
+  margin: 0;
+  min-width: 0;
+}
+
+.home-main > section > .surface-card {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.home-main [data-testid="week-context"] {
+  margin-top: 7px;
+  background: var(--dream-cloud);
+  color: var(--journal-accent);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 20px;
+  display: inline-block;
+  padding: 5px 12px;
+}
+
+.home-main .control-pill {
+  border-radius: 24px;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--journal-ink) 12%, transparent);
+  font-size: 13px;
+  padding: 10px 12px;
+  background: var(--dream-cloud);
+  color: var(--journal-ink);
+  border-color: var(--journal-rule);
+}
+
+.home-main a[href="/history"] {
+  background: var(--dream-cloud);
+  color: var(--journal-ink);
+  border-color: var(--journal-rule);
+  box-shadow: none;
+  border-radius: 24px;
+  min-height: 44px;
+}
+
+.home-main .control-pill:hover,
+.home-main a[href="/history"]:hover {
+  background: color-mix(in srgb, var(--journal-ink) 7%, var(--journal-surface));
+}
+
+.home-main .control-pill:disabled {
+  opacity: 0.5;
+}
+
 .journal-note {
   position: relative;
   width: 100%;
@@ -941,6 +996,29 @@ html[data-time="night"] .journal-scene img {
   isolation: isolate;
   background: none;
   border: none;
+}
+
+.journal-details {
+  border: 1px solid var(--journal-rule);
+  border-radius: 22px;
+  padding: 0 16px;
+  background: var(--dream-cloud);
+  color: var(--journal-muted);
+  font-size: 14px;
+}
+
+.journal-details summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+  color: var(--journal-ink);
+}
+
+.journal-copy-status {
+  min-height: 3.5rem;
+  margin: -4px 0;
+  font-size: 14px;
+  color: var(--journal-muted);
 }
 
 .journal-status {
@@ -1826,6 +1904,13 @@ html[data-time="night"] .journal-scene img {
   }
   .journal-eyebrow {
     font-size: 10px;
+  }
+  .home-main {
+    padding: 38px 40px 80px;
+  }
+  .home-main > section {
+    max-width: 560px;
+    margin: auto;
   }
   .journal-scene {
     top: 154px;
