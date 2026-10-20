@@ -981,6 +981,221 @@ html[data-time="night"] .journal-scene img {
 }
 
 /* A native top-layer window: the impossible scenery never overlaps the letter. */
+/* Birthday: a photo suspended inside an impossible, melting observatory. */
+.birthday-dialog {
+  --birthday-dark: #233c50;
+  --journal-paper: var(--journal-surface);
+  background: var(--journal-paper);
+  isolation: isolate;
+}
+:where(.birthday-dialog) .journal-dialog-header {
+  position: relative;
+  z-index: 3;
+  background: var(--journal-paper);
+}
+.birthday-secret {
+  width: min(560px, calc(100vw - 28px));
+}
+.birthday-world {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 65% 20%, #ffe2b1 0, transparent 42%),
+    linear-gradient(150deg, #6bcfc6, #badbdc 48%, #f4a093);
+}
+.birthday-orbit {
+  position: absolute;
+  width: 120%;
+  height: 48%;
+  left: -10%;
+  top: 20%;
+  border: 2px solid #fff5d3;
+  border-radius: 50%;
+  transform: rotate(-24deg);
+  box-shadow: 0 5px 0 #284b5a22;
+}
+.birthday-orbit-two {
+  transform: rotate(29deg);
+  top: 35%;
+  border-color: #d68a46;
+}
+.birthday-moon {
+  position: absolute;
+  right: 7%;
+  top: 7%;
+  width: 90px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ffdb91;
+  box-shadow:
+    inset -18px -5px 0 #d59258,
+    14px 14px 0 #245c5b26;
+}
+.birthday-cloud {
+  position: absolute;
+  width: 150px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff6e8;
+  box-shadow:
+    18px 10px 0 #e0f6ef,
+    0 13px 16px #25535b33;
+}
+.birthday-cloud::before {
+  content: "";
+  position: absolute;
+  background: inherit;
+  width: 70%;
+  height: 150%;
+  border-radius: 50%;
+  top: -50%;
+  left: 10%;
+}
+.birthday-cloud-one {
+  left: -5%;
+  top: 33%;
+  transform: rotate(-12deg);
+}
+.birthday-cloud-two {
+  right: -6%;
+  bottom: 12%;
+  transform: rotate(15deg) scale(0.8);
+}
+.birthday-satellite {
+  position: absolute;
+  width: 95px;
+  height: 120px;
+  border: 7px ridge #edb263;
+  border-radius: 50% 50% 12% 40%;
+  overflow: hidden;
+  box-shadow: 10px 12px 0 #31696655;
+}
+.birthday-satellite img {
+  object-fit: cover;
+}
+.birthday-satellite-one {
+  left: 1%;
+  top: 6%;
+  transform: rotate(-17deg);
+}
+.birthday-satellite-two {
+  right: 1%;
+  bottom: 15%;
+  transform: rotate(18deg);
+  width: 75px;
+  height: 90px;
+}
+.birthday-stair {
+  position: absolute;
+  width: 140px;
+  height: 110px;
+  left: 2%;
+  bottom: -22px;
+  transform: rotate(-16deg);
+  background: repeating-linear-gradient(
+    0deg,
+    #f9d4b7 0 13px,
+    #b96865 13px 19px
+  );
+  clip-path: polygon(
+    0 100%,
+    0 80%,
+    20% 80%,
+    20% 60%,
+    40% 60%,
+    40% 40%,
+    60% 40%,
+    60% 20%,
+    80% 20%,
+    80% 0,
+    100% 0,
+    100% 100%
+  );
+}
+.birthday-secret-world {
+  position: relative;
+  height: 215px;
+  display: grid;
+  place-items: center;
+}
+.birthday-keyhole {
+  z-index: 1;
+  width: 105px;
+  height: 148px;
+  border: 12px ridge #f3bd72;
+  border-radius: 52% 48% 12% 20%;
+  transform: rotate(9deg);
+  background: radial-gradient(
+    circle at 45% 30%,
+    #f9f2d9 0 13%,
+    #3c6175 14% 28%,
+    #223f58 29%
+  );
+  box-shadow: 11px 12px 0 #284d6455;
+}
+.birthday-keyhole span {
+  display: block;
+  width: 32px;
+  height: 55px;
+  background: #f7e0b6;
+  clip-path: polygon(40% 0, 65% 0, 100% 100%, 0 100%);
+  margin: 47px auto 0;
+}
+.birthday-world-label {
+  position: absolute;
+  z-index: 2;
+  bottom: 10px;
+  padding: 6px 14px;
+  border-radius: 50%;
+  color: #233c50;
+  background: #fff3da;
+  font-family: var(--font-journal-serif), Georgia, serif;
+  font-style: italic;
+}
+.birthday-secret-form {
+  display: grid;
+  gap: 13px;
+  padding: 24px clamp(20px, 6vw, 42px) 0;
+}
+.birthday-secret-form label {
+  font-weight: 700;
+}
+.birthday-secret-form input {
+  min-height: 48px;
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid var(--journal-ink);
+  border-radius: 16px 8px 20px 9px;
+  background: var(--journal-paper);
+  color: var(--journal-ink);
+}
+.birthday-secret-form input:focus-visible {
+  outline: 3px solid var(--journal-accent);
+  outline-offset: 3px;
+}
+.birthday-secret-form input::placeholder {
+  color: var(--journal-muted);
+  opacity: 1;
+}
+.birthday-secret-form button {
+  border: 2px solid currentColor;
+  min-height: 48px;
+}
+.birthday-secret-hint {
+  font-size: 13px;
+  color: var(--journal-muted);
+}
+.birthday-error,
+.birthday-notice {
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: var(--journal-paper);
+  color: var(--journal-ink);
+}
 .birthday-countdown > div {
   background: var(--journal-surface);
   color: var(--journal-ink);

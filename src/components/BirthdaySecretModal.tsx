@@ -1,10 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { Lock, Sparkles, X } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BirthdaySecretModalProps } from "@/types/components";
+import BirthdayWorld from "./BirthdayWorld";
+import JournalDialog from "./JournalDialog";
 
 const PASSWORD = "2329";
 
@@ -16,160 +16,98 @@ const BirthdaySecretModal: React.FC<BirthdaySecretModalProps> = ({
   const [password, setPassword] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [error, setError] = useState("");
-  const [isShaking, setIsShaking] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (password.toLowerCase().trim() === PASSWORD) {
-      setError("");
-      onSuccess();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleClose = () => {
+    // Ordinary dismissal retains partial attempts, as in the original puzzle.
+    // An exhausted session resets on close, without a timer leaking into reopen.
+    if (attempts >= 3) {
       setPassword("");
       setAttempts(0);
-    } else {
-      setAttempts((prev) => prev + 1);
-      setIsShaking(true);
-      setTimeout(() => setIsShaking(false), 500);
+      setError("");
+    }
+    onClose();
+  };
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = handleClose;
 
+  useEffect(() => {
+    if (!isOpen && closeTimer.current) clearTimeout(closeTimer.current);
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, [isOpen]);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (attempts >= 3) return;
+    if (password.toLowerCase().trim() === PASSWORD) {
+      setError("");
+      setPassword("");
+      setAttempts(0);
+      onSuccess();
+    } else {
+      setAttempts((value) => value + 1);
+      setPassword("");
       if (attempts >= 2) {
-        setError("Casi lo logras... tal vez mañana tengas más suerte 💫");
-        setTimeout(() => {
-          onClose();
-          setPassword("");
-          setAttempts(0);
-          setError("");
-        }, 3000);
-      } else {
-        setError("Mmm... no es esa. Piensa en un 2 números especiales ✨");
-        setPassword("");
-      }
+        setError("Casi lo logras... tal vez mañana tengas más suerte");
+        closeTimer.current = setTimeout(() => onCloseRef.current(), 3000);
+      } else setError("Mmm... no es esa. Piensa en un 2 números especiales");
     }
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
+    <JournalDialog
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="El secreto de Landa"
+      initialFocusRef={inputRef}
+      className="birthday-dialog birthday-secret"
+    >
+      <div className="birthday-secret-world">
+        <BirthdayWorld />
+        <div className="birthday-keyhole" aria-hidden="true">
+          <span />
+        </div>
+        <p className="birthday-world-label">
+          Una puerta que solo tú sabes abrir
+        </p>
+      </div>
+      <form onSubmit={handleSubmit} className="birthday-secret-form">
+        <p className="journal-eyebrow">Al otro lado de lo imposible</p>
+        <p>Hay un pequeño universo preparado solo para ti.</p>
+        <label htmlFor="secret-code">Código secreto</label>
+        <input
+          ref={inputRef}
+          id="secret-code"
+          type="text"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder="Escribe aquí..."
+          disabled={attempts >= 3}
+          aria-invalid={Boolean(error)}
+          aria-describedby={
+            error ? "birthday-secret-error" : "birthday-secret-hint"
+          }
+          autoComplete="off"
+        />
+        {error && (
+          <p id="birthday-secret-error" role="alert" className="birthday-error">
+            {error}
+          </p>
+        )}
+        <button
+          type="submit"
+          className="control-pill"
+          disabled={attempts >= 3 || !password.trim()}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-              y: 0,
-              x: isShaking ? [-10, 10, -10, 10, 0] : 0,
-            }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative max-w-md w-full bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50 rounded-3xl shadow-2xl border-2 border-rose-200 p-8"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-4 right-4 text-rose-400 hover:text-rose-600 transition-colors"
-            >
-              <X size={24} />
-            </button>
-
-            {/* Header */}
-            <motion.div
-              className="text-center mb-6"
-              animate={{
-                y: [0, -5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <div className="flex justify-center mb-4">
-                <div className="relative">
-                  <Lock size={48} className="text-rose-400" />
-                  <motion.div
-                    className="absolute -top-2 -right-2"
-                    animate={{
-                      rotate: [0, 360],
-                      scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                    }}
-                  >
-                    <Sparkles size={24} className="text-amber-400" />
-                  </motion.div>
-                </div>
-              </div>
-              <h2 className="text-3xl font-serif text-rose-700 mb-2">
-                El Secreto de Landa
-              </h2>
-              <p className="text-rose-600 text-sm">
-                Descubre algo especial preparado solo para ti
-              </p>
-            </motion.div>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="secret-code"
-                  className="block text-sm font-semibold text-rose-700 mb-2"
-                >
-                  ¿Cuál es el código secreto? ✨
-                </label>
-                <input
-                  id="secret-code"
-                  type="text"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Escribe aquí..."
-                  className="w-full px-4 py-3 rounded-xl border-2 border-rose-200 focus:border-rose-400 focus:outline-none bg-white/80 text-rose-900 placeholder-rose-300 transition-colors"
-                  autoFocus
-                  disabled={attempts >= 3}
-                />
-              </div>
-
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-rose-600 text-center bg-rose-100 rounded-lg p-3"
-                >
-                  {error}
-                </motion.div>
-              )}
-
-              <motion.button
-                type="submit"
-                disabled={attempts >= 3 || !password.trim()}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3 bg-gradient-to-r from-rose-400 via-pink-400 to-amber-400 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {attempts >= 3 ? "Intentos agotados" : "Descubrir el secreto"}
-              </motion.button>
-
-              <p className="text-xs text-center text-rose-400">
-                Pista: ya lo has usado alguna vez 💫
-              </p>
-            </form>
-
-            {/* Decorative elements */}
-            <div className="absolute -top-3 -left-3 text-4xl">🎁</div>
-            <div className="absolute -bottom-3 -right-3 text-4xl">✨</div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          {attempts >= 3 ? "Intentos agotados" : "Descubrir el secreto"}
+        </button>
+        <p id="birthday-secret-hint" className="birthday-secret-hint">
+          Pista: ya lo has usado alguna vez.
+        </p>
+      </form>
+    </JournalDialog>
   );
 };
-
 export default BirthdaySecretModal;
