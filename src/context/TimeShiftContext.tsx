@@ -3,7 +3,6 @@
 import React, {
   createContext,
   type ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -18,14 +17,6 @@ interface TimeShiftContextType {
 const TimeShiftContext = createContext<TimeShiftContextType | undefined>(
   undefined,
 );
-
-export const useTimeShift = () => {
-  const context = useContext(TimeShiftContext);
-  if (context === undefined) {
-    throw new Error("useTimeShift must be used within a TimeShiftProvider");
-  }
-  return context;
-};
 
 interface TimeShiftProviderProps {
   children: ReactNode;
