@@ -943,6 +943,32 @@ html[data-time="night"] .journal-scene img {
   border: none;
 }
 
+.journal-status {
+  width: 100%;
+  min-height: 250px;
+  padding: 26px;
+  border-radius: 30px 50px 32px 20px;
+  background: var(--dream-cloud);
+  color: var(--journal-ink);
+}
+
+.journal-status h2 {
+  margin: 14px 0;
+  font-size: clamp(28px, 4vw, 38px);
+}
+
+.journal-status p {
+  max-width: 45ch;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.journal-status .journal-status-aside {
+  margin: 14px 0;
+  color: var(--journal-muted);
+  font-style: italic;
+}
+
 .journal-note-mark {
   display: block;
   color: var(--journal-accent);
