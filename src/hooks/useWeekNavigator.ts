@@ -105,6 +105,13 @@ export const useWeekNavigator = (qualities: QualityEntry[]) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
+        document.querySelector("dialog[open]") ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.isComposing ||
+        (event.target instanceof HTMLElement &&
+          event.target.isContentEditable) ||
         event.target instanceof HTMLInputElement ||
         event.target instanceof HTMLTextAreaElement ||
         event.target instanceof HTMLSelectElement

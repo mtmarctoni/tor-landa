@@ -932,6 +932,83 @@ html[data-time="night"] .journal-scene img {
   filter: brightness(0.79) saturate(0.72);
 }
 
+/* A native top-layer window: the impossible scenery never overlaps the letter. */
+
+.journal-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(
+    100dvh -
+    32px -
+    env(safe-area-inset-top) -
+    env(safe-area-inset-bottom)
+  );
+  margin: auto;
+  padding: 0;
+  color: var(--journal-ink);
+  background: var(--journal-paper);
+  border: 2px solid var(--journal-ink);
+  border-radius: 36px 80px 38px 70px / 45px 40px 70px 35px;
+  box-shadow:
+    9px 12px 0 #42b7ac,
+    16px 21px 0 #ec9479,
+    0 35px 100px #101c4566;
+  overflow: hidden;
+}
+.journal-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.journal-dialog::backdrop {
+  background:
+    radial-gradient(ellipse at 20% 25%, #ef8e7f55, transparent 55%), #152b48c9;
+  backdrop-filter: blur(7px);
+}
+.journal-dialog-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: max(20px, env(safe-area-inset-top)) 28px 18px;
+  border-bottom: 1px solid var(--journal-rule);
+}
+.journal-dialog-header h2 {
+  font-family: var(--font-journal-serif), Georgia, serif;
+  font-size: clamp(25px, 4vw, 38px);
+  line-height: 1;
+  text-wrap: balance;
+}
+.journal-dialog-close {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: var(--journal-paper);
+  color: var(--journal-ink);
+  font-size: 14px;
+}
+.journal-dialog-close:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+.journal-dialog-content {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+  scrollbar-gutter: stable;
+}
+@media (max-width: 480px) {
+  .journal-dialog-header {
+    padding: 20px 18px 16px;
+    gap: 10px;
+  }
+  .journal-dialog-header h2 {
+    max-width: 9ch;
+  }
+}
 @media (min-width: 768px) {
   .journal-header {
     padding: 38px 40px 24px;
