@@ -12,6 +12,7 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
     "knip": "knip",
     "depcheck": "depcruise src --config .dependency-cruiser.mjs --output-type text",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm knip && pnpm depcheck && pnpm build",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.7",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26",
     "@types/react": "19.2.18",
