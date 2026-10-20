@@ -1000,6 +1000,227 @@ html[data-time="night"] .journal-scene img {
   padding-bottom: max(24px, env(safe-area-inset-bottom));
   scrollbar-gutter: stable;
 }
+.surprise-dialog {
+  background: #ffe8c9;
+  color: #26354a;
+}
+.surprise-dialog .journal-dialog-header {
+  background: #ffe8c9;
+  border-color: #26354a33;
+}
+.surprise-dialog .journal-dialog-close {
+  background: #fff5df;
+  color: #26354a;
+}
+.surprise-world {
+  position: relative;
+  isolation: isolate;
+  height: clamp(230px, 32vw, 310px);
+  margin: 18px 22px 0;
+  overflow: hidden;
+  border-radius: 48% 48% 12% 12% / 28% 28% 10% 10%;
+  background:
+    radial-gradient(ellipse at 68% 25%, #ffd89d, transparent 45%),
+    linear-gradient(
+      #3299ad 0%,
+      #90d8c8 65%,
+      #e8b18c 66%,
+      #e8b18c 70%,
+      #9e879c 100%
+    );
+  box-shadow: inset 0 0 0 1px #26354a22;
+}
+.surprise-orbit {
+  position: absolute;
+  width: 75%;
+  height: 55%;
+  border: 1px solid #fff5dba8;
+  border-radius: 50%;
+  left: 10%;
+  top: 15%;
+  transform: rotate(-24deg);
+}
+.surprise-moon {
+  position: absolute;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #fff3cb;
+  top: 12%;
+  right: 12%;
+  box-shadow:
+    inset -14px -8px 0 #efb877,
+    0 0 40px #fff3cb66;
+}
+.surprise-painting {
+  position: absolute;
+  width: 43%;
+  height: 69%;
+  left: 23%;
+  top: 9%;
+  padding: 11px;
+  border: 3px solid #87503a;
+  border-radius: 48% 48% 12% 45% / 40% 45% 9% 20%;
+  background: linear-gradient(
+    120deg,
+    #fff0b4,
+    #d49147 40%,
+    #ffdc83 60%,
+    #9f643b
+  );
+  box-shadow:
+    9px 12px 0 #26354a44,
+    inset 0 0 0 3px #ffd98f;
+  transform: rotate(-9deg);
+  animation: surprise-levitate 9s ease-in-out infinite;
+}
+.surprise-painting > div {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: url("/images/dali1.webp") center / cover;
+}
+.surprise-window {
+  position: absolute;
+  width: 18%;
+  height: 36%;
+  right: 10%;
+  bottom: 11%;
+  border: 6px solid #ffe6b0;
+  border-bottom-width: 12px;
+  border-radius: 50% 50% 0 0;
+  background: url("/images/dream/van-gogh-cypresses.webp") center / cover;
+  transform: rotate(12deg);
+  box-shadow: 7px 8px 0 #26354a66;
+}
+.surprise-stair {
+  position: absolute;
+  left: 10%;
+  bottom: 3%;
+  width: 40%;
+  transform: skewY(-12deg);
+}
+.surprise-stair i {
+  display: block;
+  height: 12px;
+  width: 42%;
+  margin-left: 0;
+  background: #fff0d5;
+  border-bottom: 5px solid #a06b83;
+  border-right: 10px solid #dc9d90;
+  box-shadow: 7px 4px 0 #26354a33;
+}
+.surprise-stair i:nth-child(1) {
+  margin-left: 55%;
+}
+.surprise-stair i:nth-child(2) {
+  margin-left: 44%;
+}
+.surprise-stair i:nth-child(3) {
+  margin-left: 33%;
+}
+.surprise-stair i:nth-child(4) {
+  margin-left: 22%;
+}
+.surprise-stair i:nth-child(5) {
+  margin-left: 11%;
+}
+.surprise-cloud {
+  position: absolute;
+  width: 32%;
+  height: 12%;
+  border-radius: 50%;
+  background: #fff6e3;
+  box-shadow: 0 8px 0 #bac1cb77;
+}
+.surprise-cloud::before,
+.surprise-cloud::after {
+  content: "";
+  position: absolute;
+  width: 48%;
+  height: 140%;
+  background: inherit;
+  border-radius: 50%;
+  bottom: 10%;
+  left: 10%;
+}
+.surprise-cloud::after {
+  left: 42%;
+  height: 190%;
+}
+.surprise-cloud-one {
+  top: 54%;
+  left: -6%;
+  transform: rotate(-9deg);
+}
+.surprise-cloud-two {
+  top: 31%;
+  right: -13%;
+  transform: rotate(15deg);
+}
+.surprise-drop {
+  position: absolute;
+  width: 20px;
+  height: 62px;
+  background: #eab65e;
+  border-radius: 10% 10% 70% 70%;
+  top: 70%;
+  left: 52%;
+  transform: rotate(6deg);
+}
+.surprise-letter {
+  position: relative;
+  margin: 24px auto 0;
+  padding: 0 30px 4px;
+  max-width: 60ch;
+  text-align: center;
+}
+.surprise-note {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.surprise-letter p {
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.amor-dialog {
+  box-shadow:
+    9px 12px 0 #d77891,
+    16px 21px 0 #e8b86c,
+    0 35px 100px #101c4566;
+}
+.amor-dialog .surprise-world {
+  background:
+    radial-gradient(ellipse at 30% 20%, #cf8098, transparent 60%),
+    linear-gradient(
+      #243951 0%,
+      #777ba8 65%,
+      #e6a48f 66%,
+      #e6a48f 70%,
+      #ae7088 100%
+    );
+}
+.amor-dialog .surprise-painting {
+  border-radius: 48% 48% 43% 43% / 20% 20% 70% 70%;
+  transform: rotate(9deg);
+}
+.amor-dialog .surprise-painting > div {
+  background-image: url("/images/thekiss.jpg");
+}
+.amor-dialog .surprise-moon {
+  right: auto;
+  left: 10%;
+}
+@keyframes surprise-levitate {
+  50% {
+    translate: 0 -7px;
+  }
+}
 @media (max-width: 480px) {
   .journal-dialog-header {
     padding: 20px 18px 16px;
@@ -1008,7 +1229,19 @@ html[data-time="night"] .journal-scene img {
   .journal-dialog-header h2 {
     max-width: 9ch;
   }
+  .surprise-world {
+    margin-inline: 12px;
+  }
+  .surprise-letter {
+    padding-inline: 23px;
+  }
 }
+@media (prefers-reduced-motion: reduce) {
+  .surprise-painting {
+    animation: none;
+  }
+}
+
 @media (min-width: 768px) {
   .journal-header {
     padding: 38px 40px 24px;
