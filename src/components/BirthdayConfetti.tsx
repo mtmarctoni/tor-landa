@@ -1,54 +1,22 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Heart, Sparkles, Star } from "lucide-react";
-import React from "react";
+import { useReducedMotion } from "framer-motion";
 
-const BirthdayConfetti: React.FC = () => {
-  const [confettiItems] = React.useState(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      Icon: [Heart, Star, Sparkles][i % 3],
-      delay: Math.random() * 2,
-      duration: 3 + Math.random() * 2,
-      x: Math.random() * 100,
-    })),
-  );
-
+export default function BirthdayConfetti() {
+  const reducedMotion = useReducedMotion();
+  if (reducedMotion) return null;
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-50">
-      {confettiItems.map(({ id, Icon, delay, duration, x }) => (
-        <motion.div
-          key={id}
-          className="absolute"
-          initial={{
-            top: "-10%",
-            left: `${x}%`,
-            opacity: 0,
-            rotate: 0,
-            scale: 0,
+    <div aria-hidden="true" className="birthday-confetti">
+      {Array.from({ length: 12 }, (_, index) => (
+        <i
+          key={index}
+          style={{
+            left: `${(index * 17 + 5) % 100}%`,
+            animationDelay: `${index * 0.09}s`,
+            background: ["#f7bc61", "#3cc8bd", "#f58b89"][index % 3],
           }}
-          animate={{
-            top: "110%",
-            opacity: [0, 1, 1, 0],
-            rotate: 360,
-            scale: [0, 1, 1, 0.5],
-          }}
-          transition={{
-            duration,
-            delay,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        >
-          <Icon
-            size={24}
-            className="text-rose-400 drop-shadow-[0_0_8px_#f87171]"
-          />
-        </motion.div>
+        />
       ))}
     </div>
   );
-};
-
-export default BirthdayConfetti;
+}
