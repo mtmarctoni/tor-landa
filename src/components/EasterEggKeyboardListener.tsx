@@ -1,67 +1,64 @@
 "use client";
 
+import { Heart } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AmorEasterEggModal from "./AmorEasterEggModal";
-
-const targetSequence = ["a", "m", "o", "r"]; // "AMOR" sequence
-const sequenceTimeout = 3000; // 3 seconds timeout between keys
 
 const EasterEggKeyboardListener: React.FC = () => {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
-  const [keySequence, setKeySequence] = useState<string[]>([]);
-  const [lastKeyTime, setLastKeyTime] = useState<number>(0);
+  const sequence = useRef("");
+  const lastKeyTime = useRef(0);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Only listen for letter keys, ignore if user is typing in an input
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
+        document.querySelector("dialog[open]") ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.isComposing ||
+        (event.target instanceof HTMLElement &&
+          (event.target.isContentEditable ||
+            event.target.closest("input, textarea, select")))
       ) {
+        sequence.current = "";
         return;
       }
-
-      const key = e.key.toLowerCase();
-      const currentTime = Date.now();
-
-      // Reset sequence if too much time has passed since last key
-      if (currentTime - lastKeyTime > sequenceTimeout) {
-        setKeySequence([]);
-      }
-
-      setLastKeyTime(currentTime);
-
-      // Check if this key is the next expected key in the sequence
-      const nextExpectedKey = targetSequence[keySequence.length];
-
-      if (key === nextExpectedKey) {
-        const newSequence = [...keySequence, key];
-        setKeySequence(newSequence);
-
-        // Check if sequence is complete
-        if (newSequence.length === targetSequence.length) {
-          setShowEasterEgg(true);
-          setKeySequence([]); // Reset for next time
-        }
-      } else if (key === targetSequence[0]) {
-        // If they pressed the first key, start over
-        setKeySequence([key]);
-      } else {
-        // Wrong key, reset sequence
-        setKeySequence([]);
+      const now = Date.now();
+      if (now - lastKeyTime.current > 3000) sequence.current = "";
+      lastKeyTime.current = now;
+      const key = event.key.toLowerCase();
+      sequence.current = "amor".startsWith(sequence.current + key)
+        ? sequence.current + key
+        : key === "a"
+          ? "a"
+          : "";
+      if (sequence.current === "amor") {
+        sequence.current = "";
+        setShowEasterEgg(true);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [keySequence, lastKeyTime]);
+  }, []);
 
-  const handleClose = () => {
-    setShowEasterEgg(false);
-  };
-
-  return <>{showEasterEgg && <AmorEasterEggModal onClose={handleClose} />}</>;
+  return (
+    <>
+      <button
+        type="button"
+        className="journal-surprise journal-amor-trigger"
+        aria-label="Abrir un momento especial"
+        title="Abrir un momento especial"
+        onClick={() => setShowEasterEgg(true)}
+      >
+        <Heart size={21} strokeWidth={1.3} aria-hidden="true" />
+      </button>
+      {showEasterEgg && (
+        <AmorEasterEggModal onClose={() => setShowEasterEgg(false)} />
+      )}
+    </>
+  );
 };
 
 export default EasterEggKeyboardListener;

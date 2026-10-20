@@ -932,6 +932,54 @@ html[data-time="night"] .journal-scene img {
   filter: brightness(0.79) saturate(0.72);
 }
 
+
+.journal-footer {
+  margin-top: auto;
+  padding: 0 24px 24px;
+  color: var(--journal-muted);
+}
+
+.journal-footer-inner {
+  max-width: 1120px;
+  margin: auto;
+  border-top: none;
+  background: var(--dream-cloud);
+  border-radius: 28px;
+  padding: 16px 20px;
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.journal-footer p {
+  max-width: 36ch;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.journal-footer-mark {
+  color: var(--journal-accent);
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.journal-surprise {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  color: var(--journal-accent);
+  border: 1px solid var(--journal-rule);
+  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+.journal-amor-trigger {
+  margin-left: 0;
+}
+
 /* A native top-layer window: the impossible scenery never overlaps the letter. */
 
 .journal-dialog {
@@ -1265,6 +1313,12 @@ html[data-time="night"] .journal-scene img {
     right: 0;
     top: 0;
     bottom: auto;
+  }
+  .journal-footer {
+    padding: 0 40px 28px;
+  }
+  .journal-footer p {
+    max-width: none;
   }
 }
 
