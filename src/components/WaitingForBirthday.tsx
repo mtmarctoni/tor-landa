@@ -6,7 +6,7 @@ const WaitingForBirthday: React.FC = () => {
   return (
     <StatusState
       icon="🎁"
-      title="Algo especial esta por abrirse"
+      title="Algo especial está por abrirse"
       description="Vuelve el 23 de octubre"
       tone="celebration"
     />
