@@ -1,7 +1,7 @@
-import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { motion, type PanInfo, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import type React from "react";
+import { useState } from "react";
 import type { Photo } from "@/types";
 
 interface PhotoViewerProps {
@@ -12,98 +12,90 @@ interface PhotoViewerProps {
   onPrev: () => void;
 }
 
-const PhotoViewer: React.FC<PhotoViewerProps> = ({
+export default function PhotoViewer({
   photos,
   currentIndex,
   imageLoadStates,
   onNext,
   onPrev,
-}) => {
-  const handlePanEnd = (_event: Event, info: PanInfo) => {
-    const swipeThreshold = 50;
-
-    if (info.offset.x > swipeThreshold) {
-      onPrev();
-    } else if (info.offset.x < -swipeThreshold) {
-      onNext();
-    }
-  };
-
-  if (photos.length === 0) {
+}: PhotoViewerProps) {
+  const reducedMotion = useReducedMotion();
+  const [displayStates, setDisplayStates] = useState<
+    Record<string, "loaded" | "error">
+  >({});
+  const photo = photos[currentIndex];
+  if (!photo)
     return (
-      <div className="text-center p-8">
-        <p className="text-rose-600 text-lg mb-2">💖</p>
-        <p className="text-rose-700">Pronto habrá fotos especiales aquí</p>
-      </div>
+      <p className="birthday-notice">Pronto habrá fotos especiales aquí</p>
     );
-  }
-
+  const state = displayStates[photo.url];
+  const handlePanEnd = (_event: Event, info: PanInfo) => {
+    if (info.offset.x > 50) onPrev();
+    else if (info.offset.x < -50) onNext();
+  };
   return (
-    <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="w-full h-full flex items-center justify-center p-2 md:p-8 relative"
-          onPanEnd={handlePanEnd}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
-        >
-          {/* Show loading spinner for individual image if not loaded */}
-          {!imageLoadStates[currentIndex] && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-rose-100 to-pink-100">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="text-3xl"
-              >
-                ✨
-              </motion.div>
-            </div>
+    <div className="birthday-photo-composition">
+      <motion.div
+        className="birthday-photo-frame"
+        onPanEnd={handlePanEnd}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={reducedMotion ? 0 : 0.12}
+      >
+        <div className="birthday-photo-surface">
+          {!state && (
+            <p role="status" className="birthday-image-status">
+              Cargando foto...
+            </p>
           )}
-
+          {state === "error" && (
+            <p role="status" className="birthday-image-status">
+              Esta foto no se pudo cargar. Puedes pasar a la siguiente.
+            </p>
+          )}
           <Image
-            src={photos[currentIndex].url}
-            alt={`Memory ${currentIndex + 1}`}
-            className={`w-full h-full object-contain rounded-xl md:rounded-2xl shadow-2xl transition-opacity duration-300 ${imageLoadStates[currentIndex] ? "opacity-100" : "opacity-0"}`}
+            key={photo.url}
+            src={photo.url}
+            alt={`Recuerdo ${currentIndex + 1}`}
             fill
-            sizes="(max-width: 768px) 90vw, 70vw"
-            priority
-            style={{ objectFit: "contain" }}
+            sizes="(max-width: 600px) 80vw, 65vw"
+            loading="eager"
+            draggable={false}
+            onLoad={() =>
+              setDisplayStates((previous) => ({
+                ...previous,
+                [photo.url]: "loaded",
+              }))
+            }
+            onError={() =>
+              setDisplayStates((previous) => ({
+                ...previous,
+                [photo.url]: "error",
+              }))
+            }
+            style={{
+              objectFit: "contain",
+              opacity: state === "loaded" ? 1 : 0,
+            }}
+            data-preloaded={Boolean(imageLoadStates[currentIndex])}
           />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation buttons */}
-      {photos.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={onPrev}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 md:p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
-          >
-            <ChevronLeft size={20} className="md:w-6 md:h-6" />
+        </div>
+      </motion.div>
+      <nav aria-label="Navegar entre fotos" className="birthday-photo-nav">
+        {photos.length > 1 && (
+          <button type="button" onClick={onPrev} aria-label="Foto anterior">
+            <ChevronLeft aria-hidden="true" />
           </button>
-          <button
-            type="button"
-            onClick={onNext}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 md:p-3 text-rose-600 hover:bg-white hover:scale-110 transition-all shadow-lg"
-          >
-            <ChevronRight size={20} className="md:w-6 md:h-6" />
+        )}
+        <span aria-live="polite" aria-atomic="true">
+          {currentIndex + 1} / {photos.length}
+        </span>
+        {photos.length > 1 && (
+          <button type="button" onClick={onNext} aria-label="Foto siguiente">
+            <ChevronRight aria-hidden="true" />
           </button>
-        </>
-      )}
-
-      {/* Counter */}
-      <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm px-3 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm text-rose-700 font-semibold shadow-lg">
-        {currentIndex + 1} / {photos.length}
-      </div>
-    </>
+        )}
+      </nav>
+    </div>
   );
-};
-
-export default PhotoViewer;
+}

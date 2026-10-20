@@ -996,6 +996,9 @@ html[data-time="night"] .journal-scene img {
 .birthday-secret {
   width: min(560px, calc(100vw - 28px));
 }
+.birthday-gallery {
+  width: min(1040px, calc(100vw - 28px));
+}
 .birthday-world {
   position: absolute;
   inset: 0;
@@ -1196,6 +1199,144 @@ html[data-time="night"] .journal-scene img {
   background: var(--journal-paper);
   color: var(--journal-ink);
 }
+.birthday-notice {
+  margin: 0 16px 12px;
+}
+.birthday-gallery-intro {
+  text-align: center;
+  padding: 14px 15px;
+  font-size: 14px;
+}
+.birthday-photo-world {
+  position: relative;
+  padding: 26px clamp(12px, 6vw, 65px) 12px;
+}
+.birthday-photo-composition {
+  position: relative;
+  z-index: 1;
+}
+.birthday-photo-frame {
+  position: relative;
+  padding: 12px;
+  border: 9px ridge #eab06b;
+  border-radius: 46px 26px 60px 32px / 26px 55px 28px 65px;
+  background: #f7d9ac;
+  box-shadow:
+    9px 10px 0 #b16868,
+    16px 19px 0 #274d5d77;
+  touch-action: pan-y;
+}
+.birthday-photo-frame::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 40px;
+  background: #eab06b;
+  border-radius: 0 0 80% 70%;
+  bottom: -28px;
+  left: 14%;
+  box-shadow: 40px -6px 0 -5px #eab06b;
+  pointer-events: none;
+}
+.birthday-photo-surface {
+  position: relative;
+  height: clamp(230px, 43dvh, 460px);
+  background: #183a49;
+  border-radius: 22px 12px 30px 16px;
+  overflow: hidden;
+}
+.birthday-image-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  padding: 24px;
+  color: #fff3da;
+  text-align: center;
+  font-size: 14px;
+}
+.birthday-photo-nav {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin: 25px auto 0;
+  width: max-content;
+  padding: 4px;
+  border-radius: 50px;
+  background: #fff2d9;
+  color: #233c50;
+  border: 1px solid #233c50;
+  box-shadow: 4px 5px 0 #31696644;
+}
+.birthday-photo-nav button {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #233c50;
+  color: #fff2d9;
+}
+.birthday-photo-nav button:focus-visible {
+  outline: 3px solid #233c50;
+  outline-offset: 3px;
+}
+.birthday-photo-nav span {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 42px;
+  text-align: center;
+}
+.birthday-caption {
+  position: relative;
+  margin: 16px clamp(16px, 6vw, 60px) 0;
+  padding: 12px 20px;
+  color: var(--journal-ink);
+  background: var(--journal-paper);
+  border: 1px solid var(--journal-rule);
+  border-radius: 45% 12px 30% 15px / 12px 35% 15px 30%;
+  text-align: center;
+  overflow-wrap: anywhere;
+  font:
+    italic clamp(18px, 2.5vw, 24px) / 1.4 var(--font-journal-serif),
+    Georgia,
+    serif;
+}
+.birthday-dedication {
+  text-align: center;
+  font-size: 14px;
+  padding: 14px 16px 0;
+}
+.birthday-dedication span {
+  font-style: italic;
+  color: var(--journal-accent);
+}
+.birthday-gallery-loading {
+  position: relative;
+  z-index: 1;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #233c50;
+}
+.birthday-gallery-loading p {
+  background: #fff2d9;
+  padding: 10px 20px;
+  border-radius: 30px;
+}
+.birthday-loading-portal {
+  width: 80px;
+  height: 110px;
+  border: 12px ridge #efb76f;
+  border-radius: 50% 50% 10% 20%;
+  background: #233c50;
+  transform: rotate(12deg);
+}
 .birthday-countdown > div {
   background: var(--journal-surface);
   color: var(--journal-ink);
@@ -1228,6 +1369,48 @@ html[data-time="night"] .journal-scene img {
   100% {
     transform: translateY(90vh) rotate(260deg);
     opacity: 0;
+  }
+}
+@media (min-width: 700px) and (max-height: 500px) {
+  :where(.birthday-gallery) .journal-dialog-content {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr);
+    align-items: center;
+    padding-bottom: 12px;
+  }
+  .birthday-gallery-intro {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 8px 12px;
+  }
+  .birthday-photo-world {
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    padding: 12px 24px 8px;
+  }
+  .birthday-photo-surface {
+    height: 135px;
+  }
+  .birthday-photo-frame {
+    padding: 5px;
+    border-width: 6px;
+  }
+  .birthday-photo-nav {
+    margin-top: 12px;
+    gap: 14px;
+  }
+  .birthday-caption {
+    grid-column: 2;
+    margin: 4px 16px;
+    padding: 8px;
+  }
+  .birthday-dedication {
+    grid-column: 2;
+    padding: 8px;
+  }
+  .birthday-notice {
+    grid-column: 2;
+    margin: 4px 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

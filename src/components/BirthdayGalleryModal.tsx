@@ -1,14 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useBirthdayPhotos } from "@/hooks/useBirthdayPhotos";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import type { BaseModalProps } from "@/types/components";
 import BirthdayConfetti from "./BirthdayConfetti";
+import BirthdayWorld from "./BirthdayWorld";
 import GalleryLoading from "./GalleryLoading";
+import JournalDialog from "./JournalDialog";
 import PhotoCaption from "./PhotoCaption";
 import PhotoViewer from "./PhotoViewer";
 
@@ -17,151 +17,74 @@ const BirthdayGalleryModal: React.FC<BaseModalProps> = ({
   onClose,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(true);
+  const { photos, loading, error, isPlaceholder } = useBirthdayPhotos(isOpen);
+  const { imageLoadStates, preloadImages, clearPreloadedImages } =
+    useImagePreloader();
 
-  // Custom hooks for data and preloading
-  const { photos, loading } = useBirthdayPhotos(isOpen);
-  const {
-    imageLoadStates,
-    preloadImages,
-    clearPreloadedImages,
-    resetLoadStates,
-  } = useImagePreloader();
-
-  // Calculate loading progress
-  const loadedImagesCount = Object.keys(imageLoadStates).filter(
-    (key) => imageLoadStates[parseInt(key, 10)],
-  ).length;
-
-  // Preload images when photos are loaded
-  useEffect(() => {
-    if (photos.length > 0 && !loading) {
-      preloadImages(photos.map((photo) => photo.url));
-    }
-  }, [photos, loading, preloadImages]);
-
-  // Handle confetti animation
-  useEffect(() => {
-    if (isOpen) {
-      queueMicrotask(() => setShowConfetti(true));
-      setTimeout(() => setShowConfetti(false), 5000);
-    }
-  }, [isOpen]);
-
-  // Reset states when modal closes
   useEffect(() => {
     if (!isOpen) {
-      queueMicrotask(() => setCurrentIndex(0));
-      resetLoadStates();
-    }
-  }, [isOpen, resetLoadStates]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
+      setCurrentIndex(0);
       clearPreloadedImages();
-    };
-  }, [clearPreloadedImages]);
+    }
+  }, [isOpen, clearPreloadedImages]);
+  useEffect(() => {
+    if (isOpen && !loading && photos.length)
+      void preloadImages(photos.map((photo) => photo.url));
+  }, [isOpen, loading, photos, preloadImages]);
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % photos.length);
+  const index = currentIndex < photos.length ? currentIndex : 0;
+  const next = () => {
+    if (photos.length) setCurrentIndex((value) => (value + 1) % photos.length);
   };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  const prev = () => {
+    if (photos.length)
+      setCurrentIndex((value) => (value - 1 + photos.length) % photos.length);
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-2 md:p-4 bg-black/90 backdrop-blur-md"
-          onClick={onClose}
-        >
-          {/* Confetti celebration */}
-          {showConfetti && <BirthdayConfetti />}
-
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            className="relative w-full h-full md:max-w-4xl md:h-auto bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-2 right-2 md:top-4 md:right-4 z-10 bg-white/80 backdrop-blur-sm rounded-full p-2 text-rose-600 hover:text-rose-800 hover:bg-white transition-all shadow-lg"
-            >
-              <X size={20} className="md:w-6 md:h-6" />
-            </button>
-
-            {/* Header */}
-            <div className="bg-gradient-to-r from-rose-400 via-pink-400 to-amber-400 p-3 md:p-6 text-center flex-shrink-0">
-              <motion.div
-                animate={{
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
-                <h2 className="text-xl md:text-3xl font-serif text-white mb-1 md:mb-2">
-                  🎂 Para Ti, Landa 💖
-                </h2>
-              </motion.div>
-              <p className="text-white/90 text-xs md:text-sm">
-                Momentos especiales (o las únicas fotos que tenemos juntos)
-              </p>
-            </div>
-
-            {/* Photo Gallery */}
-            <div className="relative flex-1 min-h-0 bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center overflow-hidden">
-              {loading ? (
-                <GalleryLoading
-                  photosCount={photos.length}
-                  loadedCount={loadedImagesCount}
-                />
-              ) : (
-                <PhotoViewer
-                  photos={photos}
-                  currentIndex={currentIndex}
-                  imageLoadStates={imageLoadStates}
-                  onNext={handleNext}
-                  onPrev={handlePrev}
-                />
-              )}
-            </div>
-
-            {/* Caption */}
-            {!loading && photos.length > 0 && (
-              <div className="flex-shrink-0">
-                <PhotoCaption
-                  photo={photos[currentIndex]}
-                  currentIndex={currentIndex}
-                />
-              </div>
-            )}
-
-            {/* Footer message */}
-            <div className="bg-gradient-to-r from-rose-50 to-pink-50 p-3 md:p-6 border-t-2 border-rose-200 flex-shrink-0">
-              <p className="text-center text-rose-700 leading-relaxed text-sm md:text-base">
-                Feliz cumpleaños.
-              </p>
-              <p className="text-center text-rose-700 leading-relaxed text-sm md:text-base">
-                Te quiero.
-              </p>
-            </div>
-          </motion.div>
-        </motion.div>
+    <JournalDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Para ti, Landa"
+      className="birthday-dialog birthday-gallery"
+    >
+      {isOpen && <BirthdayConfetti />}
+      <div className="birthday-gallery-intro">
+        <p className="journal-eyebrow">Un universo en nuestras fotos</p>
+        <p>La gravedad no entra aquí. Los recuerdos, sí.</p>
+      </div>
+      {isPlaceholder && !loading && (
+        <div role="status" className="birthday-notice">
+          <p>Mostrando imágenes de ejemplo</p>
+          {error && (
+            <p>
+              No se pudieron cargar las fotos. Mientras tanto, estas pinturas
+              nos acompañan.
+            </p>
+          )}
+        </div>
       )}
-    </AnimatePresence>
+      <div className="birthday-photo-world">
+        <BirthdayWorld />
+        {loading ? (
+          <GalleryLoading photosCount={0} loadedCount={0} />
+        ) : (
+          <PhotoViewer
+            photos={photos}
+            currentIndex={index}
+            imageLoadStates={imageLoadStates}
+            onNext={next}
+            onPrev={prev}
+          />
+        )}
+      </div>
+      {!loading && photos[index] && (
+        <PhotoCaption photo={photos[index]} currentIndex={index} />
+      )}
+      <p className="birthday-dedication">
+        Feliz cumpleaños. <span>Te quiero.</span>
+      </p>
+    </JournalDialog>
   );
 };
-
 export default BirthdayGalleryModal;
