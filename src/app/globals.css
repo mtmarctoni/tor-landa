@@ -855,6 +855,36 @@ a.control-pill {
   box-shadow: none;
 }
 
+.journal-header {
+  position: relative;
+  z-index: 20;
+  padding: 28px 24px 18px;
+}
+
+.journal-masthead {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  max-width: 1120px;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
+}
+
+.journal-emblem {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 48px;
+  border: 1px solid var(--journal-rule);
+  border-radius: 50% 50% 0 0;
+  font:
+    italic 30px var(--font-journal-serif),
+    Georgia,
+    serif;
+  color: var(--journal-accent);
+}
+
 .journal-eyebrow {
   color: var(--journal-muted);
   font-size: 10px;
@@ -864,6 +894,32 @@ a.control-pill {
   margin-bottom: 4px;
 }
 
+.journal-masthead h1 {
+  font-size: clamp(34px, 5vw, 60px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.journal-header-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--journal-rule);
+  margin-left: 22px;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .journal-header {
+    padding: 38px 40px 24px;
+  }
+  .journal-header-rule {
+    display: none;
+  }
+  .journal-eyebrow {
+    font-size: 10px;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   /* MotionConfig covers Framer transforms. CSS atmosphere must also stop. */
