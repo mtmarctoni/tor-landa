@@ -2,7 +2,9 @@
 
 import type { ReactNode } from "react";
 import LunarDepartment from "@/components/LunarDepartment";
+import usePostalDelivery from "@/components/usePostalDelivery";
 import "./post-office.css";
+import "./postal-delivery.css";
 
 interface PostOfficeProps {
   week: number;
@@ -13,7 +15,7 @@ interface PostOfficeProps {
   children: ReactNode;
 }
 
-/** Presentation only. A keyed, finite cast cue cannot accumulate timers or delay a letter. */
+/** Only the real cargo remounts. Lunar memory and the focused skip button survive. */
 export default function PostOffice({
   week,
   year,
@@ -22,147 +24,165 @@ export default function PostOffice({
   randomCue,
   children,
 }: PostOfficeProps) {
+  const delivery = usePostalDelivery(`${year}-${week}-${randomCue}`, delivered);
   return (
     <section
       className="postal-scene"
       data-testid="post-office"
       data-direction={direction}
       data-delivered={delivered}
+      data-phase={delivery.phase}
+      data-running={delivery.running}
+      data-opened={delivery.opened}
+      data-stamped={delivery.stamped}
       aria-label="La oficina de correos imposibles de Landa"
     >
       <div className="postal-sign">
         <span>Correos imposibles</span>
         <em>Sucursal Landa · solo cartas que te quieren</em>
       </div>
-      <div
-        className="postal-airmail"
-        aria-hidden="true"
-        key={`${year}-${week}-${delivered}`}
-      >
-        <svg
-          aria-hidden="true"
-          className="postal-rig"
-          viewBox="0 0 600 155"
-          preserveAspectRatio="none"
-        >
-          <path d="M92 45L30 153M92 45L570 153" />
-        </svg>
-        <svg
-          aria-hidden="true"
-          className="postal-fish"
-          data-laboratory-character="flying-fish"
-          viewBox="0 0 210 130"
-        >
-          <path
-            d="M89 65Q32 -21 39 27Q4 1 28 39Q-3 23 23 56L77 84M111 64Q141 3 157 11L154 46L183 33L158 80"
-            fill="#fff3cd"
-            stroke="#492752"
-            strokeWidth="3"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M56 72Q111 26 159 74L197 50L187 83L199 107L158 91Q103 132 56 72Z"
-            fill="#fa967f"
-            stroke="#492752"
-            strokeWidth="3"
-          />
-          <ellipse
-            cx="85"
-            cy="73"
-            rx="13"
-            ry="17"
-            fill="#fff9de"
-            stroke="#492752"
-            strokeWidth="2"
-          />
-          <ellipse cx="81" cy="76" rx="5" ry="8" fill="#492752" />
-          <path
-            d="M59 83L47 85M112 72L121 86L111 96M136 64L143 80L135 99"
-            fill="none"
-            stroke="#492752"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
-        <span className="postal-fish-aside">
-          No le han dicho
-          <br />
-          que pesa demasiado.
-        </span>
-        <svg aria-hidden="true" className="postal-clock" viewBox="0 0 100 115">
-          <path
-            d="M8 45C0 0 92 -7 91 44L81 100Q63 124 52 95L48 74Q7 102 8 45Z"
-            fill="#ffe582"
-            stroke="#492752"
-            strokeWidth="3"
-          />
-          <circle
-            cx="49"
-            cy="43"
-            r="30"
-            fill="#fff8e8"
-            stroke="#492752"
-            strokeWidth="2"
-          />
-          <path
-            d="M49 17V22M49 64V69M23 43H28M70 43H75"
-            stroke="#492752"
-            strokeWidth="3"
-          />
-          <path
-            className="postal-clock-hand"
-            d="M49 24V43L65 49"
-            fill="none"
-            stroke="#a92059"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="postal-peeker">
-          <svg aria-hidden="true" viewBox="0 0 100 100">
+      <div className="postal-cargo" key={delivery.identity}>
+        <div className="postal-airmail" aria-hidden="true">
+          <svg aria-hidden="true" className="postal-rig">
+            <line x1="110" y1="60" x2="4" y2="100%" />
+            <line x1="110" y1="60" x2="100%" y2="100%" />
+          </svg>
+          <svg
+            aria-hidden="true"
+            className="postal-fish"
+            data-laboratory-character="flying-fish"
+            viewBox="0 0 210 130"
+          >
             <path
-              d="M24 76L10 98M75 76L91 98"
-              stroke="#492752"
-              strokeWidth="7"
-            />
-            <path
-              d="M5 4H95V82H5Z"
-              fill="#e5bb68"
-              stroke="#492752"
-              strokeWidth="4"
-            />
-            <image
-              href="/images/thekiss.jpg"
-              x="11"
-              y="10"
-              width="78"
-              height="66"
-              preserveAspectRatio="xMidYMid slice"
-            />
-            <path
-              d="M0 47Q11 35 22 47Q11 60 0 47M78 47Q89 35 100 47Q89 60 78 47"
+              d="M89 65Q32 -21 39 27Q4 1 28 39Q-3 23 23 56L77 84M111 64Q141 3 157 11L154 46L183 33L158 80"
               fill="#fff3cd"
+              stroke="#492752"
+              strokeWidth="3"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M56 72Q111 26 159 74L197 50L187 83L199 107L158 91Q103 132 56 72Z"
+              fill="#fa967f"
+              stroke="#492752"
+              strokeWidth="3"
+            />
+            <ellipse
+              cx="85"
+              cy="73"
+              rx="13"
+              ry="17"
+              fill="#fff9de"
               stroke="#492752"
               strokeWidth="2"
             />
-            <path d="M12 41V53M88 41V53" stroke="#492752" strokeWidth="5" />
+            <ellipse cx="81" cy="76" rx="5" ry="8" fill="#492752" />
+            <path
+              d="M59 83L47 85M112 72L121 86L111 96M136 64L143 80L135 99"
+              fill="none"
+              stroke="#492752"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
           </svg>
+          <span className="postal-fish-aside">
+            {delivery.stamped ? "Necesito vacaciones." : "No le han dicho"}
+            <br />
+            {delivery.stamped ? "Y una pecera con spa." : "que pesa demasiado."}
+          </span>
+          <svg
+            aria-hidden="true"
+            className="postal-clock"
+            viewBox="0 0 100 115"
+          >
+            <path
+              d="M8 45C0 0 92 -7 91 44L81 100Q63 124 52 95L48 74Q7 102 8 45Z"
+              fill="#ffe582"
+              stroke="#492752"
+              strokeWidth="3"
+            />
+            <circle
+              cx="49"
+              cy="43"
+              r="30"
+              fill="#fff8e8"
+              stroke="#492752"
+              strokeWidth="2"
+            />
+            <path
+              d="M49 17V22M49 64V69M23 43H28M70 43H75"
+              stroke="#492752"
+              strokeWidth="3"
+            />
+            <path
+              className="postal-clock-hand"
+              d="M49 24V43L65 49"
+              fill="none"
+              stroke="#a92059"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="postal-peeker">
+            <svg aria-hidden="true" viewBox="0 0 100 100">
+              <path
+                d="M24 76L10 98M75 76L91 98"
+                stroke="#492752"
+                strokeWidth="7"
+              />
+              <path
+                d="M5 4H95V82H5Z"
+                fill="#e5bb68"
+                stroke="#492752"
+                strokeWidth="4"
+              />
+              <image
+                href="/images/thekiss.jpg"
+                x="11"
+                y="10"
+                width="78"
+                height="66"
+                preserveAspectRatio="xMidYMid slice"
+              />
+              <path
+                d="M0 47Q11 35 22 47Q11 60 0 47M78 47Q89 35 100 47Q89 60 78 47"
+                fill="#fff3cd"
+                stroke="#492752"
+                strokeWidth="2"
+              />
+              <path d="M12 41V53M88 41V53" stroke="#492752" strokeWidth="5" />
+            </svg>
+          </div>
+        </div>
+        <div className="postal-envelope">
+          <div className="postal-envelope-front" aria-hidden="true">
+            <span>
+              Para Landa.
+              <br />
+              <em>Exceso de cariño. No doblar al pez.</em>
+            </span>
+            <b>♥</b>
+          </div>
+          <div className="postal-flap" aria-hidden="true" />
+          <div className="postal-address">
+            <span>
+              Para: Landa
+              <br />
+              <b>Franqueo pagado con cariño</b>
+            </span>
+            <span className="postal-stamp">
+              {delivery.stamped ? "ENTREGADA" : "EN CLASIFICACIÓN"}
+            </span>
+          </div>
+          <div
+            className="postal-paper"
+            inert={!delivery.opened}
+            aria-hidden={!delivery.opened}
+          >
+            {children}
+          </div>
         </div>
       </div>
       <LunarDepartment randomCue={randomCue} />
-      <div className="postal-envelope">
-        <div className="postal-address">
-          <span>
-            Para: Landa
-            <br />
-            <b>Franqueo pagado con cariño</b>
-          </span>
-          <span className="postal-stamp">
-            {delivered ? "ENTREGADA" : "EN CLASIFICACIÓN"}
-          </span>
-        </div>
-        {children}
-      </div>
       <div className="postal-desk">
         <svg
           className="postal-cup"
@@ -217,7 +237,7 @@ export default function PostOffice({
           />
           <ellipse cx="132" cy="136" rx="12" ry="6" fill="#ed8aa2" />
           <ellipse cx="212" cy="138" rx="12" ry="6" fill="#ed8aa2" />
-          <g className="postal-cup-seal">
+          <g className="postal-cup-seal" key={delivery.identity}>
             <path
               d="M274 169L308 145L318 161L285 183Z"
               fill="#a92059"
@@ -248,6 +268,18 @@ export default function PostOffice({
               : "Servicio urgente de quererte"}
         </span>
       </div>
+      <button
+        type="button"
+        className="postal-skip"
+        onClick={delivery.toggle}
+        aria-disabled={!delivered}
+      >
+        {!delivered
+          ? "En espera de carta"
+          : delivery.running
+            ? "Saltar animación"
+            : "Repetir entrega"}
+      </button>
     </section>
   );
 }

@@ -208,7 +208,9 @@ for (const reduced of [false, true]) {
       await previous.click();
     }
     expect(await scene.locator(".postal-fish").count()).toBe(1);
-    await page.waitForTimeout(1300);
+    // The approved shared delivery now includes opening and stamping (2.7s),
+    // not the superseded 850ms fish-only cue. Keep the same cleanup assertions.
+    await expect(scene).toHaveAttribute("data-phase", "complete");
     await info.attach("pending-timers", {
       body: JSON.stringify(
         await page.evaluate(() =>
