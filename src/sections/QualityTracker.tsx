@@ -12,6 +12,7 @@ import HistoryButton from "@/components/HistoryButton";
 import { getDialogOwnershipVersion } from "@/components/JournalDialog";
 import LoadingQuality from "@/components/LoadingQuality";
 import NoQualityInPast from "@/components/NoQualityInPast";
+import PostOffice from "@/components/PostOffice";
 import QualityCard from "@/components/QualityCard";
 import StatusState from "@/components/StatusState";
 import WaitingForBirthday from "@/components/WaitingForBirthday";
@@ -45,6 +46,7 @@ const QualityTracker: React.FC = () => {
     "idle",
   );
   const [showSecretModal, setShowSecretModal] = useState(false);
+  const [randomCue, setRandomCue] = useState<0 | 1 | 2>(0);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const galleryHandoffTimer = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -147,7 +149,13 @@ const QualityTracker: React.FC = () => {
           </button>
         </div>
 
-        <div className="relative flex w-full items-center py-2">
+        <PostOffice
+          week={week}
+          year={year}
+          direction={direction}
+          delivered={canCopy}
+          randomCue={randomCue}
+        >
           {loading ? (
             <LoadingQuality />
           ) : error ? (
@@ -189,7 +197,7 @@ const QualityTracker: React.FC = () => {
               />
             </motion.div>
           )}
-        </div>
+        </PostOffice>
 
         <nav
           aria-label="Navegar entre semanas"
@@ -215,7 +223,10 @@ const QualityTracker: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={goToRandomSavedWeek}
+            onClick={() => {
+              setRandomCue((cue) => (cue === 1 ? 2 : 1));
+              goToRandomSavedWeek();
+            }}
             disabled={loading || Boolean(error) || qualities.length === 0}
             className="control-pill inline-flex items-center gap-2 border"
           >

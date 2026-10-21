@@ -33,6 +33,33 @@
   transform: rotate(9deg) translateY(4px);
   animation-delay: -2s;
 }
+.laboratory-cast {
+  pointer-events: none;
+}
+.lunar-request {
+  min-height: 44px;
+  padding: 8px 19px;
+  border: 2px solid #492752;
+  border-radius: 44% 55% 40% 50% / 45% 35% 60% 45%;
+  background: #ffe582;
+  color: #492752;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 3px 3px 0 #d87398;
+  cursor: pointer;
+}
+.lunar-request:hover {
+  background: #fff0b2;
+}
+.lunar-request:active {
+  box-shadow: 1px 1px 0 #d87398;
+}
+.lunar-reply {
+  color: var(--journal-ink);
+  text-wrap: balance;
+  background: var(--dream-cloud);
+  border-radius: 18px;
+}
 .laboratory-header .journal-eyebrow {
   max-width: 180px;
   margin-inline: auto;

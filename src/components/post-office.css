@@ -1,0 +1,391 @@
+/* The letter IS the oversized cargo. All travel is confined to the cast. */
+.postal-scene {
+  position: relative;
+  isolation: isolate;
+  color: var(--journal-ink);
+  padding-top: 160px;
+}
+.postal-sign {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-left: 4px solid #a92059;
+  padding-left: 10px;
+}
+.postal-sign > span {
+  display: block;
+  font-family: var(--font-journal-serif), Georgia, serif;
+  font-size: 25px;
+  line-height: 1;
+}
+.postal-sign em {
+  font-size: 10px;
+}
+.postal-airmail {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 160px;
+  pointer-events: none;
+  z-index: -1;
+}
+.postal-rig {
+  position: absolute;
+  width: 100%;
+  height: 120px;
+  bottom: -2px;
+  fill: none;
+  stroke: var(--journal-ink);
+  stroke-width: 3;
+  stroke-dasharray: 4 3;
+}
+.postal-fish {
+  position: absolute;
+  width: 125px;
+  height: 85px;
+  top: 38px;
+  left: 5px;
+  transform: rotate(-12deg);
+}
+.postal-scene[data-delivered="true"] .postal-fish {
+  animation: postal-arrival 850ms ease-out both;
+}
+.postal-fish-aside {
+  position: absolute;
+  top: 116px;
+  left: 22%;
+  font-size: 10px;
+  line-height: 1.2;
+  font-style: italic;
+  background: var(--dream-cloud);
+  padding: 3px 6px;
+  border-radius: 6px;
+  transform: rotate(-5deg);
+}
+.postal-clock {
+  position: absolute;
+  width: 43px;
+  height: 51px;
+  left: 40%;
+  top: 50px;
+  transform: rotate(12deg);
+}
+.postal-clock-hand {
+  transform-origin: 49px 43px;
+  transform: rotate(-40deg);
+  animation: postal-rewind 950ms ease-out both;
+}
+.postal-peeker {
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  bottom: -10px;
+  left: 0;
+  transform: translateY(-6px) rotate(-12deg);
+  animation: postal-peek 800ms ease-out both;
+}
+.postal-scene .lunar-department {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  width: 130px;
+  margin: 0;
+}
+.postal-scene .laboratory-moon {
+  position: static;
+  display: block;
+  width: 65px;
+  height: 62px;
+  margin: -15px auto -8px;
+  animation: none;
+  transform: none;
+}
+.postal-moon-pose {
+  transform: rotate(0deg);
+  transform-origin: 50% 30%;
+}
+.postal-scene .moon-pose-1 {
+  transform: rotate(-19deg) translateX(-8px);
+}
+.postal-scene .moon-pose-2 {
+  transform: rotate(19deg) translateX(8px);
+}
+.postal-scene .lunar-request {
+  font-size: 10px;
+  padding: 4px 9px;
+}
+.postal-scene .lunar-reply {
+  font-size: 9px;
+  line-height: 1.25;
+  min-height: 36px;
+  padding: 4px;
+  margin-top: 4px;
+}
+.postal-scene .moon-heart {
+  animation: none;
+}
+.postal-envelope {
+  position: relative;
+  background: var(--dream-cloud);
+  border: 9px solid transparent;
+  border-image: repeating-linear-gradient(
+      135deg,
+      #ac3c62 0 12px,
+      #fff4d8 12px 24px,
+      #347d87 24px 36px,
+      #fff4d8 36px 48px
+    )
+    9;
+  box-shadow: 4px 8px 0 #49275230;
+  padding: 11px 12px 0;
+}
+.postal-address {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-journal-serif), Georgia, serif;
+  font-size: 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #a9577940;
+}
+.postal-address b {
+  display: block;
+  font-family: var(--font-journal-sans), sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+}
+.postal-stamp {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  border: 2px double currentColor;
+  color: var(--journal-accent);
+  padding: 5px;
+  transform: rotate(-8deg);
+}
+.postal-envelope .journal-note {
+  padding: 12px 0 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 0;
+}
+.postal-envelope .journal-note-mark,
+.postal-envelope .dream-note-label {
+  display: none;
+}
+.postal-envelope .dream-message-shell {
+  inset: 7px -4px 5px;
+  border: 1px solid color-mix(in srgb, var(--journal-accent) 12%, transparent);
+  box-shadow: none;
+  background: var(--dream-cloud);
+}
+.postal-envelope .dream-note-top {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+}
+.postal-envelope .journal-message {
+  margin: 0;
+  padding: 0;
+}
+.postal-envelope .dream-dance-status {
+  padding-right: 48px;
+  margin-top: 18px;
+}
+.postal-desk {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 93px;
+  border-bottom: 2px solid #492752;
+  background: linear-gradient(transparent 70%, #e5bb6860 70%);
+}
+.postal-cup {
+  width: 78px;
+  height: 80px;
+  flex-shrink: 0;
+  transform: rotate(-8deg);
+}
+.postal-cup-seal {
+  transform-origin: 274px 169px;
+}
+[data-delivered="true"] .postal-cup-seal {
+  transform: rotate(24deg);
+}
+.postal-desk p {
+  font-size: 10px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--dream-cloud);
+  border-radius: 10px;
+}
+.postal-desk p span {
+  display: block;
+}
+.postal-route {
+  position: absolute;
+  font-size: 8px;
+  right: 0;
+  bottom: -13px;
+  background: var(--dream-cloud);
+  padding: 1px 4px;
+}
+.postal-scene[data-direction="1"] .postal-peeker {
+  transform: translateY(-15px) rotate(12deg);
+}
+.postal-scene[data-direction="1"] .postal-fish {
+  transform: rotate(10deg) scaleX(-1);
+}
+.postal-scene[data-direction="1"] .postal-clock-hand {
+  transform: rotate(-110deg);
+}
+body:has(.postal-scene) .laboratory-header {
+  padding-top: 12px;
+}
+body:has(.postal-scene) .laboratory-header .journal-eyebrow {
+  display: none;
+}
+body:has(.postal-scene) .laboratory-header h1 {
+  font-size: 28px;
+}
+body:has(.postal-scene) .laboratory-header h1 > span {
+  display: inline;
+  font-size: 0.65em;
+}
+body:has(.postal-scene) .laboratory-header h1 em {
+  font-size: 1.6em;
+}
+body:has(.postal-scene) .laboratory-header h1 em span {
+  animation: none;
+}
+body:has(.postal-scene) .home-main {
+  padding-top: 18px;
+}
+body:has(.postal-scene) .home-main .control-pill:hover {
+  transform: none;
+}
+body:has(.postal-scene) .dream-painting-swans {
+  top: 260px;
+}
+body:has(.postal-scene) .dream-painting-clocks {
+  top: 260px;
+}
+body:has(.postal-scene) .dream-painting-kiss {
+  top: 540px;
+}
+body:has(.postal-scene) .laboratory-legs {
+  animation: none;
+}
+body:has(.postal-scene) .dream-stairs {
+  left: -60px;
+  top: 620px;
+  width: 150px;
+}
+body:has(dialog[open]) .postal-scene :where(*) {
+  animation-play-state: paused;
+}
+@keyframes postal-arrival {
+  from {
+    translate: -25px -12px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@keyframes postal-rewind {
+  from {
+    rotate: 360deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+@keyframes postal-peek {
+  from {
+    translate: 0 14px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@media (min-width: 768px) {
+  .postal-peeker {
+    left: auto;
+    right: 34%;
+  }
+  body:has(.postal-scene) .dream-stairs {
+    left: calc(50% - 630px);
+    top: 420px;
+    width: 220px;
+  }
+  .postal-scene {
+    padding-top: 175px;
+  }
+  .postal-sign > span {
+    font-size: 35px;
+  }
+  .postal-sign em {
+    font-size: 12px;
+  }
+  .postal-airmail {
+    height: 175px;
+  }
+  .postal-fish {
+    width: 165px;
+    height: 110px;
+    top: 45px;
+  }
+  .postal-rig {
+    height: 130px;
+  }
+  .postal-clock {
+    width: 58px;
+    height: 66px;
+    top: 62px;
+  }
+  .postal-scene .lunar-department {
+    width: 170px;
+    top: 5px;
+  }
+  .postal-scene .laboratory-moon {
+    width: 100px;
+    height: 95px;
+  }
+  .postal-scene .lunar-request {
+    font-size: 12px;
+  }
+  .postal-scene .lunar-reply {
+    font-size: 11px;
+  }
+  .postal-envelope {
+    padding: 16px 26px 0;
+  }
+  .postal-address {
+    font-size: 23px;
+  }
+  .postal-address b {
+    font-size: 11px;
+  }
+  .postal-stamp {
+    font-size: 12px;
+  }
+  .postal-cup {
+    width: 90px;
+    height: 95px;
+  }
+  .postal-desk p {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .postal-scene *,
+  .postal-scene *::before,
+  .postal-scene *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
