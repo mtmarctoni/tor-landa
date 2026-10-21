@@ -57,6 +57,14 @@
   transform-origin: top;
   animation: laboratory-knees 4s ease-in-out infinite alternate;
 }
+.laboratory-landscape {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  opacity: 0.9;
+}
 .dream-gallery .dream-moon {
   opacity: 0.85;
 }
@@ -78,6 +86,9 @@
 :root[data-time="night"] .laboratory-header h1 em {
   color: #ffc2d5;
   text-shadow: 3px 3px 0 #773764;
+}
+:root[data-time="night"] .laboratory-landscape {
+  opacity: 0.55;
 }
 @keyframes laboratory-letter {
   to {
