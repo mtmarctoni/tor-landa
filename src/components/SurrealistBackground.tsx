@@ -33,6 +33,33 @@ export default function SurrealistBackground() {
             sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 380px"
             loading="eager"
           />
+          {name === "kiss" && (
+            <svg
+              className="laboratory-legs"
+              data-laboratory-character="painting-legs"
+              viewBox="0 0 180 150"
+              aria-hidden="true"
+            >
+              <path
+                d="M55 0L43 67L68 112M124 0L139 61L112 113"
+                fill="none"
+                stroke="#492752"
+                strokeWidth="12"
+                strokeLinecap="round"
+              />
+              <path
+                d="M66 101Q98 105 94 126L42 129Q34 106 66 101ZM110 102Q78 106 83 128L143 124Q146 100 110 102Z"
+                fill="#ec587c"
+                stroke="#492752"
+                strokeWidth="4"
+              />
+              <path
+                d="M44 49L54 77M130 44L119 76"
+                stroke="#fff3cd"
+                strokeWidth="10"
+              />
+            </svg>
+          )}
           {name === "swans" && (
             <>
               <svg

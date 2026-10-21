@@ -47,6 +47,34 @@
 .home-main {
   padding-top: 32px;
 }
+.laboratory-legs {
+  position: absolute;
+  top: 90%;
+  left: 10%;
+  width: 85%;
+  height: 48%;
+  overflow: visible;
+  transform-origin: top;
+  animation: laboratory-knees 4s ease-in-out infinite alternate;
+}
+.dream-gallery .dream-moon {
+  opacity: 0.85;
+}
+.dream-gallery .dream-stairs {
+  top: 175px;
+  left: calc(50% - 55px);
+}
+.dream-gallery .dream-painting-swans {
+  top: 147px;
+  left: -43px;
+}
+.dream-gallery .dream-painting-clocks {
+  top: 155px;
+  right: -38px;
+}
+.dream-gallery .dream-painting-kiss {
+  top: 765px;
+}
 :root[data-time="night"] .laboratory-header h1 em {
   color: #ffc2d5;
   text-shadow: 3px 3px 0 #773764;
@@ -56,8 +84,14 @@
     transform: rotate(5deg) translateY(-3px);
   }
 }
+@keyframes laboratory-knees {
+  to {
+    transform: skewX(7deg) rotate(-4deg);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .laboratory-header h1 em span {
+  .laboratory-header h1 em span,
+  .laboratory-legs {
     animation: none;
   }
 }
@@ -67,5 +101,40 @@
   }
   .laboratory-header {
     padding-top: 28px;
+  }
+  .dream-gallery .dream-stairs {
+    left: 1%;
+    top: 470px;
+  }
+  .dream-gallery .dream-painting-swans {
+    top: 230px;
+    left: -75px;
+  }
+  .dream-gallery .dream-painting-clocks {
+    top: 240px;
+    right: -70px;
+  }
+  .dream-gallery .dream-painting-kiss {
+    top: 590px;
+  }
+}
+@media (min-width: 1100px) {
+  .dream-gallery .dream-painting-swans {
+    left: calc(50% - 690px);
+    top: 190px;
+  }
+  .dream-gallery .dream-painting-clocks {
+    right: calc(50% - 690px);
+    top: 210px;
+  }
+  .dream-gallery .dream-painting-kiss {
+    right: calc(50% - 670px);
+    top: 550px;
+    width: 230px;
+    height: 270px;
+  }
+  .dream-gallery .dream-stairs {
+    left: calc(50% - 630px);
+    top: 420px;
   }
 }
