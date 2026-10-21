@@ -114,6 +114,9 @@
 [data-running="false"] .postal-envelope-front {
   display: none;
 }
+[data-running="false"] .postal-cargo :is(.postal-clock-hand, .postal-peeker) {
+  animation: none;
+}
 [data-running="true"] .postal-cargo {
   animation: postal-cargo-flight 1250ms linear both;
 }

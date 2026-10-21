@@ -34,6 +34,34 @@ export default function usePostalDelivery(cue: string, available: boolean) {
 
   useEffect(() => {
     if (!running) return;
+    let cancelled = false;
+    const timers: number[] = [];
+    const cancel = () => {
+      cancelled = true;
+      timers.forEach(window.clearTimeout);
+      observer.disconnect();
+    };
+    const settleForDialog = () => {
+      if (cancelled || !document.querySelector("dialog[open]")) return;
+      cancel();
+      setSequence((current) =>
+        current.identity === identity
+          ? { identity, phase: "complete" }
+          : current,
+      );
+    };
+    const observer = new MutationObserver(settleForDialog);
+    // Modal ownership stays native. Cancel presentation, never move its focus.
+    if (document.querySelector("dialog[open]")) {
+      settleForDialog();
+      return;
+    }
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["open"],
+      childList: true,
+      subtree: true,
+    });
     const stages: [number, Phase][] = [
       [950, "land"],
       [1250, "fold"],
@@ -41,14 +69,17 @@ export default function usePostalDelivery(cue: string, available: boolean) {
       [2150, "stamp"],
       [2700, "complete"],
     ];
-    const timers = stages.map(([delay, next]) =>
-      window.setTimeout(() => {
-        setSequence((current) =>
-          current.identity === identity ? { identity, phase: next } : current,
-        );
-      }, delay),
-    );
-    return () => timers.forEach(window.clearTimeout);
+    for (const [delay, next] of stages)
+      timers.push(
+        window.setTimeout(() => {
+          setSequence((current) =>
+            !cancelled && current.identity === identity
+              ? { identity, phase: next }
+              : current,
+          );
+        }, delay),
+      );
+    return cancel;
     // Phase changes must not restart the timeline; only cancellation or a new cue does.
   }, [identity, running]);
 
