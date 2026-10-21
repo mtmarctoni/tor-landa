@@ -188,6 +188,32 @@ export default function SurrealistBackground() {
       <span className="dream-spark dream-spark-one">✦</span>
       <span className="dream-spark dream-spark-two">✧</span>
       <span className="dream-spark dream-spark-three">✦</span>
+      <svg
+        className="laboratory-landscape"
+        aria-hidden="true"
+        viewBox="0 0 1440 300"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0 123Q150 -90 330 130T660 95T990 125T1440 40V300H0Z"
+          fill="#eaa6bd"
+        />
+        <path
+          d="M0 200Q190 60 370 205T800 163T1140 199T1440 150V300H0Z"
+          fill="#4a8f88"
+        />
+        <path
+          d="M0 277Q230 100 420 264T920 246T1440 225V300H0Z"
+          fill="#e7bf6b"
+        />
+        <path
+          d="M0 278Q200 148 366 246M1040 282Q1250 157 1440 224"
+          stroke="#492752"
+          strokeWidth="3"
+          strokeDasharray="9 15"
+          fill="none"
+        />
+      </svg>
     </div>
   );
 }
