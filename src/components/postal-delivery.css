@@ -1,3 +1,10 @@
+.postal-scene {
+  padding-top: 0;
+}
+.postal-stage {
+  position: relative;
+  padding-top: 160px;
+}
 .postal-cargo {
   position: relative;
   --postal-trip: -165px;
@@ -20,7 +27,7 @@
 .postal-skip {
   position: relative;
   display: block;
-  margin: 16px 0 0 auto;
+  margin: 0 0 8px auto;
   width: 150px;
   min-height: 44px;
   padding: 8px 10px;
@@ -41,6 +48,10 @@
 }
 .postal-envelope {
   perspective: 900px;
+}
+.postal-address {
+  line-height: 1.1;
+  padding-bottom: 2px;
 }
 .postal-stamp {
   flex: 0 0 112px;
@@ -215,6 +226,9 @@ body:has(.postal-scene) {
   }
 }
 @media (min-width: 768px) {
+  .postal-stage {
+    padding-top: 175px;
+  }
   .postal-stamp {
     flex-basis: 138px;
   }
