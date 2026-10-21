@@ -1,4 +1,4 @@
-/* The letter IS the oversized cargo. All travel is confined to the cast. */
+/* Fish, ropes and the actual reading envelope are ONE moving cargo. */
 .postal-scene {
   position: relative;
   isolation: isolate;
@@ -45,9 +45,6 @@
   top: 38px;
   left: 5px;
   transform: rotate(-12deg);
-}
-.postal-scene[data-delivered="true"] .postal-fish {
-  animation: postal-arrival 850ms ease-out both;
 }
 .postal-fish-aside {
   position: absolute;
@@ -212,7 +209,7 @@
 .postal-cup-seal {
   transform-origin: 274px 169px;
 }
-[data-delivered="true"] .postal-cup-seal {
+[data-stamped="true"] .postal-cup-seal {
   transform: rotate(24deg);
 }
 .postal-desk p {
@@ -287,14 +284,6 @@ body:has(.postal-scene) .dream-stairs {
 }
 body:has(dialog[open]) .postal-scene :where(*) {
   animation-play-state: paused;
-}
-@keyframes postal-arrival {
-  from {
-    translate: -25px -12px;
-  }
-  to {
-    translate: 0 0;
-  }
 }
 @keyframes postal-rewind {
   from {
