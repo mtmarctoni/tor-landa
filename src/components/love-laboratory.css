@@ -1,0 +1,71 @@
+/* Preserved painting islands; the home postal scene supplies its own cast. */
+.laboratory-header {
+  padding: 22px 18px 0;
+  max-width: 1180px;
+  width: 100%;
+  margin-inline: auto;
+}
+.laboratory-header .journal-masthead h1 {
+  font-size: clamp(38px, 5vw, 56px);
+  line-height: 0.85;
+  color: var(--journal-ink);
+}
+.laboratory-header h1 > span {
+  display: block;
+  font-size: 0.48em;
+  letter-spacing: -0.02em;
+  margin: 10px 0 5px;
+}
+.laboratory-header h1 em {
+  display: inline-flex;
+  font-size: 1.65em;
+  font-weight: 600;
+  letter-spacing: -0.075em;
+  color: #a92059;
+  text-shadow: 2px 3px 0 #ffe58a;
+}
+.laboratory-header h1 em span {
+  display: inline-block;
+  transform: rotate(-8deg);
+  animation: laboratory-letter 3.7s ease-in-out infinite alternate;
+}
+.laboratory-header h1 em span:nth-child(even) {
+  transform: rotate(9deg) translateY(4px);
+  animation-delay: -2s;
+}
+.laboratory-header .journal-eyebrow {
+  max-width: 180px;
+  margin-inline: auto;
+  font-size: 9px;
+}
+.home-main > section > .surface-card > div:first-child .journal-eyebrow {
+  background: var(--dream-cloud);
+  border-radius: 8px;
+  padding: 3px 6px;
+  width: fit-content;
+}
+.home-main {
+  padding-top: 32px;
+}
+:root[data-time="night"] .laboratory-header h1 em {
+  color: #ffc2d5;
+  text-shadow: 3px 3px 0 #773764;
+}
+@keyframes laboratory-letter {
+  to {
+    transform: rotate(5deg) translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .laboratory-header h1 em span {
+    animation: none;
+  }
+}
+@media (min-width: 768px) {
+  .home-main {
+    padding-top: 0;
+  }
+  .laboratory-header {
+    padding-top: 28px;
+  }
+}
