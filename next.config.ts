@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { shoeboxSharpIncludes } from "./scripts/shoebox-sharp-includes.mjs";
 
 // Applied to every shoebox page, RSC, API, redirect and error response.
 const SHOEBOX_HEADERS = [
@@ -18,14 +19,15 @@ const SHOEBOX_HEADERS = [
 
 // media-validation.ts starts src/features/shoebox/server/media-worker.mjs by
 // its fixed path, which file tracing cannot see. Keep the worker, its shared
-// inspection module and Mediabunny (no dependencies) in the routes that
-// validate media. Sharp and its native @img packages are already traced for
-// every server function through next-server's own sharp dependency.
+// inspection module, Mediabunny and the worker's own Sharp/native dependencies
+// in every memory route. Next may use a different Sharp version; its server
+// trace is not evidence that this worker's dependencies were packaged.
 const MEDIA_WORKER_TRACE = [
   "./src/features/shoebox/server/media-worker.mjs",
   "./src/features/shoebox/media-inspection.mjs",
   "./node_modules/mediabunny/package.json",
   "./node_modules/mediabunny/dist/modules/**/*.js",
+  ...shoeboxSharpIncludes(),
 ];
 
 const nextConfig: NextConfig = {
