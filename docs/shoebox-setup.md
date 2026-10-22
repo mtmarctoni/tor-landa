@@ -234,6 +234,24 @@ and ordinary isolated unit run passed. No test was skipped or timeout enlarged.
 The dedicated guard unit test launches real preloaded child/grandchild Node
 processes. All Next build/dev/start subprocesses retain the preload.
 
+### Production media worker packaging
+
+The worker must ship with **its own** Sharp version, native `@img` libraries,
+and installed transitive/optional dependencies. Do not rely on Next's Sharp:
+after the Next16.4.2 upgrade it was0.35.5 while the worker still used0.34.5.
+That mismatch caused production media503s even though source-tree tests passed.
+`scripts/shoebox-sharp-includes.mjs` resolves the worker's actual installation
+and supplies narrow dependency includes to all three memory-route traces.
+
+`worker-packaging.test.ts` runs JPEG/WebM/fMP4 workers from isolated copies of
+the configured deployment files, with empty environments and relocated symlinks.
+It also proves that omitting native libraries fails rather than falling back to
+local packages. CI runs these units on Linux. The full production check copies
+the **actual emitted NFT files**, separately for upload/detail/media routes,
+before running the same smoke test. Source-tree worker execution alone is not
+packaging verification. Confirm real photo/audio serving after an authorized
+redeploy; no private memories need to be removed or re-uploaded for this fix.
+
 ## 7. Pinned local package versions and sources
 
 Observed locally2026-10-22: Next16.3.0-preview.6 MIT; @notionhq/client5.24.0 MIT;
