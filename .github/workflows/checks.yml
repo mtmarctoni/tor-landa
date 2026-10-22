@@ -23,6 +23,8 @@ jobs:
         run: pnpm format:check
       - name: Typecheck
         run: pnpm typecheck
+      - name: Unit tests (including isolated media workers)
+        run: pnpm test:unit
       - name: Knip (unused code)
         run: pnpm knip
       - name: Dependency Cruiser (architecture)

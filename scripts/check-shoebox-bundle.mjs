@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Worker } from "node:worker_threads";
+import { smokeWorkerArtifact } from "./shoebox-worker-artifact.mjs";
 
 /** Only paths and variable names leave this scanner, never canary values. */
 export function scanClientCanaries(directory, canaries) {
@@ -82,85 +83,49 @@ async function main() {
     for (const [name, value] of Object.entries(canaries))
       assert.ok(!body.includes(value), `Rendered canary: ${name} in ${path}`);
   }
-  // Assert the actual production trace includes the worker/parser, not just
-  // that source-tree unit tests can import them. Native Sharp is traced by Next.
-  const tracePath = join(
-    output,
-    "server/app/api/shoebox/memories/route.js.nft.json",
-  );
-  const files = JSON.parse(readFileSync(tracePath, "utf8")).files.map((file) =>
-    resolve(dirname(tracePath), file),
-  );
-  for (const suffix of [
-    "src/features/shoebox/server/media-worker.mjs",
-    "src/features/shoebox/media-inspection.mjs",
-    "mediabunny/package.json",
-  ]) {
-    assert.ok(
-      files.some((file) => file.endsWith(suffix)),
-      `Missing traced ${suffix}`,
-    );
-  }
+  // A source-tree worker can borrow untraced packages. Copy the actual emitted
+  // files for EACH memory route plus Next's server trace into an isolated root.
   const serverTracePath = join(output, "next-server.js.nft.json");
   const serverFiles = JSON.parse(
     readFileSync(serverTracePath, "utf8"),
   ).files.map((file) => resolve(dirname(serverTracePath), file));
-  assert.ok(
-    serverFiles.some(
-      (file) => file.includes("sharp") && file.endsWith("package.json"),
-    ),
-    "Missing traced Sharp",
-  );
-  assert.ok(
-    serverFiles.some(
-      (file) => file.includes("sharp") && file.endsWith(".node"),
-    ),
-    "Missing native Sharp module in server trace",
-  );
-  const workerPath = files.find((file) =>
-    file.endsWith("src/features/shoebox/server/media-worker.mjs"),
-  );
-  for (const [kind, fixture, mode] of [
+  const fixtures = [
     ["photo", "photo-exif-orientation-gps.jpg", "validate"],
+    ["photo", "photo-edge-2048.jpg", "inspect"],
     ["audio", "audio-webm-opus-2s-no-duration.webm", "inspect"],
     ["audio", "audio-fmp4-aac-2s.m4a", "validate"],
-  ]) {
-    const worker = new Worker(workerPath, {
-      resourceLimits: { maxOldGenerationSizeMb: 64 },
-    });
-    try {
-      const result = await new Promise((res, rej) => {
-        const timer = setTimeout(
-          () => rej(Error("Traced worker deadline")),
-          5000,
-        );
-        worker.once("message", (result) => {
-          clearTimeout(timer);
-          res(result);
-        });
-        worker.once("error", (error) => {
-          clearTimeout(timer);
-          rej(error);
-        });
-        worker.postMessage({
-          kind,
-          mode,
-          bytes: new Uint8Array(
-            readFileSync(`tests/fixtures/shoebox/${fixture}`),
-          ),
-        });
-      });
-      assert.equal(
-        result.ok,
-        true,
-        `Traced worker rejected synthetic ${fixture}`,
+  ].map(([kind, name, mode]) => ({
+    kind,
+    mode,
+    bytes: new Uint8Array(readFileSync(`tests/fixtures/shoebox/${name}`)),
+  }));
+  for (const route of ["", "/[id]", "/[id]/media"]) {
+    const tracePath = join(
+      output,
+      `server/app/api/shoebox/memories${route}/route.js.nft.json`,
+    );
+    const files = JSON.parse(readFileSync(tracePath, "utf8")).files.map(
+      (file) => resolve(dirname(tracePath), file),
+    );
+    for (const suffix of [
+      "src/features/shoebox/server/media-worker.mjs",
+      "src/features/shoebox/media-inspection.mjs",
+      "mediabunny/package.json",
+    ]) {
+      assert.ok(
+        files.some((file) => file.endsWith(suffix)),
+        `Missing traced ${suffix} for memories${route}`,
       );
-    } finally {
-      await worker.terminate();
     }
+    await smokeWorkerArtifact({
+      files: [...files, ...serverFiles],
+      root: process.cwd(),
+      scratch: join(tmpdir(), "opencode"),
+      fixtures,
+    });
   }
   console.log(
-    "Client static + HTML/RSC canaries absent; traced JPEG/WebM/fMP4 workers passed",
+    "Client static + HTML/RSC canaries absent; isolated traced JPEG/WebM/fMP4 workers passed for all memory routes",
   );
 }
 
