@@ -16,6 +16,7 @@
     "knip": "knip",
     "depcheck": "depcruise src --config .dependency-cruiser.mjs --output-type text",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm knip && pnpm depcheck && pnpm build",
+    "test:unit": "vitest run",
     "test:telegram": "node -r dotenv/config scripts/test-telegram.js dotenv_config_path=.env.local"
   },
   "dependencies": {

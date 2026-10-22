@@ -1,15 +1,59 @@
 import type { NextConfig } from "next";
 
+// Applied to every shoebox page, RSC, API, redirect and error response.
+const SHOEBOX_HEADERS = [
+  { key: "Cache-Control", value: "private, no-store, max-age=0" },
+  { key: "CDN-Cache-Control", value: "no-store" },
+  { key: "Vercel-CDN-Cache-Control", value: "no-store" },
+  { key: "Referrer-Policy", value: "no-referrer" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+  {
+    key: "Permissions-Policy",
+    value: "microphone=(self), camera=(), geolocation=()",
+  },
+  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+];
+
+// media-validation.ts starts src/features/shoebox/server/media-worker.mjs by
+// its fixed path, which file tracing cannot see. Keep the worker, its shared
+// inspection module and Mediabunny (no dependencies) in the routes that
+// validate media. Sharp and its native @img packages are already traced for
+// every server function through next-server's own sharp dependency.
+const MEDIA_WORKER_TRACE = [
+  "./src/features/shoebox/server/media-worker.mjs",
+  "./src/features/shoebox/media-inspection.mjs",
+  "./node_modules/mediabunny/package.json",
+  "./node_modules/mediabunny/dist/modules/**/*.js",
+];
+
 const nextConfig: NextConfig = {
   experimental: {
     useTypeScriptCli: true,
   },
-  env: {
-    NOTION_API_KEY: process.env.NOTION_API_KEY,
-    NOTION_DB_ID: process.env.NOTION_DB_ID,
-    BIRTHDAY_PHOTOS_DB_ID: process.env.BIRTHDAY_PHOTOS_DB_ID,
+  outputFileTracingIncludes: {
+    // Next matches keys with picomatch `contains`, so this covers the upload
+    // route and every nested memories route (including [id]/media).
+    "/api/shoebox/memories": MEDIA_WORKER_TRACE,
+  },
+  async headers() {
+    return ["/shoebox/:path*", "/api/shoebox/:path*"].map((source) => ({
+      source,
+      headers: SHOEBOX_HEADERS,
+    }));
   },
   images: {
+    // Only public artwork may be optimized; never /api/shoebox/** or any query.
+    localPatterns: [
+      { pathname: "/images/**", search: "" },
+      // `next dev` makes next/image throw in the browser for unlisted local
+      // paths, which breaks the synthetic birthday fixtures (their optimizer
+      // requests are intercepted by Playwright). Production never lists it.
+      ...(process.env.NODE_ENV === "production"
+        ? []
+        : [{ pathname: "/__fixtures/**", search: "" }]),
+    ],
     remotePatterns: [
       {
         protocol: "https",
