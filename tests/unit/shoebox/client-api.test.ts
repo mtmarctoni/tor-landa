@@ -109,13 +109,14 @@ describe("shoeboxFetch", () => {
     expect(calls).toHaveLength(0);
   });
 
-  it("forces same-origin credentials, no-store and no redirects", async () => {
+  it("forces same-origin credentials and referrer policy, no-store and no redirects", async () => {
     replies.push(json(200, { expiresAt: 1 }));
     await shoeboxFetch("/api/shoebox/session", {
       credentials: "include",
       cache: "force-cache",
       redirect: "follow",
       mode: "cors",
+      referrerPolicy: "no-referrer",
     });
     expect(calls).toHaveLength(1);
     expect(calls[0]?.url).toBe("/api/shoebox/session");
@@ -124,6 +125,7 @@ describe("shoeboxFetch", () => {
       cache: "no-store",
       redirect: "error",
       mode: "same-origin",
+      referrerPolicy: "same-origin",
     });
   });
 
