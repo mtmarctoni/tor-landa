@@ -213,7 +213,7 @@ test("natural phone and desktop delivery evidence includes flight, fold, paper a
   await mkdir(dir, { recursive: true });
   const viewport = info.project.use.viewport ?? { width: 390, height: 844 };
   const context = await browser.newContext({
-    baseURL: process.env.E2E_BASE_URL,
+    baseURL: info.project.use.baseURL,
     viewport,
     reducedMotion: "no-preference",
     timezoneId: "Europe/Madrid",
