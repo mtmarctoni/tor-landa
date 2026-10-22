@@ -9,6 +9,7 @@
       "!**/build",
       "!**/test-results",
       "!**/playwright-report",
+      "!**/.superpowers",
       "!**/public"
     ]
   },
