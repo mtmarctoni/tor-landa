@@ -258,6 +258,17 @@ describe("readMultipart", () => {
     ).toBe("TOO_LARGE");
   });
 
+  it.each([1024, 1025])(
+    "pads a multipart fixture to %i bytes without changing its fields or file",
+    async (totalBytes) => {
+      const request = multipartRequest({ files: [bytes(10)], totalBytes });
+      expect((await request.clone().arrayBuffer()).byteLength).toBe(totalBytes);
+      const result = await readMultipart(request);
+      expect(result.fields).toEqual(photoFields);
+      expect(result.file?.size).toBe(10);
+    },
+  );
+
   it("enforces the total even when Content-Length lies or is unknown", async () => {
     const lying = multipartRequest({
       files: [bytes(MAX_FILE_BYTES)],
