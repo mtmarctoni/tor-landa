@@ -212,9 +212,9 @@ test("four dialogs in four themes have solid readable surfaces, inert background
   await page.emulateMedia({ reducedMotion: "reduce" });
   await installJournalFixtures(page, {
     now: "2026-10-23T12:00:00+02:00",
-    storedWeek: { week: 43, year: 2026 },
+    storedWeek: { week: 43, year: 2025 },
     qualities: [
-      { week: 43, year: 2026, message: "Berlín y nuestros cuatro números" },
+      { week: 43, year: 2025, message: "Berlín y nuestros cuatro números" },
     ],
   });
   for (const time of ["dawn", "day", "dusk", "night"]) {

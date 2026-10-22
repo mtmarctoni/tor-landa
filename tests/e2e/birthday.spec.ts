@@ -20,7 +20,7 @@ async function setup(page: Page, options: JournalFixtureOptions = {}) {
   await installJournalFixtures(page, {
     now: "2026-10-23T12:00:00+02:00",
     qualities: entries,
-    storedWeek: { week: 43, year: 2026 },
+    storedWeek: { week: 43, year: 2025 },
     ...options,
   });
   await page.goto("/");
@@ -58,7 +58,10 @@ for (const [now, countdown] of [
   ["2026-10-18", true],
 ] as const) {
   test(`countdown window ${now}`, async ({ page }) => {
-    await setup(page, { now: `${now}T12:00:00+02:00` });
+    await setup(page, {
+      now: `${now}T12:00:00+02:00`,
+      storedWeek: { week: 43, year: 2026 },
+    });
     await expect(page.getByTestId("week-context")).toContainText("2026");
     // Next's hidden hydration diff also contains countdown text. Assert the
     // actual app live status, not diagnostic copies in the dev portal.
@@ -76,22 +79,37 @@ for (const [now, countdown] of [
 test("birthday gate and historical birthday preserve existing dates", async ({
   page,
 }) => {
-  await setup(page, { now: "2026-10-22T12:00:00+02:00" });
+  await setup(page, {
+    now: "2026-10-22T12:00:00+02:00",
+    storedWeek: { week: 43, year: 2026 },
+  });
   await expect(page.getByText("Vuelve el 23 de octubre")).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Berlín", exact: true }),
   ).toHaveCount(0);
   await page.clock.setFixedTime(new Date("2026-10-23T12:00:00+02:00"));
   await page.reload();
+  await expect(page.getByTestId("quality-message")).toHaveText(
+    "Berlín y nuestros cuatro números",
+  );
+  await expect(
+    page.getByRole("heading", { name: "¡Feliz Cumpleaños, Landa!" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Berlín", exact: true }),
+  ).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "nuestros cuatro números", exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await page.getByText("Detalles de la semana", { exact: true }).click();
   await page
     .getByRole("button", { name: "Semana 43 del 2025", exact: true })
     .click();
   await expect(
     page.getByRole("button", { name: "Berlín", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "nuestros cuatro números", exact: true }),
   ).toBeVisible();
 });
 test("incorrect then correct unlock transfers focus and repeated reopening returns to original hint", async ({
