@@ -158,7 +158,20 @@ test("handoff ignores hint re-entry and restores original focus and scroll", asy
   });
   const scroll = await page.evaluate(() => scrollY);
   expect(scroll).toBeGreaterThan(0);
-  const dialog = await secret(page, "nuestros cuatro números");
+  // Keep the deliberately chosen scroll position: Playwright's pointer click
+  // can scroll before opening, which changes the position the dialog must save.
+  await opener.evaluate((el: HTMLButtonElement) => {
+    el.focus({ preventScroll: true });
+    el.click();
+  });
+  const dialog = page.getByRole("dialog", {
+    name: "El secreto de Landa",
+    exact: true,
+  });
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByRole("textbox", { name: "Código secreto", exact: true }),
+  ).toBeFocused();
   await dialog.getByRole("textbox").fill(puzzle ?? "");
   const now = new Date("2026-10-23T12:00:00+02:00");
   await page.clock.install({ time: now });
