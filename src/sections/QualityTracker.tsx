@@ -9,6 +9,7 @@ import BirthdayCountdown from "@/components/BirthdayCountdown";
 import BirthdayGalleryModal from "@/components/BirthdayGalleryModal";
 import BirthdaySecretModal from "@/components/BirthdaySecretModal";
 import HistoryButton from "@/components/HistoryButton";
+import IpadCountdown from "@/components/IpadCountdown";
 import { getDialogOwnershipVersion } from "@/components/JournalDialog";
 import LoadingQuality from "@/components/LoadingQuality";
 import NoQualityInPast from "@/components/NoQualityInPast";
@@ -299,6 +300,7 @@ const QualityTracker: React.FC = () => {
           </div>
         </details>
       </div>
+      <IpadCountdown />
       <BirthdayCountdown />
       <BirthdaySecretModal
         isOpen={showSecretModal}
