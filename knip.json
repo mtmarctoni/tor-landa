@@ -1,3 +1,14 @@
 {
-  "entry": ["src/app/**/*.{ts,tsx}", "src/sections/**/*.{ts,tsx}"]
+  "ignoreExportsUsedInFile": true,
+  "ignoreBinaries": ["openssl"],
+  "entry": [
+    "src/app/**/*.{ts,tsx}",
+    "src/sections/**/*.{ts,tsx}",
+    "src/features/shoebox/server/media-worker.mjs",
+    "scripts/shoebox-offline.cjs",
+    "scripts/shoebox-https-proxy.mjs",
+    "scripts/check-shoebox-bundle.mjs",
+    "tests/unit/**/*.test.ts",
+    "tests/helpers/*.ts"
+  ]
 }
