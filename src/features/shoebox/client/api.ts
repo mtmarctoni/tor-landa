@@ -161,6 +161,10 @@ export async function shoeboxFetch<T>(
       cache: "no-store",
       redirect: "error",
       mode: "same-origin",
+      // WebKit/Firefox can send Origin: null when inheriting the page's
+      // no-referrer policy. Preserve the origin for our strict CSRF check;
+      // this policy still omits referrers on cross-origin requests.
+      referrerPolicy: "same-origin",
     });
   } catch {
     throw new ShoeboxApiError(

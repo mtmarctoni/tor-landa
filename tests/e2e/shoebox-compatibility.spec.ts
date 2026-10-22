@@ -1,6 +1,78 @@
+import { readFileSync } from "node:fs";
+import { createServer } from "node:http";
+import { stripTypeScriptTypes } from "node:module";
 import { expect, test } from "@playwright/test";
 import { loginThroughUi } from "./shoebox.fixture";
 import { mockArchive, syntheticMemory } from "./shoebox-archive.fixture";
+
+for (const kind of ["text", "photo", "audio"] as const) {
+  test(`${kind} saves retain the same-origin header under the page's no-referrer policy`, async ({
+    page,
+  }) => {
+    // Execute the actual client module with only its TypeScript types erased.
+    // Use a real HTTP boundary: intercepted requests can hide engine-generated
+    // security headers. Persistence and the document are synthetic, not Notion.
+    const client = stripTypeScriptTypes(
+      readFileSync("src/features/shoebox/client/api.ts", "utf8"),
+    );
+    const origins: (string | undefined)[] = [];
+    const server = createServer((request, response) => {
+      if (request.url === "/client.js") {
+        response.writeHead(200, { "Content-Type": "text/javascript" });
+        response.end(client);
+      } else if (request.url === "/api/shoebox/memories") {
+        origins.push(request.headers.origin);
+        request.resume();
+        response.writeHead(201, { "Content-Type": "application/json" });
+        response.end(
+          JSON.stringify({ memory: syntheticMemory(1, kind), replayed: false }),
+        );
+      } else {
+        response.writeHead(200, {
+          "Content-Type": "text/html",
+          "Referrer-Policy": "no-referrer",
+        });
+        response.end(
+          "<!doctype html><title>Synthetic shoebox origin regression</title>",
+        );
+      }
+    });
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const address = server.address();
+    if (!address || typeof address === "string")
+      throw new Error("Missing test server address");
+    const origin = `http://127.0.0.1:${address.port}`;
+    try {
+      await page.goto(origin);
+      const result = await page.evaluate(async (kind) => {
+        // The runtime URL is deliberately not a TypeScript source dependency.
+        const modulePath = "/client.js";
+        const { saveMemory } = await import(modulePath);
+        return saveMemory({
+          requestId: crypto.randomUUID(),
+          fields: {
+            kind,
+            caption: "",
+            memoryDate: "2026-10-22",
+            ...(kind === "text" ? { text: "synthetic note" } : {}),
+          },
+          ...(kind !== "text"
+            ? { file: new File(["synthetic bytes"], "fixture.bin") }
+            : {}),
+        });
+      }, kind);
+      expect(result.kind).toBe("saved");
+      expect(origins).toEqual([origin]);
+    } finally {
+      server.closeAllConnections();
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+  });
+}
 
 test("real session, synthetic archive, native dialogs and upload fallback work across engines", async ({
   page,
