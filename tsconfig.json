@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next/shoebox-check/types/**/*.ts",
+    ".next/shoebox-check/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules", "playwright-report", "test-results"]
 }

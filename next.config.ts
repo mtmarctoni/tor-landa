@@ -29,6 +29,11 @@ const MEDIA_WORKER_TRACE = [
 ];
 
 const nextConfig: NextConfig = {
+  // Test tooling output isolation only, never an auth/data fixture switch.
+  distDir:
+    process.env.SHOEBOX_ISOLATED_CHECK === "1"
+      ? ".next/shoebox-check"
+      : ".next",
   experimental: {
     useTypeScriptCli: true,
   },

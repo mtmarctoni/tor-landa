@@ -17,6 +17,8 @@
     "depcheck": "depcruise src --config .dependency-cruiser.mjs --output-type text",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm knip && pnpm depcheck && pnpm build",
     "test:unit": "vitest run",
+    "test:shoebox:browsers": "playwright test --config=playwright.shoebox.config.ts",
+    "check:shoebox": "node scripts/run-shoebox-checks.mjs",
     "shoebox:setup": "node scripts/shoebox-setup.mjs",
     "test:telegram": "node -r dotenv/config scripts/test-telegram.js dotenv_config_path=.env.local"
   },
