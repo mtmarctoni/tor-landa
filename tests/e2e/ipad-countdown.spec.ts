@@ -104,7 +104,9 @@ async function setup(
     };
   });
   await page.goto("/?time=day");
-  await expect(page.getByTestId("week-context")).toContainText("2026");
+  await expect(page.getByTestId("week-context")).toContainText(
+    String(options.storedWeek?.year ?? 2026),
+  );
   await page.clock.pauseAt(now);
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
 }
@@ -316,7 +318,7 @@ for (const timezoneId of [
         ).toBeVisible();
       } else
         await expect(
-          page.getByRole("button", { name: "Berlín", exact: true }),
+          page.getByRole("heading", { name: "¡Feliz Cumpleaños, Landa!" }),
         ).toBeVisible();
       await open(page);
       await expect(certificate(page)).toContainText(
@@ -331,7 +333,9 @@ for (const timezoneId of [
 test("new iPad dialog cancels obsolete gallery handoff even after immediate dismissal", async ({
   page,
 }) => {
-  await setup(page, reveal + 12 * 3_600_000);
+  await setup(page, reveal + 12 * 3_600_000, {
+    storedWeek: { week: 43, year: 2025 },
+  });
   const puzzle = readFileSync(
     "src/components/BirthdaySecretModal.tsx",
     "utf8",

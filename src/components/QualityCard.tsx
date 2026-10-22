@@ -23,7 +23,8 @@ const QualityCard: FC<QualityCardProps> = ({ entry, onSecretClick }) => {
   }, [dance]);
   const reaction = useAnimationControls();
   const isBirthdayWeek = isLandaBirthdayWeek(entry.week, entry.year);
-  const message = isBirthdayWeek
+  const isBerlinBirthdayWeek = isBirthdayWeek && entry.year === 2025;
+  const message = isBerlinBirthdayWeek
     ? entry.message
         .split(/(Berlín|nuestros cuatro números)/g)
         .map((part, index) =>

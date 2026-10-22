@@ -168,8 +168,9 @@ test("dialog typing and arrows cannot activate the outside postal scene", async 
 }) => {
   await installJournalFixtures(page, {
     now: "2026-10-23T12:00:00+02:00",
+    storedWeek: { week: 43, year: 2025 },
     qualities: [
-      { week: 43, year: 2026, message: "Berlín y nuestros cuatro números" },
+      { week: 43, year: 2025, message: "Berlín y nuestros cuatro números" },
     ],
   });
   await page.goto("/");
