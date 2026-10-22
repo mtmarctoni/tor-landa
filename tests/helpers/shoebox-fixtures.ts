@@ -34,7 +34,7 @@ export type MultipartOptions = {
   metadata?: unknown;
   files?: Uint8Array[];
   extraFields?: Record<string, string>;
-  /** Pad the whole body to exactly this many bytes using a preamble. */
+  /** Pad using leading CRLF pairs and, for odd lengths, header whitespace. */
   totalBytes?: number;
   headers?: Record<string, string>;
 };
@@ -85,7 +85,24 @@ export function buildMultipartBody(options: MultipartOptions): {
     if (pad < 0) {
       throw new Error("totalBytes smaller than the multipart body");
     }
-    body = concat([new Uint8Array(pad).fill(0x20), body]);
+    // Node22's multipart parser accepts leading CRLF, not an arbitrary space
+    // preamble (Node24 is more permissive). Keep the opening delimiter valid.
+    if (pad % 2 === 1) {
+      // Optional whitespace after the first header colon changes neither the
+      // metadata nor file bytes and lets us construct odd total lengths too.
+      const afterColon = body.indexOf(0x3a) + 1;
+      body = concat([
+        body.subarray(0, afterColon),
+        new Uint8Array([0x20]),
+        body.subarray(afterColon),
+      ]);
+    }
+    const prefix = new Uint8Array(pad - (pad % 2));
+    for (let index = 0; index < prefix.length; index += 2) {
+      prefix[index] = 0x0d;
+      prefix[index + 1] = 0x0a;
+    }
+    body = concat([prefix, body]);
   }
   return { body, contentType: `multipart/form-data; boundary=${boundary}` };
 }
