@@ -139,14 +139,23 @@ describe("readBodyLimited mid-read abort", () => {
   it("throws instead of returning partial bytes when aborted while a read is pending", async () => {
     const controller = new AbortController();
     let sent = false;
+    let cancelled = false;
+    let markPendingRead: () => void = () => undefined;
+    const pendingRead = new Promise<void>((resolve) => {
+      markPendingRead = resolve;
+    });
     const body = new ReadableStream<Uint8Array>({
       pull(c) {
         if (!sent) {
           sent = true;
           c.enqueue(bytes(2));
+          return;
         }
-        // Second pull stays pending until cancelled.
+        markPendingRead();
         return new Promise(() => undefined);
+      },
+      cancel() {
+        cancelled = true;
       },
     });
     const request = new Request("https://shoebox.test/x", {
@@ -156,8 +165,13 @@ describe("readBodyLimited mid-read abort", () => {
       duplex: "half",
     } as RequestInit);
     const pending = readBodyLimited(request, 100);
-    setTimeout(() => controller.abort(), 20);
+    // Wait for an actual stalled read rather than sleeping. Keep the Request
+    // alive through signal propagation: Node22's Request uses a weak abort link.
+    await pendingRead;
+    controller.abort();
+    expect(request.signal.aborted).toBe(true);
     expect(await code(pending)).toBe("UNAVAILABLE");
+    expect(cancelled).toBe(true);
   });
 });
 
